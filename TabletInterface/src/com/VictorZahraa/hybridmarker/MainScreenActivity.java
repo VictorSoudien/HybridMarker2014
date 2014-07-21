@@ -49,7 +49,7 @@ public class MainScreenActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
-        /*if (savedInstanceState == null) 
+        /*if (savedInstanceState == null)
         {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
