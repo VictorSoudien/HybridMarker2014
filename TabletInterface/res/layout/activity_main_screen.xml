@@ -1,0 +1,43 @@
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:columnCount="2"
+    tools:context="com.VictorZahraa.hybridmarker.MainScreenActivity"
+    tools:ignore="MergeRootFrame" >
+    
+    <!--  
+    
+    <RelativeLayout
+        android:id="@+id/canvas_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" >
+        
+    </RelativeLayout>
+    
+    -->
+
+    <RelativeLayout
+        android:id="@+id/canvas_container"
+        android:layout_width="1150dp"
+        android:layout_height="match_parent"
+        android:layout_column="0"
+        android:layout_gravity="left|top"
+        android:layout_row="0" 
+        android:background="@android:color/white" >
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/button_recog_gesture"
+        android:layout_column="1"
+        android:layout_gravity="right|center_vertical"
+        android:layout_row="0"
+        android:text="@string/menu_option_recog_gesture" 
+        android:onClick="detectGesture"/>
+    
+</GridLayout>
+
