@@ -20,11 +20,6 @@ public class EmailMonitor
 	private IMAPFolder inbox;
 	private int lastMessageRead;
 	
-	public EmailMonitor()
-	{
-		
-	}
-	
 	public void createConnectionToMailbox()
 	{
 		// Define protocol
@@ -102,23 +97,12 @@ public class EmailMonitor
 							if (bodyPart.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
 							{
 								String attachedFileName = bodyPart.getFileName();
-								bodyPart.saveFile("Downloads/" + attachedFileName);
+								bodyPart.saveFile("Downloads/" + attachedFileName); // Save the attachment
 								System.out.println("Attachment Saved");
 							}
 						}
 					}
 				}
-				
-				/*Address[] in = message.getFrom();
-		        for (Address address : in) 
-		        {
-		            System.out.println("FROM:" + address.toString());
-		        }*/
-		        
-		        /*BodyPart bp = mp.getBodyPart(0);
-		        System.out.println("SENT DATE:" + message.getSentDate());
-		        System.out.println("SUBJECT:" + message.getSubject());
-		        System.out.println("CONTENT:" + bp.getContent());*/
 			}
 		}
 		catch (Exception e)
