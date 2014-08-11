@@ -15,16 +15,12 @@ import com.sun.mail.imap.IMAPStore;
 
 public class EmailMonitor
 {
-	private boolean checkMail;
-	private int sleepTime;
-	
 	private IMAPFolder inbox;
+	private int lastMessageRead;
 	
 	public EmailMonitor()
 	{
-		//createConnectionToMailbox();
-		checkMail = true;
-		sleepTime = 10000;
+		
 	}
 	
 	public void createConnectionToMailbox()
@@ -44,6 +40,8 @@ public class EmailMonitor
 			inbox = (IMAPFolder)mailStore.getFolder("INBOX");
 			inbox.open(Folder.READ_ONLY);
 			inbox.addMessageCountListener(new countChangeListener());
+			
+			lastMessageRead = inbox.getMessageCount(); // Set the index to the current amount of emails in the inbox
 		}
 		catch (Exception e)
 		{
@@ -77,23 +75,27 @@ public class EmailMonitor
 		t.start();
 	}
 	
-	private void processLatestMessage ()
+	private void processLatestMessages ()
 	{
 		try
 		{
-			// Get the latest email
-			Message message = inbox.getMessage(inbox.getMessageCount());
-	
-			Address[] in = message.getFrom();
-	        for (Address address : in) 
-	        {
-	            System.out.println("FROM:" + address.toString());
-	        }
-	        Multipart mp = (Multipart) message.getContent();
-	        BodyPart bp = mp.getBodyPart(0);
-	        System.out.println("SENT DATE:" + message.getSentDate());
-	        System.out.println("SUBJECT:" + message.getSubject());
-	        System.out.println("CONTENT:" + bp.getContent());
+			// Read all messages that were received since the last read
+			for (int i = lastMessageRead + 1; i <= inbox.getMessageCount(); i++)
+			{
+				// Get the latest email
+				Message message = inbox.getMessage(i);
+		
+				Address[] in = message.getFrom();
+		        for (Address address : in) 
+		        {
+		            System.out.println("FROM:" + address.toString());
+		        }
+		        Multipart mp = (Multipart) message.getContent();
+		        BodyPart bp = mp.getBodyPart(0);
+		        System.out.println("SENT DATE:" + message.getSentDate());
+		        System.out.println("SUBJECT:" + message.getSubject());
+		        System.out.println("CONTENT:" + bp.getContent());
+			}
 		}
 		catch (Exception e)
 		{
@@ -109,8 +111,7 @@ public class EmailMonitor
 		public void messagesAdded(MessageCountEvent arg0) 
 		{
 			System.out.println ("Message Added");
-			processLatestMessage();
-			System.out.println ("Method Called");
+			processLatestMessages();
 		}
 
 		@Override
@@ -125,5 +126,6 @@ public class EmailMonitor
 		EmailMonitor monitor = new EmailMonitor();
 		monitor.createConnectionToMailbox();
 		monitor.startThread();
+		System.out.println ("Inbox monitoring started...");
 	}
 }
