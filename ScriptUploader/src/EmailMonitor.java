@@ -4,7 +4,6 @@
  * Student Number: SDNVIC001
  */
 
-import java.io.File;
 import java.util.Properties;
 
 import javax.mail.*;
