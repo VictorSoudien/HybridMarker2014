@@ -4,11 +4,13 @@
  * Student Number: SDNVIC001
  */
 
+import java.io.File;
 import java.util.Properties;
 
 import javax.mail.*;
 import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
+import javax.mail.internet.MimeBodyPart;
 
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
@@ -50,6 +52,7 @@ public class EmailMonitor
 		}
 	}
 	
+	// Allows the folder to stay in an idle state so that the connection is maintained
 	private void startThread()
 	{
 		Thread t = new Thread(new Runnable() {
@@ -75,26 +78,47 @@ public class EmailMonitor
 		t.start();
 	}
 	
+	// Processes all messages that were received since the last count change notification
 	private void processLatestMessages ()
 	{
 		try
 		{
-			// Read all messages that were received since the last read
 			for (int i = lastMessageRead + 1; i <= inbox.getMessageCount(); i++)
 			{
 				// Get the latest email
 				Message message = inbox.getMessage(i);
-		
-				Address[] in = message.getFrom();
+				Multipart multiPartMessage = (Multipart) message.getContent();
+				
+				// Only process emails that have been sent from the scanner
+				if (message.getSubject().equalsIgnoreCase("Scanned Document From MFP"))
+				{
+					// Iterate through the parts of the multipart message
+					for (int partIndex = 0; partIndex < multiPartMessage.getCount(); partIndex++)
+					{
+						MimeBodyPart bodyPart = (MimeBodyPart) multiPartMessage.getBodyPart(partIndex);
+						
+						if (bodyPart.getDisposition() != null)
+						{
+							if (bodyPart.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
+							{
+								String attachedFileName = bodyPart.getFileName();
+								bodyPart.saveFile("Downloads/" + attachedFileName);
+								System.out.println("Attachment Saved");
+							}
+						}
+					}
+				}
+				
+				/*Address[] in = message.getFrom();
 		        for (Address address : in) 
 		        {
 		            System.out.println("FROM:" + address.toString());
-		        }
-		        Multipart mp = (Multipart) message.getContent();
-		        BodyPart bp = mp.getBodyPart(0);
+		        }*/
+		        
+		        /*BodyPart bp = mp.getBodyPart(0);
 		        System.out.println("SENT DATE:" + message.getSentDate());
 		        System.out.println("SUBJECT:" + message.getSubject());
-		        System.out.println("CONTENT:" + bp.getContent());
+		        System.out.println("CONTENT:" + bp.getContent());*/
 			}
 		}
 		catch (Exception e)
