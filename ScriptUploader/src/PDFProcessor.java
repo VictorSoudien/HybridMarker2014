@@ -5,13 +5,22 @@
  */
 
 import java.io.*;
+
+import org.apache.pdfbox.*;
+import org.apache.pdfbox.pdmodel.PDDocument;
+
 import net.sourceforge.tess4j.*;
 
 public class PDFProcessor 
 {
+	public void processDocument ()
+	{
+		
+	}
+	
 	public static void main(String[] args) 
 	{
-		File imageFile = new File("Golden_Globe_text_logo.png");
+		File imageFile = new File("FileName Here");
 		Tesseract instance = Tesseract.getInstance();
 
 		try
