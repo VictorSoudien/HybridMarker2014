@@ -12,10 +12,21 @@ import org.apache.pdfbox.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
+
 import net.sourceforge.tess4j.*;
 
 public class PDFProcessor
 {
+	private FileUploader uploader;
+	
+	public PDFProcessor()
+	{
+		uploader = new FileUploader();
+	}
+	
+	// Finds the course code and name of a given test
 	public void processDocument (File fileToProcess)
 	{
 		try
@@ -48,17 +59,32 @@ public class PDFProcessor
 					line = textLines[i+2];
 					line = line.replaceAll(" ", "_");
 					uploadDirectory += line + "/";
+					
+					prepareFileForUpload(fileToProcess, uploadDirectory, line);
+					
 					break;
 				}
 			}
-			
-			System.out.println (uploadDirectory);
 		}
 		catch (Exception e)
 		{
 			System.out.println ("Error while processing file");
 			e.printStackTrace();
 		}
+	}
+	
+	// Prepares a file before it is uploaded to the server
+	public void prepareFileForUpload(File fileToUpload, String directoryToSaveTo, String testName)
+	{
+		String directoryToCount = "/home/vsoudien/Honours_Project/" + directoryToSaveTo;
+		String numberOfFiles = uploader.getNumberOfFiles(directoryToCount);
+		String uploadTime = new SimpleDateFormat("yyyyMMdd_HHmm").format(Calendar.getInstance().getTime());
+		
+		String fileName = numberOfFiles + "-" + testName + "-" + uploadTime + ".pdf";
+		
+		directoryToSaveTo += fileName;
+		uploader.uploadFileToServer(directoryToSaveTo, fileToUpload);
+		System.out.println ("File Uploaded PDF");
 	}
 	
 	public static void main(String[] args) 
