@@ -7,6 +7,7 @@
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.pdfbox.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -76,7 +77,22 @@ public class PDFProcessor
 	// Prepares a file before it is uploaded to the server
 	public void prepareFileForUpload(File fileToUpload, String directoryToSaveTo, String testName)
 	{
-		String directoryToCount = "/home/vsoudien/Honours_Project/" + directoryToSaveTo;
+		String username = "";
+		
+		try
+		{
+			Properties properties = new Properties();
+			properties.load(new FileInputStream("ConnectionProperties.txt"));
+			username = properties.getProperty("username");
+		}
+		catch (Exception e)
+		{
+			System.out.println ("Unable to load properties file");
+			e.printStackTrace();
+			return;
+		}
+		
+		String directoryToCount = "/home/" + username + "/Honours_Project/" + directoryToSaveTo;
 		String numberOfFiles = uploader.getNumberOfFiles(directoryToCount);
 		String uploadTime = new SimpleDateFormat("yyyyMMdd_HHmm").format(Calendar.getInstance().getTime());
 		
@@ -89,7 +105,7 @@ public class PDFProcessor
 	
 	public static void main(String[] args) 
 	{
-		File imageFile = new File("201408080951.pdf");
+		File imageFile = new File("201408080948.pdf");
 		PDFProcessor proc = new PDFProcessor();
 		proc.processDocument(imageFile);
 	}
