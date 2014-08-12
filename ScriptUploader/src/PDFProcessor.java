@@ -14,7 +14,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 
 import net.sourceforge.tess4j.*;
 
-public class PDFProcessor 
+public class PDFProcessor
 {
 	public void processDocument (File fileToProcess)
 	{
@@ -31,7 +31,7 @@ public class PDFProcessor
 			String ocrText = tesseract.doOCR(imageOfFirstPage);
 			
 			// Process the ocr text to get the directory to which the file needs to be uploaded
-			String [] textLines = ocrText.split("/n");
+			String [] textLines = ocrText.split("\n");
 			String uploadDirectory = "";
 			
 			for (int i = 0; i < textLines.length; i++)
@@ -46,8 +46,8 @@ public class PDFProcessor
 					
 					// Get the name of the test
 					line = textLines[i+2];
-					line.replaceAll(" ", "_");
-					uploadDirectory += line;
+					line = line.replaceAll(" ", "_");
+					uploadDirectory += line + "/";
 					break;
 				}
 			}
@@ -63,7 +63,7 @@ public class PDFProcessor
 	
 	public static void main(String[] args) 
 	{
-		File imageFile = new File("201408080948.pdf");
+		File imageFile = new File("201408080951.pdf");
 		PDFProcessor proc = new PDFProcessor();
 		proc.processDocument(imageFile);
 	}
