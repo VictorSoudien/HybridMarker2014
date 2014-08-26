@@ -6,8 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="menu_option_Pen">Pen</string>
     <string name="menu_option_Eraser">Eraser</string>
-    
     <string name="menu_option_recog_gesture">Detect</string>
-    
+    <string name="title_activity_pdf_display_screen">PDFDisplay</string>
 
 </resources>
