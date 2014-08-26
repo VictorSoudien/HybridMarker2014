@@ -1,15 +1,10 @@
 package com.VictorZahraa.hybridmarker;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.ImageView;
 
 public class PdfDisplayScreenActivity extends Activity {
 
@@ -18,10 +13,13 @@ public class PdfDisplayScreenActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pdf_display_screen);
 
-		if (savedInstanceState == null) {
+		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
+		}*/
+		
+		ImageView imageView = (ImageView) findViewById(R.id.imageView1);
+		imageView.setImageResource(R.drawable.warlock);
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class PdfDisplayScreenActivity extends Activity {
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	/*public static class PlaceholderFragment extends Fragment {
 
 		public PlaceholderFragment() {
 		}
@@ -59,6 +57,5 @@ public class PdfDisplayScreenActivity extends Activity {
 					R.layout.fragment_pdf_display_screen, container, false);
 			return rootView;
 		}
-	}
-
+	}*/
 }

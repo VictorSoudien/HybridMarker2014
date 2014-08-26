@@ -25,5 +25,6 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/menu_option_recog_gesture"/>
+    <item android:id="@+id/menu_option_view_pdf" android:title="View PDF" android:orderInCategory="100"></item>
 
 </menu>

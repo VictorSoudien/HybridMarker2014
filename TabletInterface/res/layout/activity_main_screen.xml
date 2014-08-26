@@ -7,15 +7,23 @@
     android:columnCount="2"
     tools:context="com.VictorZahraa.hybridmarker.MainScreenActivity"
     tools:ignore="MergeRootFrame" >
+    
+   <ImageView
+        android:id="@+id/tempImageView"
+        android:layout_width="1150dp"
+        android:layout_height="match_parent"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:src="@drawable/warlock" />
 
-    <RelativeLayout
+   <RelativeLayout
         android:id="@+id/canvas_container"
         android:layout_width="1150dp"
         android:layout_height="match_parent"
         android:layout_column="0"
         android:layout_gravity="left|top"
         android:layout_row="0" 
-        android:background="@android:color/white" >
+        android:background="@android:color/transparent" >
 
     </RelativeLayout>
 
