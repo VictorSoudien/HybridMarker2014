@@ -70,7 +70,6 @@ public class MemoProcessor
 			// Question 1 treated separately since nothing before it should be added to the array list
 			if ((line.indexOf("Question 1") == 0) || (line.indexOf("question 1") == 0))
 			{
-				//questions.add(temp);
 				temp = line;
 			}
 			else if ((line.indexOf("Question") == 0) || (line.indexOf("question") == 0))
@@ -87,7 +86,59 @@ public class MemoProcessor
 		// Add the lines of the last quesiton
 		questions.add(temp);
 		
-		System.out.println (questions.get(2));
+		splitIntoQuestionsAndAnswers(questions);
+		//System.out.println (questions.get(4));
+	}
+	
+	// Processes each question into the question and associated answer
+	private void splitIntoQuestionsAndAnswers(ArrayList<String> sections)
+	{
+		int iterCounter = 0;
+		
+		for (String question : sections)
+		{
+			iterCounter++;
+			
+			String [] lines = question.split("\\n");
+			
+			String questionNumber = "Question " + iterCounter;
+			String totalMarkAllocation = lines[0].substring(lines[0].indexOf("["));
+			
+			ArrayList<String> subQuestions = new ArrayList<String>();
+			ArrayList<String> subAnswers = new ArrayList<String>();
+			
+			boolean startOfAnswerFound = false;
+			String tempQuestion = "";
+			String tempAnswer = "";
+			
+			for (int i = 1; i < lines.length; i++)
+			{
+				String currentLine = lines[i];
+				
+				if (currentLine.contains("["))
+				{
+					startOfAnswerFound = true;
+					
+					tempQuestion += currentLine;
+					subQuestions.add(tempQuestion);
+					tempQuestion = "";
+					
+					continue;
+				}
+				else if (startOfAnswerFound == true)
+				{
+					// HOW DO I DETERMINE THE END OF THE QUESTION
+					tempAnswer += currentLine;
+					continue;
+				}
+				else
+				{
+					tempQuestion += currentLine;
+				}
+			}
+			
+			System.out.println (questionNumber + "\t" + totalMarkAllocation);
+		}
 	}
 	
 	public static void main (String [] args)
