@@ -87,11 +87,11 @@ public class MemoProcessor
 		// Add the lines of the last quesiton
 		questions.add(temp);
 		
-		System.out.println (questions.get(0));
+		System.out.println (questions.get(2));
 	}
 	
 	public static void main (String [] args)
 	{
-		MemoProcessor mProc = new MemoProcessor("ClassTest4.pdf");
+		MemoProcessor mProc = new MemoProcessor("ClassTest4_MovedMarkAllocation.pdf");
 	}
 }
