@@ -127,7 +127,7 @@ public class MemoProcessor
 				}
 				else if (startOfAnswerFound == true)
 				{
-					// HOW DO I DETERMINE THE END OF THE QUESTION
+					// HOW DO I DETERMINE THE END OF AN AMSWER SECTION
 					tempAnswer += currentLine;
 					continue;
 				}
