@@ -4,7 +4,9 @@
  * Student Number: SDNVIC001
  */
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Properties;
 
 import javax.mail.*;
@@ -105,9 +107,10 @@ public class EmailMonitor
 								String attachedFileName = bodyPart.getFileName();
 								//bodyPart.saveFile("Downloads/" + attachedFileName); // Save the attachment
 								
-								File scannedPDF = null;
+								File scannedPDF = new File("Attachment.pdf"); // <-- CREATES FILE ON DISK
 								bodyPart.saveFile(scannedPDF);
 								
+								// Send the pdf for processing in order to determine test name
 								PDFProcessor pdfProc = new PDFProcessor();
 								pdfProc.processDocument(scannedPDF);
 								
