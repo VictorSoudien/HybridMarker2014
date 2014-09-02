@@ -4,16 +4,27 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.samsung.spen.settings.SettingStrokeInfo;
+import com.samsung.spensdk.SCanvasView;
+import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
 	
 	private TextView questionTextView;
 	private TextView answerTextView;
+	
+	private Context context;
+	private RelativeLayout sCanvasContainer;
+	private SCanvasView sCanvasView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -62,6 +73,28 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 "\n You happen to be visiting the Petersens at this point, and want to impress them with the problem solving skills you’ve learnt at university. Using the information they’ve provided, determine how many of each colour party packet they need to buy and how many of each colour they need to allocate to each family and what the total number of party packets are." +
 
 "\n Use a diagram to show how you solve the problem.");
+		
+		
+		
+		
+		// Set up the SCanvas on which marks will be made
+		context = this;
+        sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);
+        sCanvasView = new SCanvasView(context);
+        
+        // Perform certain actions when the canvas is initialized
+        sCanvasView.setSCanvasInitializeListener(new SCanvasInitializeListener() {
+			
+			@Override
+			public void onInitialized() 
+			{
+			   SettingStrokeInfo strokeInfo = new SettingStrokeInfo();
+			   strokeInfo.setStrokeColor(Color.RED);
+			   sCanvasView.setSettingStrokeInfo(strokeInfo);
+			}
+		});
+        
+        sCanvasContainer.addView(sCanvasView);
 		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
