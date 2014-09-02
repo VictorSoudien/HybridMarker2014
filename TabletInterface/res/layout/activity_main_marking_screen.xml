@@ -4,16 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.VictorZahraa.hybridmarker.MainMarkingScreenActivity"
-    tools:ignore="MergeRootFrame" >
-    
-    
-    <!-- Code from www.androidhive.info/2013/10/android-tab-layout-with-swipeable-views-1/" -->
-    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-	</android.support.v4.view.ViewPager>
-    <!-- End of tutorial code -->
+    tools:ignore="MergeRootFrame" >    
     
     </FrameLayout>
 

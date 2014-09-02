@@ -11,7 +11,6 @@ import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 
 import com.samsung.samm.common.SObject;
 import com.samsung.samm.common.SObjectStroke;
-import com.samsung.sdraw.StrokeInfo;
 import com.samsung.spen.lib.gesture.SPenGestureInfo;
 import com.samsung.spen.lib.gesture.SPenGestureLibrary;
 import com.samsung.spen.settings.SettingStrokeInfo;
