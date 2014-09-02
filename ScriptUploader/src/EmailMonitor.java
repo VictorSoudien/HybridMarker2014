@@ -4,9 +4,7 @@
  * Student Number: SDNVIC001
  */
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Properties;
 
 import javax.mail.*;
