@@ -10,12 +10,16 @@ import java.util.ArrayList;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 
-public class MemoProcessor 
+public class MemoProcessor
 {
 	private File memoToProcess;
+	private String memoName;
 	
 	public MemoProcessor(String filename)
 	{
+		memoName = filename.split("\\.")[0].replaceAll(" ", "_");
+		memoName += ".txt";
+		
 		openFile(filename);
 		getMemoText();
 	}
@@ -44,12 +48,9 @@ public class MemoProcessor
 			
 			PDFTextStripper textStripper = new PDFTextStripper();
 			textStripper.setStartPage(2);
-			//textStripper.setAddMoreFormatting(true);
 			String extractedText = textStripper.getText(pdf);
 			
 			splitTextIntoQuestions(extractedText);
-			
-			//System.out.println (extractedText);
 		}
 		catch (IOException e)
 		{
@@ -67,6 +68,7 @@ public class MemoProcessor
 		
 		for (String line : lines)
 		{
+			line = line.trim();
 			// Question 1 treated separately since nothing before it should be added to the array list
 			if ((line.indexOf("Question 1") == 0) || (line.indexOf("question 1") == 0))
 			{
@@ -87,62 +89,114 @@ public class MemoProcessor
 		questions.add(temp);
 		
 		splitIntoQuestionsAndAnswers(questions);
-		//System.out.println (questions.get(4));
+		//System.out.println (questions.get(0));
 	}
 	
 	// Processes each question into the question and associated answer
 	private void splitIntoQuestionsAndAnswers(ArrayList<String> sections)
 	{
-		int iterCounter = 0;
+		PrintWriter writer = null;
 		
-		for (String question : sections)
+		try
 		{
-			iterCounter++;
+			writer = new PrintWriter(new File (memoName));
 			
-			String [] lines = question.split("\\n");
+			int iterCounter = 0;
 			
-			String questionNumber = "Question " + iterCounter;
-			String totalMarkAllocation = lines[0].substring(lines[0].indexOf("["));
-			
-			ArrayList<String> subQuestions = new ArrayList<String>();
-			ArrayList<String> subAnswers = new ArrayList<String>();
-			
-			boolean startOfAnswerFound = false;
-			String tempQuestion = "";
-			String tempAnswer = "";
-			
-			for (int i = 1; i < lines.length; i++)
+			for (String question : sections)
 			{
-				String currentLine = lines[i];
+				iterCounter++;
 				
-				if (currentLine.contains("["))
+				String [] lines = question.split("\\n");
+				
+				String questionNumber = "Question " + iterCounter;
+				String totalMarkAllocation = lines[0].substring(lines[0].indexOf("["));
+				
+				ArrayList<String> subQuestions = new ArrayList<String>();
+				ArrayList<String> subAnswers = new ArrayList<String>();
+				
+				boolean startOfAnswerFound = false;
+				String tempQuestion = "";
+				String tempAnswer = "";
+				String prevLine = "null";
+				
+				for (int i = 1; i < lines.length; i++)
 				{
-					startOfAnswerFound = true;
+					String currentLine = lines[i] + "\n";
 					
-					tempQuestion += currentLine;
-					subQuestions.add(tempQuestion);
-					tempQuestion = "";
+					if (currentLine.equals(prevLine))
+					{
+						continue;
+					}
+					else
+					{
+						prevLine = currentLine;
+					}
 					
-					continue;
+					// if there is a closing square bracket at the end of a line then it's the last line of a question
+					if (currentLine.split("]$").length != 1)
+					{
+						startOfAnswerFound = true;
+						
+						tempQuestion += currentLine;
+						subQuestions.add(tempQuestion);
+						tempQuestion = "";
+						
+						continue;
+					}
+					else if (startOfAnswerFound == true)
+					{
+						int indexOfEndMarker = currentLine.indexOf("{end}");
+						
+						// Check if this is the last line of the answer
+						if (indexOfEndMarker != -1)
+						{
+							startOfAnswerFound = false;
+							
+							tempAnswer += currentLine.substring(0, indexOfEndMarker);
+							subAnswers.add(tempAnswer);
+							tempAnswer = "";
+						}
+						else
+						{
+							tempAnswer += currentLine;
+						}
+						
+						continue;
+					}
+					else
+					{
+						tempQuestion += currentLine;
+					}
 				}
-				else if (startOfAnswerFound == true)
+				
+				writer.println(questionNumber + "\t" + totalMarkAllocation);
+				
+				for (int i = 0; i < subQuestions.size(); i++)
 				{
-					// HOW DO I DETERMINE THE END OF AN AMSWER SECTION
-					tempAnswer += currentLine;
-					continue;
-				}
-				else
-				{
-					tempQuestion += currentLine;
+					writer.println ("Question:");
+					writer.println (subQuestions.get(i));
+					writer.println ("Answer:");
+					writer.println (subAnswers.get(i));
 				}
 			}
-			
-			System.out.println (questionNumber + "\t" + totalMarkAllocation);
+		}
+		catch (Exception e)
+		{
+			System.out.println ("Error while writing memo data to file: " + memoName);
+		}
+		finally
+		{
+			if (writer != null)
+			{
+				writer.close();
+				System.out.println ("Memo data written to file: " + memoName);
+			}
 		}
 	}
 	
 	public static void main (String [] args)
 	{
-		MemoProcessor mProc = new MemoProcessor("ClassTest4_MovedMarkAllocation.pdf");
+		MemoProcessor mProc = new MemoProcessor("endMarkers.pdf");
 	}
 }

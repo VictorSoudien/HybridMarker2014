@@ -1,0 +1,223 @@
+Question 1	[5 marks]
+Question:
+
+Consider the following problem. Answer it appropriately.
+
+The Petersens have recently moved to a new town and are arranging a surprise birthday
+party for their son Andre, and have invited three families from the neighbourhood, the Smiths,
+the Januarys and the Hectors. They plan to make up party packets for the kids to take home
+after the party, blue for boys and pink for girls.
+
+Being super organised, Mrs Petersen with the help of Mr Petersen wants to determine how
+many of each colour party packet she needs to buy, and also how many of each colour she
+needs to put aside for each family.
+
+They sit down and come up with the following information. Mrs Petersen remembers that the
+Hectors have a “pigeon pair”, i.e. a boy and a girl. Mr Petersen recalls that the Januarys
+only have a set of identical twin boys. Mrs Petersen notes that she’s only ever noticed two
+girls from these local families to come over to play. Mr Petersen notes that the Smiths have
+three children, since the family fits nicely into their family sedan when they go out.
+
+You happen to be visiting the Petersens at this point, and want to impress them with the
+problem solving skills you’ve learnt at university. Using the information they’ve provided,
+determine how many of each colour party packet they need to buy and how many of each
+colour they need to allocate to each family and what the total number of party packets are.
+
+Use a diagram to show how you solve the problem.      [5]
+
+Answer:
+
+Smiths Januaries Hectors
+Blue/boys 2 2 1 5
+Pink/girls 1 0 1 2
+3 2 2 7
+
+# 1 for grid
+# 1 for headings/labels
+# 0.5 * 6 = 3 for given values
+# 0.5 * 6 = 3 for derived values 
+Question 2	[7 marks]
+Question:
+
+Answer the following questions:
+
+a) When using debugging features in an IDE, what should the user typically do once
+execution has reached the breakpoint?       [2]
+
+Answer:
+
+Step over each line in program #1
+
+Watches variables #1     
+Question:
+
+b) When a new module has been defined, how do you ensure that it is accessible and can be
+imported into a program with no problems, i.e. “import newmodule” works?  [1]
+
+Answer:
+
+Save it in same file #1 or   Save it in Python\Lib directory #1 
+Question:
+
+c) Explain what happens in memory when Python makes successive recursive function calls.
+[1]
+
+Answer:
+
+Each function call/copy is placed on runtime/memory stack #1  
+Question:
+
+Indicate whether the following statements are True or False.
+
+d) The accepted Python coding convention for module names is long descriptive names in
+uppercase.           [1]
+
+Answer:
+
+false         
+Question:
+
+e) Curly brackets {} are used to enclose parameters to a function.    [1]
+
+Answer:
+
+false         
+Question:
+
+f) The print() function can be used to write to a file.      [1]
+
+Answer:
+
+true         
+Question 3	[6 marks]
+Question:
+
+Write a Python function called draw_line() which draws a line of horizontal line of characters.
+The draw_line() function should take two parameters, with the first being the size of the line
+(i.e. the number of characters) and the second parameter being the character with which to
+draw the line. This character parameter should have a default value of an asterisk (‘*’).
+
+Calling the draw_line() function with the following parameters should produce the
+corresponding output:
+
+draw_line(5)   produces   *****
+draw_line(6,’$’)      $$$$$$ [6]
+
+Answer:
+
+def draw_line(size,char='*'): #2
+for i in range(size): #1
+print(char,end='') #2
+print() #1    or  print(char * size) #4
+
+Question 4	[7 marks]
+Question:
+
+Consider the following recursive function definition:
+
+def do_this(stuff):
+if len(stuff) == 0:
+return ""
+else:
+return str(stuff[0] * 2) + do_this(stuff[1:])
+
+a) What datatype can the parameter to this function be?     [2]
+
+Answer:
+
+List, string #2
+
+Or sequence #2       
+Question:
+
+b) What is the base case for this function?       [1]
+
+Answer:
+
+Empty list/string/sequence #1      
+Question:
+5
+
+c)   Based on the do_this() function definition, what will the following statements display?
+
+i. print(do_this([1,2,3]))       [2]
+
+Answer:
+
+246 #2       
+Question:
+
+ii. print(do_this(“123”))       [2]
+
+Answer:
+
+112233 #2      
+Question 5	[4 marks]
+Question:
+
+Consider the following Python program and answer the questions below:
+
+def main():
+f = open('to_do_list.txt','a')
+while True:
+thing_to_do = input('Enter thing to do:')
+if thing_to_do == 'done': break
+else:
+f.write(thing_to_do + '\n')
+f.close()
+
+main()
+
+a) What is the name of the file created?       [1]
+
+Answer:
+
+To_do_list.txt       
+Question:
+
+b)  What mode is the file created in?        [1]
+
+Answer:
+
+append        
+Question:
+
+c)  Looking at the code, how does the user terminate the program?    [1]
+
+Answer:
+
+Entering done       
+Question:
+
+d)  How will the information that the user enters be written in the file?    [1]
+
+Answer:
+
+Each thing on a new line     
+Question 6	[6 marks]
+Question:
+
+Consider the following definition of the classify_weight() function. Specify test cases which
+thoroughly test the function, using equivalence classes and boundary value. For each test case
+specify whether it is an equivalence class value or a boundary value.
+
+# classifies weight in kgs
+def classify_weight(w):
+if 0 < w <= 60:
+return "light"
+elif 60 < w <= 120:
+return "heavy"
+else:
+return "error"
+[6]
+
+Answer:
+
+any value between 0 and 60 – equivalence class value #1
+any value between 60 and 120 – equivalence class value #1
+any value not between 0 and 120 – equivalence class value #1
+0 – boundary value #1
+60 – boundary value #1
+120 – boundary value #1
+
+
