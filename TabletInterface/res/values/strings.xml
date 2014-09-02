@@ -8,5 +8,6 @@
     <string name="menu_option_Eraser">Eraser</string>
     <string name="menu_option_recog_gesture">Detect</string>
     <string name="title_activity_pdf_display_screen">PDFDisplay</string>
+    <string name="title_activity_main_marking_screen">MainMarkingScreenActivity</string>
 
 </resources>
