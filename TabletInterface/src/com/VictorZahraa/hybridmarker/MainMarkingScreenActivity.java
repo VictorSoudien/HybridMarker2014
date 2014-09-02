@@ -7,9 +7,13 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
+	
+	private TextView questionTextView;
+	private TextView answerTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -31,6 +35,34 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		actionBar.addTab(actionBar.newTab().setText("Mark Summary").setTabListener(this));
 
+		questionTextView = (TextView) findViewById(R.id.questionText);
+		
+		questionTextView.setText("Consider the following problem. Answer it appropriately." + 
+
+"\n The Petersens have recently moved to a new town and are arranging a surprise birthday party for their son Andre, and have invited three families from the neighbourhood, the Smiths, the Januarys and the Hectors. They plan to make up party packets for the kids to take home after the party, blue for boys and pink for girls. " +
+
+"\n Being super organised, Mrs Petersen with the help of Mr Petersen wants to determine how many of each colour party packet she needs to buy, and also how many of each colour she needs to put aside for each family." +
+
+"\n They sit down and come up with the following information. Mrs Petersen remembers that the Hectors have a “pigeon pair”, i.e. a boy and a girl. Mr Petersen recalls that the Januarys only have a set of identical twin boys. Mrs Petersen notes that she’s only ever noticed two girls from these local families to come over to play. Mr Petersen notes that the Smiths have three children, since the family fits nicely into their family sedan when they go out." +
+
+"\n You happen to be visiting the Petersens at this point, and want to impress them with the problem solving skills you’ve learnt at university. Using the information they’ve provided, determine how many of each colour party packet they need to buy and how many of each colour they need to allocate to each family and what the total number of party packets are." +
+
+"\n Use a diagram to show how you solve the problem.");
+		
+		answerTextView = (TextView) findViewById(R.id.answerText);
+		
+		answerTextView.setText("Consider the following problem. Answer it appropriately." + 
+
+"\n The Petersens have recently moved to a new town and are arranging a surprise birthday party for their son Andre, and have invited three families from the neighbourhood, the Smiths, the Januarys and the Hectors. They plan to make up party packets for the kids to take home after the party, blue for boys and pink for girls. " +
+
+"\n Being super organised, Mrs Petersen with the help of Mr Petersen wants to determine how many of each colour party packet she needs to buy, and also how many of each colour she needs to put aside for each family." +
+
+"\n They sit down and come up with the following information. Mrs Petersen remembers that the Hectors have a “pigeon pair”, i.e. a boy and a girl. Mr Petersen recalls that the Januarys only have a set of identical twin boys. Mrs Petersen notes that she’s only ever noticed two girls from these local families to come over to play. Mr Petersen notes that the Smiths have three children, since the family fits nicely into their family sedan when they go out." +
+
+"\n You happen to be visiting the Petersens at this point, and want to impress them with the problem solving skills you’ve learnt at university. Using the information they’ve provided, determine how many of each colour party packet they need to buy and how many of each colour they need to allocate to each family and what the total number of party packets are." +
+
+"\n Use a diagram to show how you solve the problem.");
+		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
