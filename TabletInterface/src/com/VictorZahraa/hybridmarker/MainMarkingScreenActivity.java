@@ -1,8 +1,11 @@
 package com.VictorZahraa.hybridmarker;
 
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,17 +14,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
-public class MainMarkingScreenActivity extends Activity {
+public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
+{
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_marking_screen);
+		this.setTitle(R.string.app_name);
+		
+		ActionBar actionBar = this.getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		
+		// Add tabs to the action bar
+		actionBar.addTab(actionBar.newTab().setText("Question 1").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Question 2").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Question 3").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Question 4").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Question 5").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Question 6").setTabListener(this));
+		
+		actionBar.addTab(actionBar.newTab().setText("Mark Summary").setTabListener(this));
 
-		if (savedInstanceState == null) {
+		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
+		}*/
 	}
 
 	@Override
@@ -44,10 +63,28 @@ public class MainMarkingScreenActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) 
+	{
+		
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	/*public static class PlaceholderFragment extends Fragment {
 
 		public PlaceholderFragment() {
 		}
@@ -59,6 +96,5 @@ public class MainMarkingScreenActivity extends Activity {
 					R.layout.fragment_main_marking_screen, container, false);
 			return rootView;
 		}
-	}
-
+	}*/
 }
