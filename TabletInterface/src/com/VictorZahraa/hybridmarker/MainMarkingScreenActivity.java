@@ -6,15 +6,23 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.samsung.samm.common.SObjectStroke;
+import com.samsung.sdraw.StrokeInfo;
 import com.samsung.spen.settings.SettingStrokeInfo;
 import com.samsung.spensdk.SCanvasView;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
+import com.samsung.spensdk.applistener.SCanvasLongPressListener;
+import com.samsung.spensdk.applistener.SPenTouchListener;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
@@ -82,7 +90,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
         sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);
         sCanvasView = new SCanvasView(context);
         
-        // Perform certain actions when the canvas is initialized
+        // Set the properties of the SPen Stroke
         sCanvasView.setSCanvasInitializeListener(new SCanvasInitializeListener() {
 			
 			@Override
@@ -90,7 +98,25 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			{
 			   SettingStrokeInfo strokeInfo = new SettingStrokeInfo();
 			   strokeInfo.setStrokeColor(Color.RED);
+			   strokeInfo.setStrokeWidth(1.0f);
 			   sCanvasView.setSettingStrokeInfo(strokeInfo);
+			}
+		});
+        
+        sCanvasView.setSCanvasLongPressListener(new SCanvasLongPressListener() {
+			
+			@Override
+			public void onLongPressed(float arg0, float arg1) 
+			{
+				Toast t = Toast.makeText(context, "Long Press args", Toast.LENGTH_SHORT);
+				t.show();
+			}
+			
+			@Override
+			public void onLongPressed() 
+			{
+				Toast t = Toast.makeText(context, "Long Press", Toast.LENGTH_SHORT);
+				t.show();
 			}
 		});
         
