@@ -24,7 +24,7 @@
 	        <ScrollView
 	            android:id="@+id/questionTextScrollView"
 	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content" 
+	            android:layout_height="match_parent" 
 	            android:layout_weight="1">
 	
 	            <LinearLayout
@@ -46,7 +46,7 @@
 	         <ScrollView
 	            android:id="@+id/answerTextScrollView"
 	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content" 
+	            android:layout_height="match_parent" 
 	            android:layout_weight="1">
 	
 	            <LinearLayout

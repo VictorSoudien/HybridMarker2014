@@ -109,6 +109,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 "\n Use a diagram to show how you solve the problem.");
 		
+		//answerTextView.setText("Hello World! I'm the Answer.");
+		
 		
 		
 		// Set up the SCanvas on which marks will be made
