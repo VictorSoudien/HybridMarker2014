@@ -12,7 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 {
 	private TextView questionTextView;
 	private TextView answerTextView;
+	private ScrollView scriptScrollView;
+	private ImageView scriptDisplay;
+	
+	// Used to display short messages to the user
+	private Toast toast;
 	
 	private Context context;
 	private RelativeLayout sCanvasContainer;
@@ -39,6 +46,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_marking_screen);
 		this.setTitle(R.string.app_name);
+		
+		scriptScrollView = (ScrollView) findViewById(R.id.scriptDisplayScrollView);
+		
+		scriptDisplay = (ImageView) findViewById(R.id.scriptDisplay);
 		
 		ActionBar actionBar = this.getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -83,7 +94,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		
 		
-		
 		// Set up the SCanvas on which marks will be made
 		context = this;
         sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);
@@ -107,15 +117,13 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			@Override
 			public void onLongPressed(float arg0, float arg1) 
 			{
-				Toast t = Toast.makeText(context, "Long Press args", Toast.LENGTH_SHORT);
-				t.show();
+				displayToast ("Long Press Args");
 			}
 			
 			@Override
 			public void onLongPressed() 
 			{
-				Toast t = Toast.makeText(context, "Long Press", Toast.LENGTH_SHORT);
-				t.show();
+				displayToast ("Long Press");
 			}
 		});
         
@@ -150,7 +158,17 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) 
 	{
+		// Reset the scroll view when a new tab is selected
+		scriptScrollView.setScrollY(0);
 		
+		if (tab.getText().equals("Question 2"))
+		{
+			scriptDisplay.setImageResource(R.drawable.page2);
+		}
+		else
+		{
+			scriptDisplay.setImageResource(R.drawable.page1);
+		}
 	}
 
 	@Override
@@ -165,6 +183,21 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 	}
 
+	// Displays a toast containing the specified message
+	private void displayToast(String message)
+	{
+		if (toast == null)
+		{
+			toast= Toast.makeText(context, message, Toast.LENGTH_SHORT);
+		}
+		else
+		{
+			toast.setText(message);
+		}
+		
+		toast.show();
+	}
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */

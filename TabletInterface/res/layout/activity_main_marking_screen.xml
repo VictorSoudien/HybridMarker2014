@@ -68,7 +68,7 @@
 	
 	    <ScrollView
 	        android:id="@+id/scriptDisplayScrollView"
-	        android:layout_width="wrap_content"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1" 
 	        android:background="@android:color/darker_gray">
@@ -82,7 +82,7 @@
 	       		    android:id="@+id/scriptDisplay"
 	       		    android:layout_width="match_parent"
 	       		    android:layout_height="wrap_content"
-	       		    android:src="@drawable/warlock" />
+	       		    android:src="@drawable/page1" />
 	
 	        </LinearLayout>
 	    </ScrollView>
