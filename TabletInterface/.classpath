@@ -6,6 +6,5 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="lib" path="libs/libspen23.jar"/>
-	<classpathentry kind="lib" path="libs/pdfbox-app-1.8.6.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
