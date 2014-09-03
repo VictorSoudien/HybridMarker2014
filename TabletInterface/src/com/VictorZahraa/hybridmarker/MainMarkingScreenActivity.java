@@ -119,8 +119,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			}
 		});
         
-        
-        
         sCanvasContainer.addView(sCanvasView);
         
 		/*if (savedInstanceState == null) {
