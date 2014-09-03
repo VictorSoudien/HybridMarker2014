@@ -51,6 +51,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		scriptDisplay = (ImageView) findViewById(R.id.scriptDisplay);
 		
+		// Scale the image so that it fills the display area
+		scriptDisplay.setScaleX(1.2f);
+		scriptDisplay.setScaleY(1.2f);
+		
 		ActionBar actionBar = this.getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
