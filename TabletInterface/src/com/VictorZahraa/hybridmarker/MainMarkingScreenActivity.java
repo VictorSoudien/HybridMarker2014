@@ -1,5 +1,6 @@
 package com.VictorZahraa.hybridmarker;
 
+import android.animation.ObjectAnimator;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.ActionBar;
@@ -12,11 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
 
 import com.samsung.samm.common.SObjectStroke;
 import com.samsung.sdraw.StrokeInfo;
@@ -30,7 +34,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 {
 	private TextView questionTextView;
 	private TextView answerTextView;
-	private ScrollView scriptScrollView;
+	private ScrollViewHelper scriptScrollView;
 	private ImageView scriptDisplay;
 	
 	// Used to display short messages to the user
@@ -47,7 +51,16 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		setContentView(R.layout.activity_main_marking_screen);
 		this.setTitle(R.string.app_name);
 		
-		scriptScrollView = (ScrollView) findViewById(R.id.scriptDisplayScrollView);
+		scriptScrollView = (ScrollViewHelper) findViewById(R.id.scriptDisplayScrollView);
+		scriptScrollView.setOnScrollViewListener(new OnScrollViewListner() {
+			
+			@Override
+			public void onScrollChanged(ScrollViewHelper scrollView, int l, int t,
+					int prevL, int prevT) {
+				sCanvasView.setScrollY(scriptScrollView.getScrollY());
+				sCanvasContainer.setScrollY(scriptScrollView.getScrollY());
+			}
+		});
 		
 		scriptDisplay = (ImageView) findViewById(R.id.scriptDisplay);
 		
@@ -192,7 +205,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	{
 		if (toast == null)
 		{
-			toast= Toast.makeText(context, message, Toast.LENGTH_SHORT);
+			toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
 		}
 		else
 		{
