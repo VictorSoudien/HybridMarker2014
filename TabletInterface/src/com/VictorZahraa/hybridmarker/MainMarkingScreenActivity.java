@@ -26,7 +26,6 @@ import com.samsung.spensdk.applistener.SPenTouchListener;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
-	
 	private TextView questionTextView;
 	private TextView answerTextView;
 	
