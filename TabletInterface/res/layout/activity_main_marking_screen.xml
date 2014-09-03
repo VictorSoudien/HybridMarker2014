@@ -77,25 +77,32 @@
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:orientation="vertical" >
-	
-	            <ImageView
-	                android:id="@+id/scriptDisplay"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:src="@drawable/warlock" />
+
+	       		<ImageView
+	       		    android:id="@+id/scriptDisplay"
+	       		    android:layout_width="match_parent"
+	       		    android:layout_height="wrap_content"
+	       		    android:src="@drawable/warlock" />
 	
 	        </LinearLayout>
 	    </ScrollView>
 	    
 	</LinearLayout>
-
+	
+	<RelativeLayout
+	    android:id="@+id/canvasAnchorPoint"
+	    android:layout_width="558dp"
+	    android:layout_height="match_parent"
+	    android:layout_alignParentLeft="true"
+	    android:background="@android:color/transparent" >
+	</RelativeLayout>
+	
 	<RelativeLayout
 	    android:id="@+id/markingScreenCanvasContainer"
-	    android:layout_width="722dp"
+	    android:layout_width="690dp"
 	    android:layout_height="match_parent"
-	    android:layout_alignParentRight="true"
+	    android:layout_toRightOf="@id/canvasAnchorPoint"
 	    android:background="@android:color/transparent" >
-
 	</RelativeLayout>
 	
 </RelativeLayout>

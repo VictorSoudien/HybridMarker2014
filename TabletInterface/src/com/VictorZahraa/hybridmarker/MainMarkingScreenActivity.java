@@ -122,7 +122,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
         
         
         sCanvasContainer.addView(sCanvasView);
-		
+        
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
