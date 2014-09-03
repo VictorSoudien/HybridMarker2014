@@ -182,11 +182,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		if (tab.getText().equals("Question 2"))
 		{
-			scriptDisplay.setImageResource(R.drawable.page2);
+			scriptDisplay.setImageResource(R.drawable.page2a);
 		}
 		else
 		{
-			scriptDisplay.setImageResource(R.drawable.page1);
+			scriptDisplay.setImageResource(R.drawable.page1a);
 		}
 	}
 
