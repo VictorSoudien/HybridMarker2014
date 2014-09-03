@@ -99,7 +99,7 @@
 	
 	<RelativeLayout
 	    android:id="@+id/markingScreenCanvasContainer"
-	    android:layout_width="690dp"
+	    android:layout_width="680dp"
 	    android:layout_height="match_parent"
 	    android:layout_toRightOf="@id/canvasAnchorPoint"
 	    android:background="@android:color/transparent" >
