@@ -46,10 +46,10 @@ public class PDFToImage
 			
 			for (int i = 1; i < pages.size(); i++)
 			{
-				BufferedImage tempImage = pages.get(0).convertToImage();
+				BufferedImage tempImage = pages.get(i).convertToImage();
 				File outputFile = new File (i + ".png");
 				ImageIO.write(tempImage, "png", outputFile);
-				System.out.println ("Saved Page " + 1);
+				System.out.println ("Saved Page " + i);
 			}
 		}
 		catch (Exception e)
@@ -60,7 +60,7 @@ public class PDFToImage
 	
 	public static void main (String [] args)
 	{
-		PDFToImage toImage = new PDFToImage("CSC");
+		PDFToImage toImage = new PDFToImage("Scanned Script.pdf");
 		toImage.convertToImages();
 	}
 }
