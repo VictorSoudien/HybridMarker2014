@@ -46,8 +46,8 @@ public class PDFToImage
 			
 			for (int i = 1; i < pages.size(); i++)
 			{
-				BufferedImage tempImage = pages.get(i).convertToImage(BufferedImage.TYPE_INT_RGB, 300);
-				File outputFile = new File (i + ".png");
+				BufferedImage tempImage = pages.get(i).convertToImage(BufferedImage.TYPE_INT_RGB, 200);
+				File outputFile = new File ("" + i + ".png");
 				ImageIO.write(tempImage, "png", outputFile);
 				System.out.println ("Saved Page " + i);
 			}

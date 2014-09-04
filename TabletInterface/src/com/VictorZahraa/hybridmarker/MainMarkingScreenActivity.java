@@ -7,7 +7,6 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -182,11 +181,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		if (tab.getText().equals("Question 2"))
 		{
-			scriptDisplay.setImageResource(R.drawable.page2a);
+			scriptDisplay.setImageResource(R.drawable.page2200dpi);
 		}
 		else
 		{
-			scriptDisplay.setImageResource(R.drawable.page1a);
+			scriptDisplay.setImageResource(R.drawable.page1200dpi);
 		}
 	}
 
