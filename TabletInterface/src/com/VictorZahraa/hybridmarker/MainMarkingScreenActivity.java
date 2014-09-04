@@ -1,5 +1,8 @@
 package com.VictorZahraa.hybridmarker;
 
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.ActionBar;
@@ -7,6 +10,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -17,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
+import com.samsung.spen.lib.gesture.SPenGestureLibrary;
 import com.samsung.spen.settings.SettingStrokeInfo;
 import com.samsung.spensdk.SCanvasConstants;
 import com.samsung.spensdk.SCanvasView;
@@ -37,6 +42,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	private Context context;
 	private RelativeLayout sCanvasContainer;
 	private SCanvasView sCanvasView;
+	
+	// Required for gesture recognition
+	private SPenGestureLibrary gestureLib;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -105,6 +113,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		//answerTextView.setText("Hello World! I'm the Answer.");
 		
 		initiliseSCanvas();
+		loadGestureLibrary();
 		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -192,6 +201,50 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
         sCanvasContainer.addView(sCanvasView);
 	}
 
+	// Load the custom gesture library
+	public void loadGestureLibrary()
+	{
+		gestureLib = new SPenGestureLibrary(MainMarkingScreenActivity.this);
+        gestureLib.openSPenGestureEngine();
+        
+        // Get the path to external storage
+        String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
+        
+        // Load the gesture library from the SD Card
+        if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
+    	{
+    		displayToast("Custom Gesture Library Loaded");
+    	}
+        else // if the file is not found, then load it onto the SD Card
+        {	
+        	try
+        	{
+	        	InputStream inStream = getResources().openRawResource(R.raw.marking_gesture_data);
+	        	FileOutputStream outStream = new FileOutputStream(pathToSDCard + "/marking_gesture_data.dat");
+	        	int read = 0;
+	        	
+	        	byte [] buffer = new byte[1024];
+	        	
+	        	while ((read = inStream.read(buffer)) > 0)
+	        	{
+	        		outStream.write(buffer, 0, read);
+	        	}
+	        	
+	        	inStream.close();
+	        	outStream.close();
+        	}
+        	catch (Exception e)
+        	{
+        		displayToast("ERROR:" + e.getMessage());
+        	}
+        	
+        	if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
+        	{
+        		displayToast("Custom Gesture Library Loaded");
+        	}
+        }
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
