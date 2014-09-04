@@ -178,12 +178,14 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			@Override
 			public boolean onTouchPen(View arg0, MotionEvent arg1) {
 				// TODO Auto-generated method stub
-				
-				// Detect when the user lifts the pen
-				if (arg1.getAction() == (MotionEvent.ACTION_UP))
+				if (sCanvasView.getCanvasMode() == SCanvasConstants.SCANVAS_MODE_INPUT_PEN)
 				{
-					detectMultipleGestures((SCanvasView)arg0);
-					//displayToast("Gesture complete");
+					// Detect when the user lifts the pen
+					if (arg1.getAction() == (MotionEvent.ACTION_UP))
+					{
+						detectMultipleGestures((SCanvasView)arg0);
+						//displayToast("Gesture complete");
+					}
 				}
 				
 				return false;
@@ -349,7 +351,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
+		
 		int id = item.getItemId();
+		
 		if (id == R.id.action_settings) 
 		{
 			return true;
@@ -357,6 +361,19 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		else if (id == R.id.action_undo)
 		{
 			sCanvasView.undo();
+		}
+		else if (id == R.id.action_add_comment)
+		{
+			if (sCanvasView.getCanvasMode() == SCanvasConstants.SCANVAS_MODE_INPUT_PEN)
+			{
+				item.setIcon(R.drawable.ic_action_edit_selected);
+				sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_TEXT);
+			}
+			else if (sCanvasView.getCanvasMode() == SCanvasConstants.SCANVAS_MODE_INPUT_TEXT)
+			{
+				item.setIcon(R.drawable.ic_action_edit);
+				sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}

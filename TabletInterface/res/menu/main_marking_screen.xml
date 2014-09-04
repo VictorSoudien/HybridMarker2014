@@ -12,6 +12,12 @@
         android:id="@+id/action_undo" 
        	android:title="@string/action_undo"
     	android:icon="@drawable/ic_action_undo" 
+    	android:showAsAction="ifRoom"/>
+    
+    <item 
+        android:id="@+id/action_add_comment" 
+       	android:title="@string/action_add_comment"
+    	android:icon="@drawable/ic_action_edit" 
     	android:showAsAction="ifRoom"/>n
 
 </menu>
