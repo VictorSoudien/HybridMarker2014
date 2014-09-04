@@ -9,8 +9,11 @@ import java.io.*;
 import java.util.List;
 import java.util.Properties;
 
+import javax.imageio.ImageIO;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.interactive.action.PDPageAdditionalActions;
 
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
@@ -97,15 +100,59 @@ public class PDFProcessor
 		
 		String fileName = numberOfFiles + "-" + testName + "-" + uploadTime + ".pdf";
 		
-		directoryToSaveTo += fileName;
-		uploader.uploadFileToServer(directoryToSaveTo, fileToUpload);
+		///////////////// Upload pdf as multiple images /////////////////////////////
+		//String filename = numberOfFiles + "-" + testName + "-" + uploadTime + "/";
+		//directoryToSaveTo += filename;
+		String originalDir =  directoryToSaveTo;
+		
+		try
+		{
+			PDDocument pdf = PDDocument.load(fileToUpload);
+			List<PDPage> pages = pdf.getDocumentCatalog().getAllPages();
+			
+			for (int i = 0; i < pages.size(); i++)
+			{
+				directoryToSaveTo = originalDir;
+				
+				BufferedImage tempImage = pages.get(i).convertToImage(BufferedImage.TYPE_INT_RGB, 300);
+				File imageToUpload = new File("page" + (i + 1)  + ".png");
+				ImageIO.write(tempImage, "png", imageToUpload);
+				
+				String filename = numberOfFiles + "-" + testName + "-" + uploadTime + "/page" + (i+1) + ".png";
+				directoryToSaveTo += filename;
+				
+				File temp = new File("page" + (i + 1) + ".png");
+				temp = new File(imageToUpload.getAbsolutePath());
+				
+				// Check if the file exists
+				if (!temp.exists())
+				{
+					System.out.println ("Unable to open file: " + imageToUpload);
+					System.exit(0);
+				}
+				
+				uploader.uploadFileToServer(directoryToSaveTo, temp);
+				
+				System.out.println ("Uploaded page " + (i + 1));
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println ("Error while trying to convert pdf to images");
+		}
+		/////////////////////////////////////////////////////////////////////////////
+		
+		//directoryToSaveTo += fileName;
+		//uploader.uploadFileToServer(directoryToSaveTo, fileToUpload);
 		System.out.println ("File Uploaded PDF");
 	}
 	
 	public static void main(String[] args) 
 	{
-		File imageFile = new File("201408080948.pdf");
+		//File imageFile = new File("201408080948.pdf");
+		File imageFile = new File("ScannedScript.pdf");
 		PDFProcessor proc = new PDFProcessor();
 		proc.processDocument(imageFile);
+		System.out.println("Done, I need to stop, please help!!!");
 	}
 }
