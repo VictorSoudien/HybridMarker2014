@@ -1,6 +1,5 @@
 package com.VictorZahraa.hybridmarker;
 
-import android.animation.ObjectAnimator;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.ActionBar;
@@ -10,26 +9,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup.LayoutParams;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
-import com.samsung.samm.common.SObjectStroke;
-import com.samsung.sdraw.StrokeInfo;
 import com.samsung.spen.settings.SettingStrokeInfo;
 import com.samsung.spensdk.SCanvasView;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 import com.samsung.spensdk.applistener.SCanvasLongPressListener;
-import com.samsung.spensdk.applistener.SPenTouchListener;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
