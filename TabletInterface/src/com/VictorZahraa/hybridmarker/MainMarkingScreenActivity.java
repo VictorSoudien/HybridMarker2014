@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,9 +18,11 @@ import android.widget.Toast;
 
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
 import com.samsung.spen.settings.SettingStrokeInfo;
+import com.samsung.spensdk.SCanvasConstants;
 import com.samsung.spensdk.SCanvasView;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 import com.samsung.spensdk.applistener.SCanvasLongPressListener;
+import com.samsung.spensdk.applistener.SPenTouchListener;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
@@ -143,7 +147,48 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				displayToast ("Long Press");
 			}
 		});
+
+        sCanvasView.setSPenTouchListener(new SPenTouchListener() {
+			
+			@Override
+			public boolean onTouchPenEraser(View arg0, MotionEvent arg1) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean onTouchPen(View arg0, MotionEvent arg1) {
+				// TODO Auto-generated method stub
+				
+				// Detect when the user lifts the pen
+				if (arg1.getAction() == (MotionEvent.ACTION_UP))
+				{
+					displayToast("Gesture complete");
+				}
+				
+				return false;
+			}
+			
+			@Override
+			public boolean onTouchFinger(View arg0, MotionEvent arg1) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void onTouchButtonUp(View arg0, MotionEvent arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onTouchButtonDown(View arg0, MotionEvent arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
         
+        sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
         sCanvasContainer.addView(sCanvasView);
 	}
 
