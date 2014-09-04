@@ -2,6 +2,9 @@ package com.VictorZahraa.hybridmarker;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -9,6 +12,7 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
@@ -21,7 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
+import com.samsung.samm.common.SObject;
+import com.samsung.samm.common.SObjectStroke;
+import com.samsung.spen.lib.gesture.SPenGestureInfo;
 import com.samsung.spen.lib.gesture.SPenGestureLibrary;
+import com.samsung.spen.lib.input.SPenEvent;
+import com.samsung.spen.lib.input.SPenLibrary;
 import com.samsung.spen.settings.SettingStrokeInfo;
 import com.samsung.spensdk.SCanvasConstants;
 import com.samsung.spensdk.SCanvasView;
@@ -139,6 +148,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			   strokeInfo.setStrokeColor(Color.RED);
 			   strokeInfo.setStrokeWidth(1.0f);
 			   sCanvasView.setSettingStrokeInfo(strokeInfo);
+			   sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
 			}
 		});
         
@@ -172,7 +182,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				// Detect when the user lifts the pen
 				if (arg1.getAction() == (MotionEvent.ACTION_UP))
 				{
-					displayToast("Gesture complete");
+					detectMultipleGestures((SCanvasView)arg0);
+					//displayToast("Gesture complete");
 				}
 				
 				return false;
@@ -196,8 +207,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				
 			}
 		});
-        
-        sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
+     
         sCanvasContainer.addView(sCanvasView);
 	}
 
@@ -244,6 +254,87 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
         	}
         }
 	}
+	
+	// Detects multiple sPen gestures
+	public void detectMultipleGestures(SCanvasView view)
+    {
+    	LinkedList<SObject> sObjects = view.getSObjectList(true);
+    	
+    	// Used to keep track of the amount of each gesture
+    	HashMap<String, Integer> gestureCount = new HashMap<String, Integer>();
+    	
+    	if ((sObjects == null) || (sObjects.size() <= 0))
+    	{
+    		// No objects found
+    		return;
+    	}
+    	
+    	for (SObject objs : sObjects)
+    	{
+	    	PointF [][] currentPoints = new PointF[1][1];
+	    	currentPoints[0] = ((SObjectStroke) objs).getPoints();
+	    	/*int index = 0;
+	    	
+	    	for (SObject obj : sObjects)
+	    	{
+	    		currentPoints[index] = ((SObjectStroke) obj).getPoints();
+	    		index++;
+	    	}*/
+	    	
+	    	ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
+	
+	    	if ((gestureInfo == null) || (gestureInfo.size() <= 0))
+	    	{
+	    		// Gesture not recognized
+	    		return;
+	    	}
+			
+			int maxIndex = -1;
+			int maxValue = -100;
+			int scoreThreshold = 80; // The lower the number the greater the chance of false positives
+			
+			for (int i = 0; i < gestureInfo.size(); i++)
+			{
+				if ((gestureInfo.get(i).mScore > maxValue) && (gestureInfo.get(i).mScore >= scoreThreshold))
+				{
+					maxValue = gestureInfo.get(i).mScore;
+					maxIndex = i;
+				}
+			}
+			
+			if (maxIndex == -1)
+			{
+				//displayToast("Not recognised");
+				//sCanvasView.clearScreen();
+			}
+			else
+			{
+				//displayToast(gestureInfo.get(maxIndex).mName);
+				//sCanvasView.clearScreen();
+				
+				String key = gestureInfo.get(maxIndex).mName.trim();
+				int currentCount = -1;
+				
+				if (gestureCount.get(key) != null)
+				{
+					currentCount = gestureCount.get(key);
+					gestureCount.put(key, currentCount + 1);
+				}
+				else
+				{
+					gestureCount.put(key, 1);
+				}
+			}
+    	}
+    	
+    	// Create the string to be displayed
+    	String resultString = "Ticks " + gestureCount.get("tick") + "\n" +
+    						  "Half Ticks " + gestureCount.get("halfTick") + "\n" +
+    						  "Crosses " + gestureCount.get("x");
+    	
+    	displayToast(resultString);
+    	//sCanvasView.clearScreen();
+    }
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
