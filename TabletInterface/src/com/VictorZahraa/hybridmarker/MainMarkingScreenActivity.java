@@ -56,7 +56,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			@Override
 			public void onScrollChanged(ScrollViewHelper scrollView, int l, int t,
 					int prevL, int prevT) {
-				sCanvasView.setScrollY(scriptScrollView.getScrollY());
 				sCanvasContainer.setScrollY(scriptScrollView.getScrollY());
 			}
 		});
