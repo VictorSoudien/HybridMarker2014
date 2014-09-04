@@ -100,16 +100,20 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		//answerTextView.setText("Hello World! I'm the Answer.");
 		
+		initiliseSCanvas();
 		
-		
+		/*if (savedInstanceState == null) {
+			getFragmentManager().beginTransaction()
+					.add(R.id.container, new PlaceholderFragment()).commit();
+		}*/
+	}
+	
+	// Initialise both the sCanvasContainer and sCanvasView
+	public void initiliseSCanvas()
+	{
 		// Set up the SCanvas on which marks will be made
 		context = this;
-        sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);
-        
-        // Set the canvas height to be the same as that of the script display
-        //LayoutParams scriptDisplayParams = scriptScrollView.getLayoutParams();
-        
-        
+        sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);    
         sCanvasView = new SCanvasView(context);
         
         // Set the properties of the SPen Stroke
@@ -141,11 +145,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		});
         
         sCanvasContainer.addView(sCanvasView);
-        
-		/*if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}*/
 	}
 
 	@Override
