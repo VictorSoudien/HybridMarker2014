@@ -133,6 +133,9 @@ public class PDFProcessor
 				
 				uploader.uploadFileToServer(directoryToSaveTo, temp);
 				
+				// Delete the file on the local file system
+				temp.delete();
+				
 				System.out.println ("Uploaded page " + (i + 1));
 			}
 		}
