@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -20,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
-
 import com.samsung.samm.common.SObjectStroke;
 import com.samsung.sdraw.StrokeInfo;
 import com.samsung.spen.settings.SettingStrokeInfo;
@@ -114,6 +116,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Set up the SCanvas on which marks will be made
 		context = this;
         sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);
+        
+        // Set the canvas height to be the same as that of the script display
+        //LayoutParams scriptDisplayParams = scriptScrollView.getLayoutParams();
+        
+        
         sCanvasView = new SCanvasView(context);
         
         // Set the properties of the SPen Stroke
