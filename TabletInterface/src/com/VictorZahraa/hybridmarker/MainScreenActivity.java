@@ -1,35 +1,38 @@
 package com.VictorZahraa.hybridmarker;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.samsung.samm.common.SObject;
 import com.samsung.samm.common.SObjectStroke;
-import com.samsung.sdraw.StrokeInfo;
 import com.samsung.spen.lib.gesture.SPenGestureInfo;
 import com.samsung.spen.lib.gesture.SPenGestureLibrary;
 import com.samsung.spen.settings.SettingStrokeInfo;
 import com.samsung.spensdk.*;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
+
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class MainScreenActivity extends Activity 
 {
@@ -160,10 +163,39 @@ public class MainScreenActivity extends Activity
         else if (id == R.id.menu_option_recog_gesture)
         {
         	//detectGesture(null);
+        	getViewBitmap(sCanvasView);
         	detectMultipleGestures(null);
+        }
+        else if (id == R.id.menu_option_view_pdf)
+        {
+        	Intent pdfViewScreen = new Intent(MainScreenActivity.this, MainMarkingScreenActivity.class);
+        	startActivity(pdfViewScreen);
         }
         
         return super.onOptionsItemSelected(item);
+    }
+    
+    // Used to test functionality of saving view to image
+    public void getViewBitmap (View view)
+    {
+    	Bitmap image = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+    	Canvas bindCanvas = new Canvas(image);
+    	
+    	Drawable viewBackground = view.getBackground();
+    	
+    	if (viewBackground != null)
+    	{
+    		viewBackground.draw(bindCanvas);
+    	}
+    	else
+    	{
+    		bindCanvas.drawColor(Color.WHITE);
+    	}
+    	
+    	view.draw(bindCanvas);
+    	
+    	ImageView tempImageView = (ImageView) findViewById(R.id.tempImageView);
+    	tempImageView.setImageBitmap(image);
     }
     
     public void detectMultipleGestures(View view)

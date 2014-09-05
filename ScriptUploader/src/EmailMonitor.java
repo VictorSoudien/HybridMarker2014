@@ -4,6 +4,7 @@
  * Student Number: SDNVIC001
  */
 
+import java.io.File;
 import java.util.Properties;
 
 import javax.mail.*;
@@ -24,12 +25,15 @@ public class EmailMonitor
 		// Define protocol
 		Properties properties = new Properties();
 		properties.setProperty("mail.store.protocol", "imap");
+		properties.setProperty("mail.imap.port", "143");
 		
 		// Create a session
 		Session session = Session.getInstance(properties, null);
 		
 		try
 		{
+			System.out.println ("Attempting to connect to mailbox...");
+			
 			// Connect to mailbox
 			IMAPStore mailStore = (IMAPStore)session.getStore();
 			mailStore.connect("imap.cs.uct.ac.za", "vsoudien", "compsci2");
@@ -38,11 +42,14 @@ public class EmailMonitor
 			inbox.addMessageCountListener(new countChangeListener());
 			
 			lastMessageRead = inbox.getMessageCount(); // Set the index to the current amount of emails in the inbox
+			
+			System.out.println ("Connected to mailbox");
 		}
 		catch (Exception e)
 		{
 			System.out.println ("Error while connecting to mailbox");
 			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 	
@@ -96,7 +103,15 @@ public class EmailMonitor
 							if (bodyPart.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
 							{
 								String attachedFileName = bodyPart.getFileName();
-								bodyPart.saveFile("Downloads/" + attachedFileName); // Save the attachment
+								//bodyPart.saveFile("Downloads/" + attachedFileName); // Save the attachment
+								
+								File scannedPDF = new File("Attachment.pdf"); // <-- CREATES FILE ON DISK
+								bodyPart.saveFile(scannedPDF);
+								
+								// Send the pdf for processing in order to determine test name
+								PDFProcessor pdfProc = new PDFProcessor();
+								pdfProc.processDocument(scannedPDF);
+								
 								System.out.println("Attachment Saved");
 							}
 						}
