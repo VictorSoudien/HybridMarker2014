@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -95,7 +96,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter
  
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.listItem);
- 
+        
+        /*ImageView tickView = (ImageView) convertView.findViewById(R.id.icon_test_marked);
+        tickView.setVisibility(View.INVISIBLE);*/
+        
         txtListChild.setText(childText);
         return convertView;
 	}

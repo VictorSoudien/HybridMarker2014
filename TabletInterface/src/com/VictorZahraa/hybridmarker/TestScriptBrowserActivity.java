@@ -19,9 +19,12 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.Toast;
 import android.os.Build;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +67,8 @@ public class TestScriptBrowserActivity extends Activity {
 				return false;
 			}
 		});
+		
+		//new GetFilesOnServer().execute();
 		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -184,6 +189,50 @@ public class TestScriptBrowserActivity extends Activity {
 			}
 		}
 	}
+	
+	/*private class GetFilesOnServer extends AsyncTask<URL, Integer, Long>
+	{
+		@Override
+		protected Long doInBackground(URL... params) {
+			connectToServer();
+			return null;
+		}
+		
+		// Connect to the server in order to download the memo content
+		public void connectToServer()
+		{
+			try
+			{
+				JSch jsch = new JSch();
+				Session session = jsch.getSession("vsoudien", "nightmare.cs.uct.ac.za");
+				session.setPassword("compsci2");
+				
+				Properties connProps = new Properties();
+				connProps.put("StrictHostKeyChecking", "no");
+				session.setConfig(connProps);
+				
+				session.connect();
+				displayToast("Successfully connected to nightmare");
+				
+				// Create a communication channel with the server and execute the command
+				Channel commChannel = session.openChannel("exec");
+				
+				String commandToExecute = "ls -l";
+				
+				((ChannelExec)commChannel).setCommand(commandToExecute);
+				commChannel.setInputStream(null);
+				
+				InputStream inStream = commChannel.getInputStream();
+				commChannel.connect();
+				
+				displayToast(Character.toString((char) inStream.read()));
+			}
+			catch (Exception e)
+			{
+				displayToast("Error while connecting to nightmare\n" + e.getMessage());
+			}
+		}
+	}*/
 
 	/*
 	/**

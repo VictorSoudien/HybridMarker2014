@@ -15,21 +15,15 @@
         android:textSize="20dip"
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"/>
      <!-- android:paddingLeft="25dp"  -->
-    
-</RelativeLayout> 
-
-<!-- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="55dip"
-    android:orientation="vertical" >
- 
-    <TextView
-        android:id="@+id/listItem"
-        android:layout_width="fill_parent"
+     
+     <ImageView
+        android:id="@+id/icon_test_marked"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17dip"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" />
- 
-</LinearLayout> -->
+        android:layout_alignParentLeft="true"
+        android:paddingRight="10dp"
+        android:paddingLeft="5dp"
+        android:src="@drawable/ic_action_accept"
+        android:contentDescription="@string/app_name"/>
+    
+</RelativeLayout>
