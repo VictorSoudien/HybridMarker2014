@@ -2,9 +2,11 @@ package com.VictorZahraa.hybridmarker;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Properties;
 
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -13,6 +15,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
@@ -25,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 import com.samsung.samm.common.SObject;
 import com.samsung.samm.common.SObjectStroke;
 import com.samsung.sdraw.CanvasView.OnHistoryChangeListener;
@@ -46,6 +51,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	private TextView answerTextView;
 	private ScrollViewHelper scriptScrollView;
 	private ImageView scriptDisplay;
+	
+	private ActionBar actionBar;
 	
 	// Used to display short messages to the user
 	private Toast toast;
@@ -80,7 +87,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		scriptDisplay.setScaleX(1.1f);
 		scriptDisplay.setScaleY(1.1f);
 		
-		ActionBar actionBar = this.getActionBar();
+		actionBar = this.getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
 		// Add tabs to the action bar
@@ -130,6 +137,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
+		
+		new ServerConnect().execute();
+		
 	}
 	
 	// Initialise both the sCanvasContainer and sCanvasView
@@ -421,6 +431,43 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		toast.show();
 	}
+	
+	
+	
+	
+	private class ServerConnect extends AsyncTask<URL, Integer, Long>
+	{
+		@Override
+		protected Long doInBackground(URL... params) {
+			// TODO Auto-generated method stub
+			
+			connectToServer();
+			return null;
+		}
+		
+		// Connect to the server in order to download the memo content
+		public void connectToServer()
+		{
+			try
+			{
+				JSch jsch = new JSch();
+				Session session = jsch.getSession("vsoudien", "nightmare.cs.uct.ac.za");
+				session.setPassword("compsci2");
+				
+				Properties connProps = new Properties();
+				connProps.put("StrictHostKeyChecking", "no");
+				session.setConfig(connProps);
+				
+				session.connect();
+				displayToast("Successfully connected to nightmare");
+			}
+			catch (Exception e)
+			{
+				displayToast("Error while connecting to nightmare\n" + e.getMessage());
+			}
+		}
+	}
+	
 	
 	/**
 	 * A placeholder fragment containing a simple view.
