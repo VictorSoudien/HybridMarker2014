@@ -114,7 +114,7 @@ public class PDFProcessor
 			{
 				directoryToSaveTo = originalDir;
 				
-				BufferedImage tempImage = pages.get(i).convertToImage(BufferedImage.TYPE_INT_RGB, 300);
+				BufferedImage tempImage = pages.get(i).convertToImage(BufferedImage.TYPE_INT_RGB, 200);
 				File imageToUpload = new File("page" + (i + 1)  + ".png");
 				ImageIO.write(tempImage, "png", imageToUpload);
 				
@@ -156,6 +156,5 @@ public class PDFProcessor
 		File imageFile = new File("ScannedScript.pdf");
 		PDFProcessor proc = new PDFProcessor();
 		proc.processDocument(imageFile);
-		System.out.println("Done, I need to stop, please help!!!");
 	}
 }

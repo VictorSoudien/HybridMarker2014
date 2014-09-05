@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.Toast;
 import android.os.Build;
 
@@ -25,6 +29,8 @@ public class TestScriptBrowserActivity extends Activity {
 	private Context context;
 	private Toast toast;
 	
+	private ExpandableListView exListView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,7 +40,9 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		toast = Toast.makeText(context, "initialise", Toast.LENGTH_SHORT); // Initialise the toast but don't display this message
 		new ServerConnect().execute();
-
+		
+		exListView = (ExpandableListView) findViewById(R.id.scriptListView);
+		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
@@ -55,8 +63,15 @@ public class TestScriptBrowserActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		
+		if (id == R.id.action_settings) 
+		{
 			return true;
+		}
+		else if (id == R.id.action_mark_pdf)
+		{
+			Intent pdfViewScreen = new Intent(TestScriptBrowserActivity.this, MainMarkingScreenActivity.class);
+        	startActivity(pdfViewScreen);
 		}
 		return super.onOptionsItemSelected(item);
 	}
