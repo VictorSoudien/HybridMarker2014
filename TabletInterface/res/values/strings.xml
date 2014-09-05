@@ -9,8 +9,8 @@
     <string name="menu_option_recog_gesture">Detect</string>
     <string name="title_activity_pdf_display_screen">PDFDisplay</string>
     <string name="title_activity_main_marking_screen">MainMarkingScreenActivity</string>
-    
     <string name="action_undo">Undo</string>
     <string name="action_add_comment">Add Comment</string>
+    <string name="title_activity_test_script_browser">TestScriptBrowserActivity</string>
 
 </resources>

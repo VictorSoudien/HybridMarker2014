@@ -60,14 +60,17 @@ public final class R {
         public static final int activity_main_marking_screen=0x7f030000;
         public static final int activity_main_screen=0x7f030001;
         public static final int activity_pdf_display_screen=0x7f030002;
-        public static final int fragment_main_marking_screen=0x7f030003;
-        public static final int fragment_main_screen=0x7f030004;
-        public static final int fragment_pdf_display_screen=0x7f030005;
+        public static final int activity_test_script_browser=0x7f030003;
+        public static final int fragment_main_marking_screen=0x7f030004;
+        public static final int fragment_main_screen=0x7f030005;
+        public static final int fragment_pdf_display_screen=0x7f030006;
+        public static final int fragment_test_script_browser=0x7f030007;
     }
     public static final class menu {
         public static final int main_marking_screen=0x7f080000;
         public static final int main_screen=0x7f080001;
         public static final int pdf_display_screen=0x7f080002;
+        public static final int test_script_browser=0x7f080003;
     }
     public static final class raw {
         public static final int marking_gesture_data=0x7f040000;
@@ -83,6 +86,7 @@ public final class R {
         public static final int menu_option_recog_gesture=0x7f060005;
         public static final int title_activity_main_marking_screen=0x7f060007;
         public static final int title_activity_pdf_display_screen=0x7f060006;
+        public static final int title_activity_test_script_browser=0x7f06000a;
     }
     public static final class style {
         /** 

@@ -168,7 +168,8 @@ public class MainScreenActivity extends Activity
         }
         else if (id == R.id.menu_option_view_pdf)
         {
-        	Intent pdfViewScreen = new Intent(MainScreenActivity.this, MainMarkingScreenActivity.class);
+        	//Intent pdfViewScreen = new Intent(MainScreenActivity.this, MainMarkingScreenActivity.class);
+        	Intent pdfViewScreen = new Intent(MainScreenActivity.this, TestScriptBrowserActivity.class);
         	startActivity(pdfViewScreen);
         }
         

@@ -1,13 +1,5 @@
 package com.VictorZahraa.hybridmarker;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Properties;
-
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.ActionBar;
@@ -44,6 +36,14 @@ import com.samsung.spensdk.applistener.HistoryUpdateListener;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 import com.samsung.spensdk.applistener.SCanvasLongPressListener;
 import com.samsung.spensdk.applistener.SPenTouchListener;
+
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Properties;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
@@ -137,9 +137,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
-		
-		new ServerConnect().execute();
-		
 	}
 	
 	// Initialise both the sCanvasContainer and sCanvasView
@@ -431,43 +428,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		toast.show();
 	}
-	
-	
-	
-	
-	private class ServerConnect extends AsyncTask<URL, Integer, Long>
-	{
-		@Override
-		protected Long doInBackground(URL... params) {
-			// TODO Auto-generated method stub
-			
-			connectToServer();
-			return null;
-		}
-		
-		// Connect to the server in order to download the memo content
-		public void connectToServer()
-		{
-			try
-			{
-				JSch jsch = new JSch();
-				Session session = jsch.getSession("vsoudien", "nightmare.cs.uct.ac.za");
-				session.setPassword("compsci2");
-				
-				Properties connProps = new Properties();
-				connProps.put("StrictHostKeyChecking", "no");
-				session.setConfig(connProps);
-				
-				session.connect();
-				displayToast("Successfully connected to nightmare");
-			}
-			catch (Exception e)
-			{
-				displayToast("Error while connecting to nightmare\n" + e.getMessage());
-			}
-		}
-	}
-	
 	
 	/**
 	 * A placeholder fragment containing a simple view.
