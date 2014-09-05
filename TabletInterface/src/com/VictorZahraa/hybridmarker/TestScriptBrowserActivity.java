@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.Toast;
 import android.os.Build;
 
@@ -53,6 +54,16 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		exListAdapter = new CustomExpandableListAdapter(context, listHeaders, listItems);
 		exListView.setAdapter(exListAdapter);
+		
+		exListView.setOnChildClickListener(new OnChildClickListener() {
+			
+			@Override
+			public boolean onChildClick(ExpandableListView parent, View v,
+					int groupPosition, int childPosition, long id) {
+				displayToast(listHeaders.get(groupPosition) + " : " + listItems.get(listHeaders.get(groupPosition)).get(childPosition));
+				return false;
+			}
+		});
 		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
