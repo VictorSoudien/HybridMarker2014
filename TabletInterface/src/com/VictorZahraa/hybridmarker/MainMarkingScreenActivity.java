@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
 import com.samsung.samm.common.SObject;
 import com.samsung.samm.common.SObjectStroke;
+import com.samsung.sdraw.CanvasView.OnHistoryChangeListener;
 import com.samsung.spen.lib.gesture.SPenGestureInfo;
 import com.samsung.spen.lib.gesture.SPenGestureLibrary;
 import com.samsung.spen.lib.input.SPenEvent;
@@ -34,6 +35,7 @@ import com.samsung.spen.lib.input.SPenLibrary;
 import com.samsung.spen.settings.SettingStrokeInfo;
 import com.samsung.spensdk.SCanvasConstants;
 import com.samsung.spensdk.SCanvasView;
+import com.samsung.spensdk.applistener.HistoryUpdateListener;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 import com.samsung.spensdk.applistener.SCanvasLongPressListener;
 import com.samsung.spensdk.applistener.SPenTouchListener;
@@ -178,16 +180,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			@Override
 			public boolean onTouchPen(View arg0, MotionEvent arg1) {
 				// TODO Auto-generated method stub
-				if (sCanvasView.getCanvasMode() == SCanvasConstants.SCANVAS_MODE_INPUT_PEN)
-				{
-					// Detect when the user lifts the pen
-					if (arg1.getAction() == (MotionEvent.ACTION_UP))
-					{
-						detectMultipleGestures((SCanvasView)arg0);
-						//displayToast("Gesture complete");
-					}
-				}
-				
 				return false;
 			}
 			
@@ -207,6 +199,15 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			public void onTouchButtonDown(View arg0, MotionEvent arg1) {
 				// TODO Auto-generated method stub
 				
+			}
+		});
+        
+        sCanvasView.setHistoryUpdateListener(new HistoryUpdateListener() 
+        {	
+			@Override
+			public void onHistoryChanged(boolean arg0, boolean arg1) 
+			{	
+				detectMultipleGestures(sCanvasView);
 			}
 		});
      
