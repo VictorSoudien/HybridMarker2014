@@ -91,12 +91,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
 		// Add tabs to the action bar
-		actionBar.addTab(actionBar.newTab().setText("Question 1").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Question 2").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Question 3").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Question 4").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Question 5").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Question 6").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Page 1").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Page 2").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Page 3").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Page 4").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Page 5").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("Page 6").setTabListener(this));
 		
 		actionBar.addTab(actionBar.newTab().setText("Mark Summary").setTabListener(this));
 
