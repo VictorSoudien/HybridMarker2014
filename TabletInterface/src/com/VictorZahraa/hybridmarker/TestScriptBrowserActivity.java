@@ -51,7 +51,8 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		populateListView();
 		
-		exListAdapter = new CustomExpandableListAdapter(this, listHeaders, listItems);
+		exListAdapter = new CustomExpandableListAdapter(context, listHeaders, listItems);
+		exListView.setAdapter(exListAdapter);
 		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
