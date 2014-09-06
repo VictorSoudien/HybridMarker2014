@@ -10,6 +10,7 @@ import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,6 +32,7 @@ import android.os.Build;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
@@ -108,7 +110,10 @@ public class TestScriptBrowserActivity extends Activity {
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
 				
-				String directory = "Honours_Project/" + listHeaders.get(groupPosition) + "/" + listItems.get(listHeaders.get(groupPosition)).get(childPosition);
+				String tempTestName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
+				tempTestName = tempTestName.replace("*", "\\*");
+				
+				String directory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
 				
 				new ServerConnect().execute("Download Files", directory);
 				
@@ -383,7 +388,39 @@ public class TestScriptBrowserActivity extends Activity {
 		// Download the images needed for each test from the server
 		private void downloadFiles(String directory)
 		{
-			displayToast("Download files from " + directory);
+	        // Get the path to external storage
+	        String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
+			
+			try
+			{
+				String filenames = executeCommandOnServer("cd " + directory + " && ls");
+				//displayToast(directory);
+				String [] files = filenames.split("\n");
+				
+				Channel commChannel = sshSession.openChannel("sftp");
+				commChannel.connect();
+				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
+				
+				for (String file : files)
+				{
+					file.trim();
+					
+					if (file.contains(".png"))
+					{
+						String saveDir = pathToSDCard + "/" + file;
+						String fileDir = directory + file;
+						
+						sftpChannel.get(fileDir, saveDir);
+						//displayToast(file + " ... File downloaded");
+					}
+				}
+			
+				//displayToast("Downloaded files from " + directory);
+			}
+			catch (Exception e)
+			{
+				displayToast("Error: Could not download file \n" + e);
+			}
 		}
 		
 		@Override
