@@ -5,16 +5,20 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -40,6 +44,7 @@ public class TestScriptBrowserActivity extends Activity {
 
 	private Context context;
 	private Toast toast;
+	private ActionBar actionBar;
 	
 	private ProgressBar listUpdateProgressBar;
 	
@@ -51,6 +56,7 @@ public class TestScriptBrowserActivity extends Activity {
 	private String [] drawerItems;
 	private DrawerLayout drawerLayout;
 	private ListView drawerListView;
+	private ActionBarDrawerToggle drawerToggle;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +96,7 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		new ServerConnect().execute("Update Lists");*/
 		
+		actionBar = this.getActionBar();
 		initNavDrawer();
 		
 		//new GetFilesOnServer().execute();
@@ -110,7 +117,54 @@ public class TestScriptBrowserActivity extends Activity {
 		// Set the adapter for the list view
 		drawerListView.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, drawerItems));
+		
+		drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) 
+			{
+				drawerListView.setItemChecked(position, true);
+				drawerLayout.closeDrawer(drawerListView);
+				getActionBar().setTitle(drawerItems[position]);
+			}
+		});
+		
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, 
+				R.drawable.ic_drawer, R.string.nav_drawer_open, R.string.app_name)
+		{
+			/** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                //getActionBar().setTitle("Closed");
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                //getActionBar().setTitle("Open");
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+		};
+		
+		drawerLayout.setDrawerListener(drawerToggle);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
 	}
+	
+	@Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,6 +180,11 @@ public class TestScriptBrowserActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
+		
+		if (drawerToggle.onOptionsItemSelected(item))
+		{
+			return true;
+		}
 		
 		if (id == R.id.action_settings) 
 		{
@@ -289,7 +348,6 @@ public class TestScriptBrowserActivity extends Activity {
 			exListView.setEnabled(true);
 		}
 	}
-
 
 	/*
 	/**

@@ -13,5 +13,7 @@
     <string name="action_add_comment">Add Comment</string>
     <string name="title_activity_test_script_browser">TestScriptBrowserActivity</string>
     <string name="action_refresh">Refresh</string>
+    
+    <string name="nav_drawer_open">Courses</string>
 
 </resources>

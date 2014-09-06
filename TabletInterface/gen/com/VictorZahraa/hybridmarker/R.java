@@ -27,13 +27,14 @@ public final class R {
         public static final int ic_action_edit_selected=0x7f020002;
         public static final int ic_action_refresh=0x7f020003;
         public static final int ic_action_undo=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
-        public static final int page1200dpi=0x7f020006;
-        public static final int page2200dpi=0x7f020007;
-        public static final int page3200dpi=0x7f020008;
-        public static final int page4200dpi=0x7f020009;
-        public static final int page5200dpi=0x7f02000a;
-        public static final int warlock=0x7f02000b;
+        public static final int ic_drawer=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int page1200dpi=0x7f020007;
+        public static final int page2200dpi=0x7f020008;
+        public static final int page3200dpi=0x7f020009;
+        public static final int page4200dpi=0x7f02000a;
+        public static final int page5200dpi=0x7f02000b;
+        public static final int warlock=0x7f02000c;
     }
     public static final class id {
         public static final int action_add_comment=0x7f09001a;
@@ -103,6 +104,7 @@ public final class R {
         public static final int menu_option_Eraser=0x7f060004;
         public static final int menu_option_Pen=0x7f060003;
         public static final int menu_option_recog_gesture=0x7f060005;
+        public static final int nav_drawer_open=0x7f06000c;
         public static final int title_activity_main_marking_screen=0x7f060007;
         public static final int title_activity_pdf_display_screen=0x7f060006;
         public static final int title_activity_test_script_browser=0x7f06000a;
