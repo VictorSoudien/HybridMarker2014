@@ -65,9 +65,28 @@ public class TestScriptBrowserActivity extends Activity {
 		setContentView(R.layout.test_browser_drawer_layout);
 		
 		context = this;
+		actionBar = this.getActionBar();
+		
+		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
 		
 		toast = Toast.makeText(context, "initialise", Toast.LENGTH_SHORT); // Initialise the toast but don't display this message
 		
+		initExpandableListView();
+		initNavDrawer();
+		
+		new ServerConnect().execute("Update Lists");
+		
+		//new GetFilesOnServer().execute();
+		
+		/*if (savedInstanceState == null) {
+			getFragmentManager().beginTransaction()
+					.add(R.id.container, new PlaceholderFragment()).commit();
+		}*/
+	}
+	
+	// Sets up the expandable list view used to display tests for each course
+	private void initExpandableListView()
+	{
 		exListView = (ExpandableListView) findViewById(R.id.scriptListView);
 		
 		listHeaders = new ArrayList<String>();
@@ -82,8 +101,6 @@ public class TestScriptBrowserActivity extends Activity {
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
 				
-				//displayToast(listHeaders.get(groupPosition) + " : " + listItems.get(listHeaders.get(groupPosition)).get(childPosition));
-				
 				String directory = "Honours_Project/" + listHeaders.get(groupPosition) + "/" + listItems.get(listHeaders.get(groupPosition)).get(childPosition);
 				
 				new ServerConnect().execute("Request File List","cd " + directory + " && ls");
@@ -91,20 +108,6 @@ public class TestScriptBrowserActivity extends Activity {
 				return false;
 			}
 		});
-		
-		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
-		
-		new ServerConnect().execute("Update Lists");
-		
-		actionBar = this.getActionBar();
-		initNavDrawer();
-		
-		//new GetFilesOnServer().execute();
-		
-		/*if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}*/
 	}
 	
 	// Sets up the navigation drawer
