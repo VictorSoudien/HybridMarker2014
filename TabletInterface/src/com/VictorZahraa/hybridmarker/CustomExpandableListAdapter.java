@@ -6,14 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 import java.util.HashMap;
 
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter
-{
+{	
 	private Context context;
 	private List<String> listHeaders;
 	private HashMap<String, List<String>> listChildren;
@@ -88,7 +87,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter
 		
 		// Adapted from http://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
         final String childText = (String) getChild(groupPosition, childPosition);
- 
+
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_item, null);
@@ -97,10 +96,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.listItem);
         
+        txtListChild.setText(childText);
+        
         /*ImageView tickView = (ImageView) convertView.findViewById(R.id.icon_test_marked);
         tickView.setVisibility(View.INVISIBLE);*/
         
-        txtListChild.setText(childText);
         return convertView;
 	}
 
