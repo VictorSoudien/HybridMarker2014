@@ -59,6 +59,12 @@ public class TestScriptBrowserActivity extends Activity {
 	private ArrayAdapter<String> navDrawArrayAdapter;
 	private ActionBarDrawerToggle drawerToggle;
 	
+	// Stores which item in the drawer is currently selected
+	private String selectedItemInDrawer;
+	
+	// Used top determine whether a refresh is currently being performed
+	private boolean viewBeingRefreshed;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,6 +72,8 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		context = this;
 		actionBar = this.getActionBar();
+		selectedItemInDrawer = "";
+		viewBeingRefreshed = false;
 		
 		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
 		
@@ -134,6 +142,8 @@ public class TestScriptBrowserActivity extends Activity {
 				drawerLayout.closeDrawer(drawerListView);
 				getActionBar().setTitle(drawerItems[position]);
 				
+				selectedItemInDrawer = drawerItems[position];
+				
 				new ServerConnect().execute("Update Lists", drawerItems[position]);
 			}
 		});
@@ -146,6 +156,7 @@ public class TestScriptBrowserActivity extends Activity {
                 super.onDrawerClosed(view);
                 //getActionBar().setTitle("Closed");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                
             }
 
             /** Called when a drawer has settled in a completely open state. */
@@ -191,6 +202,7 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		if (drawerToggle.onOptionsItemSelected(item))
 		{
+
 			return true;
 		}
 		
@@ -203,9 +215,17 @@ public class TestScriptBrowserActivity extends Activity {
 			Intent pdfViewScreen = new Intent(TestScriptBrowserActivity.this, MainMarkingScreenActivity.class);
         	startActivity(pdfViewScreen);
 		}
-		else if (id == R.id.action_refresh)
+		else if ((id == R.id.action_refresh)  && (viewBeingRefreshed == false))
 		{
-			new ServerConnect().execute("Update Lists");
+			// Navigation drawer is updated if it is open
+			if (drawerLayout.isDrawerOpen(drawerListView) == true)
+			{
+				new ServerConnect().execute("Update Nav Drawer");
+			}
+			else if (selectedItemInDrawer != "") // else the expandable list view is updated
+			{
+				new ServerConnect().execute("Update Lists", selectedItemInDrawer);
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -363,6 +383,8 @@ public class TestScriptBrowserActivity extends Activity {
 			listUpdateProgressBar.setVisibility(View.VISIBLE);
 			exListView.setBackgroundColor(Color.GRAY);
 			exListView.setEnabled(false);
+			
+			viewBeingRefreshed = true;
 		}
 		
 		@Override
@@ -380,6 +402,8 @@ public class TestScriptBrowserActivity extends Activity {
 				navDrawArrayAdapter =  new ArrayAdapter<String>(context, R.layout.drawer_list_item, drawerItems);
 				drawerListView.setAdapter(navDrawArrayAdapter);
 			}
+			
+			viewBeingRefreshed = false;
 		}
 	}
 
