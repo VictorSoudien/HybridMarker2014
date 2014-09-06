@@ -9,13 +9,16 @@ import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.Toast;
@@ -45,16 +48,21 @@ public class TestScriptBrowserActivity extends Activity {
 	private List<String> listHeaders;
 	private HashMap<String, List<String>> listItems;
 	
+	private String [] drawerItems;
+	private DrawerLayout drawerLayout;
+	private ListView drawerListView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_test_script_browser);
+		//setContentView(R.layout.activity_test_script_browser);
+		setContentView(R.layout.test_browser_drawer_layout);
 		
 		context = this;
 		
 		toast = Toast.makeText(context, "initialise", Toast.LENGTH_SHORT); // Initialise the toast but don't display this message
 		
-		exListView = (ExpandableListView) findViewById(R.id.scriptListView);
+		/*exListView = (ExpandableListView) findViewById(R.id.scriptListView);
 		
 		listHeaders = new ArrayList<String>();
 		listItems = new HashMap<String, List<String>>();
@@ -80,7 +88,9 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
 		
-		new ServerConnect().execute("Update Lists");
+		new ServerConnect().execute("Update Lists");*/
+		
+		initNavDrawer();
 		
 		//new GetFilesOnServer().execute();
 		
@@ -88,6 +98,18 @@ public class TestScriptBrowserActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
+	}
+	
+	// Sets up the navigation drawer
+	private void initNavDrawer()
+	{
+		drawerItems = new String [] {"Item 1", "Destiny", "Infamous", "Killzone", "Assassin's Creed", "Batman"};
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawerListView = (ListView) findViewById(R.id.left_drawer);
+		
+		// Set the adapter for the list view
+		drawerListView.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, drawerItems));
 	}
 
 	@Override
