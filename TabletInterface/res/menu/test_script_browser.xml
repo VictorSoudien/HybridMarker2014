@@ -9,6 +9,13 @@
         android:title="@string/title_activity_pdf_display_screen"/>
     
     <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="@string/action_refresh"/>
+    
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"

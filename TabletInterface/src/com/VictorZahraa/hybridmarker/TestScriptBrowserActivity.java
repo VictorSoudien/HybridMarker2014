@@ -83,46 +83,6 @@ public class TestScriptBrowserActivity extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
 	}
-	
-	private void populateListView()
-	{
-		listHeaders = new ArrayList<String>();
-		listItems = new HashMap<String, List<String>>();
-		
-		// Adding child data
-		listHeaders.add("Top 250");
-		listHeaders.add("Now Showing");
-		listHeaders.add("Coming Soon..");
- 
-        // Adding child data
-        List<String> top250 = new ArrayList<String>();
-        top250.add("The Shawshank Redemption");
-        top250.add("The Godfather");
-        top250.add("The Godfather: Part II");
-        top250.add("Pulp Fiction");
-        top250.add("The Good, the Bad and the Ugly");
-        top250.add("The Dark Knight");
-        top250.add("12 Angry Men");
- 
-        List<String> nowShowing = new ArrayList<String>();
-        nowShowing.add("The Conjuring");
-        nowShowing.add("Despicable Me 2");
-        nowShowing.add("Turbo");
-        nowShowing.add("Grown Ups 2");
-        nowShowing.add("Red 2");
-        nowShowing.add("The Wolverine");
- 
-        List<String> comingSoon = new ArrayList<String>();
-        comingSoon.add("2 Guns");
-        comingSoon.add("The Smurfs 2");
-        comingSoon.add("The Spectacular Now");
-        comingSoon.add("The Canyons");
-        comingSoon.add("Europa Report");
- 
-        listItems.put(listHeaders.get(0), top250); // Header, Child data
-        listItems.put(listHeaders.get(1), nowShowing);
-        listItems.put(listHeaders.get(2), comingSoon);
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -147,6 +107,10 @@ public class TestScriptBrowserActivity extends Activity {
 		{
 			Intent pdfViewScreen = new Intent(TestScriptBrowserActivity.this, MainMarkingScreenActivity.class);
         	startActivity(pdfViewScreen);
+		}
+		else if (id == R.id.action_refresh)
+		{
+			new ServerConnect().execute("Update Lists");
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -192,11 +156,8 @@ public class TestScriptBrowserActivity extends Activity {
 			try
 			{
 				jsch = new JSch();
-				//sshSession = jsch.getSession("zmathews", "nightmare.cs.uct.ac.za");
-				//sshSession.setPassword("800hazhtM");
-				
-				sshSession = jsch.getSession("vsoudien", "nightmare.cs.uct.ac.za");
-				sshSession.setPassword("compsci2");
+				sshSession = jsch.getSession("zmathews", "nightmare.cs.uct.ac.za");
+				sshSession.setPassword("800hazhtM");
 				
 				Properties connProps = new Properties();
 				connProps.put("StrictHostKeyChecking", "no");
@@ -248,10 +209,17 @@ public class TestScriptBrowserActivity extends Activity {
 			String listOfCourses = executeCommandOnServer("cd Honours_Project && ls");
 			String [] courses = listOfCourses.split("\n");
 			
+			listHeaders.clear();
+			
 			// Populate group list
 			for (String courseCode : courses)
 			{
 				listHeaders.add(courseCode);
+				
+				if (listItems.get(courseCode) != null)
+				{
+					listItems.get(courseCode).clear();
+				}
 				
 				List<String> temp = new ArrayList<String>();
 				
