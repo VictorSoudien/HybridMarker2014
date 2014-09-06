@@ -67,7 +67,13 @@ public class TestScriptBrowserActivity extends Activity {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
-				displayToast(listHeaders.get(groupPosition) + " : " + listItems.get(listHeaders.get(groupPosition)).get(childPosition));
+				
+				//displayToast(listHeaders.get(groupPosition) + " : " + listItems.get(listHeaders.get(groupPosition)).get(childPosition));
+				
+				String directory = "Honours_Project/" + listHeaders.get(groupPosition) + "/" + listItems.get(listHeaders.get(groupPosition)).get(childPosition);
+				
+				new ServerConnect().execute("Request File List","cd " + directory + " && ls");
+				
 				return false;
 			}
 		});
@@ -144,6 +150,11 @@ public class TestScriptBrowserActivity extends Activity {
 				{
 					connectToServer();
 					populateLists();
+				}
+				else if (params[0].equalsIgnoreCase("Request File List"))
+				{
+					connectToServer();
+					displayToast(executeCommandOnServer(params[1]));
 				}
 			}
 			
@@ -256,50 +267,7 @@ public class TestScriptBrowserActivity extends Activity {
 			exListView.setEnabled(true);
 		}
 	}
-	
-	/*private class GetFilesOnServer extends AsyncTask<URL, Integer, Long>
-	{
-		@Override
-		protected Long doInBackground(URL... params) {
-			connectToServer();
-			return null;
-		}
-		
-		// Connect to the server in order to download the memo content
-		public void connectToServer()
-		{
-			try
-			{
-				JSch jsch = new JSch();
-				Session session = jsch.getSession("vsoudien", "nightmare.cs.uct.ac.za");
-				session.setPassword("compsci2");
-				
-				Properties connProps = new Properties();
-				connProps.put("StrictHostKeyChecking", "no");
-				session.setConfig(connProps);
-				
-				session.connect();
-				displayToast("Successfully connected to nightmare");
-				
-				// Create a communication channel with the server and execute the command
-				Channel commChannel = session.openChannel("exec");
-				
-				String commandToExecute = "ls -l";
-				
-				((ChannelExec)commChannel).setCommand(commandToExecute);
-				commChannel.setInputStream(null);
-				
-				InputStream inStream = commChannel.getInputStream();
-				commChannel.connect();
-				
-				displayToast(Character.toString((char) inStream.read()));
-			}
-			catch (Exception e)
-			{
-				displayToast("Error while connecting to nightmare\n" + e.getMessage());
-			}
-		}
-	}*/
+
 
 	/*
 	/**
