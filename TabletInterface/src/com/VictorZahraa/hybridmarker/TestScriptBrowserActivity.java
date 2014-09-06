@@ -173,15 +173,35 @@ public class TestScriptBrowserActivity extends Activity {
 			try
 			{
 				JSch jsch = new JSch();
-				Session session = jsch.getSession("vsoudien", "nightmare.cs.uct.ac.za");
-				session.setPassword("compsci2");
+				Session session = jsch.getSession("zmathews", "nightmare.cs.uct.ac.za");
+				session.setPassword("800hazhtM");
 				
 				Properties connProps = new Properties();
 				connProps.put("StrictHostKeyChecking", "no");
 				session.setConfig(connProps);
 				
 				session.connect();
-				displayToast("Successfully connected to nightmare");
+				//displayToast("Successfully connected to nightmare");
+				
+				String commandToExecute = "cd Honours_Project && ls";
+				
+				// Create a communication channel with the server and execute the command
+				Channel commChannel = session.openChannel("exec");
+				((ChannelExec)commChannel).setCommand(commandToExecute);
+				commChannel.setInputStream(null);
+				
+				InputStream inStream = commChannel.getInputStream();
+				commChannel.connect();
+				
+				int readValue;
+				String result = "";
+				
+				while ((readValue = inStream.read()) != -1)
+				{
+					result += Character.toString((char) readValue);
+				}
+				
+				displayToast(result);
 			}
 			catch (Exception e)
 			{
