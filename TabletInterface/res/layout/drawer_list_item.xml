@@ -3,8 +3,9 @@
        xmlns:android="http://schemas.android.com/apk/res/android"
        android:id="@+id/textView1"
        android:layout_width="match_parent"
-       android:layout_height="30dp"
-       android:textSize="17dip"
-       android:text="TextView" >
+       android:layout_height="match_parent"
+       android:textSize="20dip"
+       android:text="TextView"
+       android:padding="8dp" >
        
 </TextView>
