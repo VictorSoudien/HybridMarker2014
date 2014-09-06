@@ -248,7 +248,7 @@ public class TestScriptBrowserActivity extends Activity {
 		toast.show();
 	}
 	
-	private class ServerConnect extends AsyncTask<String, Integer, Long>
+	private class ServerConnect extends AsyncTask<String, String, Long>
 	{
 		JSch jsch;
 		Session sshSession;
@@ -403,7 +403,7 @@ public class TestScriptBrowserActivity extends Activity {
 				
 				for (String file : files)
 				{
-					file.trim();
+					file = file.trim();
 					
 					if (file.contains(".png"))
 					{
@@ -411,7 +411,7 @@ public class TestScriptBrowserActivity extends Activity {
 						String fileDir = directory + file;
 						
 						sftpChannel.get(fileDir, saveDir);
-						//displayToast(file + " ... File downloaded");
+						publishProgress(file + " ... File Downloaded");
 					}
 				}
 			
@@ -422,6 +422,11 @@ public class TestScriptBrowserActivity extends Activity {
 				displayToast("Error: Could not download file \n" + e);
 			}
 		}
+		
+		protected void onProgressUpdate(String... message) 
+		{
+	         displayToast(message[0]);
+	    }
 		
 		@Override
 		protected void onPreExecute()
