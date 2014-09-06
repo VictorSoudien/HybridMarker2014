@@ -85,10 +85,6 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		new ServerConnect().execute("Update Nav Drawer");
 		
-		//new ServerConnect().execute("Update Lists");
-		
-		//new GetFilesOnServer().execute();
-		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
