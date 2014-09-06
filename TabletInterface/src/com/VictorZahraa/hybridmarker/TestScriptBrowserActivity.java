@@ -110,7 +110,7 @@ public class TestScriptBrowserActivity extends Activity {
 				
 				String directory = "Honours_Project/" + listHeaders.get(groupPosition) + "/" + listItems.get(listHeaders.get(groupPosition)).get(childPosition);
 				
-				new ServerConnect().execute("Request File List","cd " + directory + " && ls");
+				new ServerConnect().execute("Download Files", directory);
 				
 				return false;
 			}
@@ -275,6 +275,12 @@ public class TestScriptBrowserActivity extends Activity {
 					connectToServer();
 					displayToast(executeCommandOnServer(params[1]));
 				}
+				else if (params[0].equalsIgnoreCase("Download Files"))
+				{
+					operationBeingPerformed = "Download Files";
+					connectToServer();
+					downloadFiles(params[1]);
+				}	
 			}
 			
 			return null;
@@ -372,6 +378,12 @@ public class TestScriptBrowserActivity extends Activity {
 		{
 			String listOfCourses = executeCommandOnServer("cd Honours_Project && ls");
 			drawerItems = listOfCourses.split("\n");
+		}
+		
+		// Download the images needed for each test from the server
+		private void downloadFiles(String directory)
+		{
+			displayToast("Download files from " + directory);
 		}
 		
 		@Override
