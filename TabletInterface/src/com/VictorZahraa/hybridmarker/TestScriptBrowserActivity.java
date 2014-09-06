@@ -49,14 +49,18 @@ public class TestScriptBrowserActivity extends Activity {
 		context = this;
 		
 		toast = Toast.makeText(context, "initialise", Toast.LENGTH_SHORT); // Initialise the toast but don't display this message
-		new ServerConnect().execute();
 		
 		exListView = (ExpandableListView) findViewById(R.id.scriptListView);
 		
-		populateListView();
+		//populateListView();
 		
+		//exListView.setAdapter(exListAdapter);
+		
+		listHeaders = new ArrayList<String>();
+		listItems = new HashMap<String, List<String>>();
+		
+		// Initialise with empty lists so that it can be modified by the AsyncTask
 		exListAdapter = new CustomExpandableListAdapter(context, listHeaders, listItems);
-		exListView.setAdapter(exListAdapter);
 		
 		exListView.setOnChildClickListener(new OnChildClickListener() {
 			
@@ -67,6 +71,8 @@ public class TestScriptBrowserActivity extends Activity {
 				return false;
 			}
 		});
+		
+		new ServerConnect().execute("Update Lists");
 		
 		//new GetFilesOnServer().execute();
 		
@@ -158,12 +164,23 @@ public class TestScriptBrowserActivity extends Activity {
 		toast.show();
 	}
 	
-	private class ServerConnect extends AsyncTask<URL, Integer, Long>
+	private class ServerConnect extends AsyncTask<String, Integer, Long>
 	{
+		JSch jsch;
+		Session sshSession;
+		
 		@Override
-		protected Long doInBackground(URL... params) 
+		protected Long doInBackground(String... params) 
 		{
-			connectToServer();
+			if (params.length != 0)
+			{
+				if (params[0].equalsIgnoreCase("Update Lists"))
+				{
+					connectToServer();
+					populateLists();
+				}
+			}
+			
 			return null;
 		}
 		
@@ -172,41 +189,82 @@ public class TestScriptBrowserActivity extends Activity {
 		{
 			try
 			{
-				JSch jsch = new JSch();
-				Session session = jsch.getSession("zmathews", "nightmare.cs.uct.ac.za");
-				session.setPassword("800hazhtM");
+				jsch = new JSch();
+				sshSession = jsch.getSession("zmathews", "nightmare.cs.uct.ac.za");
+				sshSession.setPassword("800hazhtM");
 				
 				Properties connProps = new Properties();
 				connProps.put("StrictHostKeyChecking", "no");
-				session.setConfig(connProps);
+				sshSession.setConfig(connProps);
 				
-				session.connect();
-				//displayToast("Successfully connected to nightmare");
-				
-				String commandToExecute = "cd Honours_Project && ls";
-				
+				sshSession.connect();
+			}
+			catch (Exception e)
+			{
+				displayToast("Error while connecting to nightmare\n" + e.getMessage());
+			}
+		}
+		
+		private String executeCommandOnServer(String command)
+		{
+			String result = "";
+			
+			try
+			{
 				// Create a communication channel with the server and execute the command
-				Channel commChannel = session.openChannel("exec");
-				((ChannelExec)commChannel).setCommand(commandToExecute);
+				Channel commChannel = sshSession.openChannel("exec");
+				((ChannelExec)commChannel).setCommand(command);
 				commChannel.setInputStream(null);
 				
 				InputStream inStream = commChannel.getInputStream();
 				commChannel.connect();
 				
 				int readValue;
-				String result = "";
 				
 				while ((readValue = inStream.read()) != -1)
 				{
 					result += Character.toString((char) readValue);
 				}
 				
-				displayToast(result);
+				// Close the communication channel
+				commChannel.disconnect();
 			}
 			catch (Exception e)
 			{
-				displayToast("Error while connecting to nightmare\n" + e.getMessage());
+				displayToast("ERROR: Could not execute command ( "  + command + " ) on server" );
 			}
+			
+			return result;
+		}
+		
+		// Populate the expandable list layout
+		private void populateLists()
+		{
+			String listOfCourses = executeCommandOnServer("cd Honours_Project && ls");
+			String [] courses = listOfCourses.split("\n");
+			
+			for (String courseCode : courses)
+			{
+				listHeaders.add(courseCode);
+				
+				List<String> temp = new ArrayList<String>();
+				listItems.put(courseCode, temp);
+			}
+			
+			displayToast("List Updated");
+		}
+		
+		@Override
+		protected void onPreExecute()
+		{
+			displayToast("Starting update...");
+		}
+		
+		@Override
+		protected void onPostExecute(Long params)
+		{
+			exListAdapter = new CustomExpandableListAdapter(context, listHeaders, listItems);
+			exListView.setAdapter(exListAdapter);
 		}
 	}
 	
