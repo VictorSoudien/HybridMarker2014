@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.view.LayoutInflater;
@@ -168,6 +169,7 @@ public class TestScriptBrowserActivity extends Activity {
 		};
 		
 		drawerLayout.setDrawerListener(drawerToggle);
+		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 	}
