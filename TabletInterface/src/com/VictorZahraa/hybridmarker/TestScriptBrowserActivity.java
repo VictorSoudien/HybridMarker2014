@@ -243,11 +243,22 @@ public class TestScriptBrowserActivity extends Activity {
 			String listOfCourses = executeCommandOnServer("cd Honours_Project && ls");
 			String [] courses = listOfCourses.split("\n");
 			
+			// Populate group list
 			for (String courseCode : courses)
 			{
 				listHeaders.add(courseCode);
 				
 				List<String> temp = new ArrayList<String>();
+				
+				String listOfTests = executeCommandOnServer("cd Honours_Project/" + courseCode + " && ls");
+				String [] tests = listOfTests.split("\n");
+				
+				// Populate the sublist for this category
+				for (String testName : tests)
+				{
+					temp.add(testName);
+				}
+				
 				listItems.put(courseCode, temp);
 			}
 			
