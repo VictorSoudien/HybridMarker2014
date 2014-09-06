@@ -68,7 +68,7 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		toast = Toast.makeText(context, "initialise", Toast.LENGTH_SHORT); // Initialise the toast but don't display this message
 		
-		/*exListView = (ExpandableListView) findViewById(R.id.scriptListView);
+		exListView = (ExpandableListView) findViewById(R.id.scriptListView);
 		
 		listHeaders = new ArrayList<String>();
 		listItems = new HashMap<String, List<String>>();
@@ -94,7 +94,7 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
 		
-		new ServerConnect().execute("Update Lists");*/
+		new ServerConnect().execute("Update Lists");
 		
 		actionBar = this.getActionBar();
 		initNavDrawer();
