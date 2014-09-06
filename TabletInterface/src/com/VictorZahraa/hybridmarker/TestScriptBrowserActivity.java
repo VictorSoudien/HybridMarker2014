@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.Toast;
 import android.os.Build;
@@ -36,6 +38,8 @@ public class TestScriptBrowserActivity extends Activity {
 	private Context context;
 	private Toast toast;
 	
+	private ProgressBar listUpdateProgressBar;
+	
 	private ExpandableListView exListView;
 	private CustomExpandableListAdapter exListAdapter;
 	private List<String> listHeaders;
@@ -52,10 +56,6 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		exListView = (ExpandableListView) findViewById(R.id.scriptListView);
 		
-		//populateListView();
-		
-		//exListView.setAdapter(exListAdapter);
-		
 		listHeaders = new ArrayList<String>();
 		listItems = new HashMap<String, List<String>>();
 		
@@ -71,6 +71,8 @@ public class TestScriptBrowserActivity extends Activity {
 				return false;
 			}
 		});
+		
+		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
 		
 		new ServerConnect().execute("Update Lists");
 		
@@ -190,8 +192,11 @@ public class TestScriptBrowserActivity extends Activity {
 			try
 			{
 				jsch = new JSch();
-				sshSession = jsch.getSession("zmathews", "nightmare.cs.uct.ac.za");
-				sshSession.setPassword("800hazhtM");
+				//sshSession = jsch.getSession("zmathews", "nightmare.cs.uct.ac.za");
+				//sshSession.setPassword("800hazhtM");
+				
+				sshSession = jsch.getSession("vsoudien", "nightmare.cs.uct.ac.za");
+				sshSession.setPassword("compsci2");
 				
 				Properties connProps = new Properties();
 				connProps.put("StrictHostKeyChecking", "no");
@@ -261,14 +266,15 @@ public class TestScriptBrowserActivity extends Activity {
 				
 				listItems.put(courseCode, temp);
 			}
-			
-			displayToast("List Updated");
 		}
 		
 		@Override
 		protected void onPreExecute()
 		{
-			displayToast("Starting update...");
+			// Display visual feedback for loading
+			listUpdateProgressBar.setVisibility(View.VISIBLE);
+			exListView.setBackgroundColor(Color.GRAY);
+			exListView.setEnabled(false);
 		}
 		
 		@Override
@@ -276,6 +282,10 @@ public class TestScriptBrowserActivity extends Activity {
 		{
 			exListAdapter = new CustomExpandableListAdapter(context, listHeaders, listItems);
 			exListView.setAdapter(exListAdapter);
+			
+			listUpdateProgressBar.setVisibility(View.INVISIBLE);
+			exListView.setBackgroundColor(Color.WHITE);
+			exListView.setEnabled(true);
 		}
 	}
 	
