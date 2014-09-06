@@ -61,7 +61,6 @@ public class TestScriptBrowserActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.activity_test_script_browser);
 		setContentView(R.layout.test_browser_drawer_layout);
 		
 		context = this;
