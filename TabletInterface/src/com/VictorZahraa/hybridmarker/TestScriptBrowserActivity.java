@@ -56,6 +56,7 @@ public class TestScriptBrowserActivity extends Activity {
 	private String [] drawerItems;
 	private DrawerLayout drawerLayout;
 	private ListView drawerListView;
+	private ArrayAdapter<String> navDrawArrayAdapter;
 	private ActionBarDrawerToggle drawerToggle;
 	
 	@Override
@@ -73,7 +74,9 @@ public class TestScriptBrowserActivity extends Activity {
 		initExpandableListView();
 		initNavDrawer();
 		
-		new ServerConnect().execute("Update Lists");
+		new ServerConnect().execute("Update Nav Drawer");
+		
+		//new ServerConnect().execute("Update Lists");
 		
 		//new GetFilesOnServer().execute();
 		
@@ -116,9 +119,10 @@ public class TestScriptBrowserActivity extends Activity {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerListView = (ListView) findViewById(R.id.left_drawer);
 		
+		navDrawArrayAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerItems);
+		
 		// Set the adapter for the list view
-		drawerListView.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, drawerItems));
+		drawerListView.setAdapter(navDrawArrayAdapter);
 		
 		drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -129,6 +133,8 @@ public class TestScriptBrowserActivity extends Activity {
 				drawerListView.setItemChecked(position, true);
 				drawerLayout.closeDrawer(drawerListView);
 				getActionBar().setTitle(drawerItems[position]);
+				
+				new ServerConnect().execute("Update Lists", drawerItems[position]);
 			}
 		});
 		
@@ -224,18 +230,30 @@ public class TestScriptBrowserActivity extends Activity {
 		JSch jsch;
 		Session sshSession;
 		
+		String operationBeingPerformed;
+		
 		@Override
 		protected Long doInBackground(String... params) 
 		{
 			if (params.length != 0)
 			{
+				if (params[0].equalsIgnoreCase("Update Nav Drawer"))
+				{
+					operationBeingPerformed = "Update Nav Drawer";
+					connectToServer();
+					populateNavDrawer();
+				}
 				if (params[0].equalsIgnoreCase("Update Lists"))
 				{
+					operationBeingPerformed = "Update Lists";
+					
 					connectToServer();
-					populateLists();
+					populateLists(params[1]);
 				}
 				else if (params[0].equalsIgnoreCase("Request File List"))
 				{
+					operationBeingPerformed = "Request File List";
+					
 					connectToServer();
 					displayToast(executeCommandOnServer(params[1]));
 				}
@@ -265,6 +283,7 @@ public class TestScriptBrowserActivity extends Activity {
 			}
 		}
 		
+		// Execute the given command on the server
 		private String executeCommandOnServer(String command)
 		{
 			String result = "";
@@ -298,36 +317,43 @@ public class TestScriptBrowserActivity extends Activity {
 		}
 		
 		// Populate the expandable list layout
-		private void populateLists()
+		private void populateLists(String courseCode)
 		{
-			String listOfCourses = executeCommandOnServer("cd Honours_Project && ls");
-			String [] courses = listOfCourses.split("\n");
+			String listOfTests = executeCommandOnServer("cd Honours_Project/" + courseCode + "/ && ls");
+			String [] tests = listOfTests.split("\n");
 			
 			listHeaders.clear();
 			
 			// Populate group list
-			for (String courseCode : courses)
+			for (String testName : tests)
 			{
-				listHeaders.add(courseCode);
+				listHeaders.add(testName);
 				
-				if (listItems.get(courseCode) != null)
+				if (listItems.get(testName) != null)
 				{
-					listItems.get(courseCode).clear();
+					listItems.get(testName).clear();
 				}
 				
 				List<String> temp = new ArrayList<String>();
 				
-				String listOfTests = executeCommandOnServer("cd Honours_Project/" + courseCode + " && ls");
-				String [] tests = listOfTests.split("\n");
+				String listOfScripts = executeCommandOnServer("cd Honours_Project/" + courseCode + "/" + testName + " && ls");
+				String [] scripts = listOfScripts.split("\n");
 				
 				// Populate the sublist for this category
-				for (String testName : tests)
+				for (String script : scripts)
 				{
-					temp.add(testName);
+					temp.add(script);
 				}
 				
-				listItems.put(courseCode, temp);
+				listItems.put(testName, temp);
 			}
+		}
+		
+		// Update the options available in the navigation drawer
+		private void populateNavDrawer()
+		{
+			String listOfCourses = executeCommandOnServer("cd Honours_Project && ls");
+			drawerItems = listOfCourses.split("\n");
 		}
 		
 		@Override
@@ -348,6 +374,12 @@ public class TestScriptBrowserActivity extends Activity {
 			listUpdateProgressBar.setVisibility(View.INVISIBLE);
 			exListView.setBackgroundColor(Color.WHITE);
 			exListView.setEnabled(true);
+			
+			if (operationBeingPerformed.equalsIgnoreCase("Update Nav Drawer"))
+			{
+				navDrawArrayAdapter =  new ArrayAdapter<String>(context, R.layout.drawer_list_item, drawerItems);
+				drawerListView.setAdapter(navDrawArrayAdapter);
+			}
 		}
 	}
 
