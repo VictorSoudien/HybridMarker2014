@@ -464,6 +464,12 @@ public class TestScriptBrowserActivity extends Activity {
 			}
 			
 			viewBeingRefreshed = false;
+			
+			if (operationBeingPerformed.equals("Download Files"))
+			{
+				Intent pdfViewScreen = new Intent(TestScriptBrowserActivity.this, MainMarkingScreenActivity.class);
+	        	startActivity(pdfViewScreen);
+			}
 		}
 	}
 
