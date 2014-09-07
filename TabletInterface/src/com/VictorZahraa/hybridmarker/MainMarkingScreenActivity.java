@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.AsyncTask;
@@ -37,6 +39,7 @@ import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 import com.samsung.spensdk.applistener.SCanvasLongPressListener;
 import com.samsung.spensdk.applistener.SPenTouchListener;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
@@ -63,6 +66,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	
 	// Required for gesture recognition
 	private SPenGestureLibrary gestureLib;
+	
+	// The path to the device's local storage
+	private String pathToSDCard;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -70,6 +76,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_marking_screen);
 		this.setTitle(R.string.app_name);
+		
+		// Get the path to external storage
+        pathToSDCard = Environment.getExternalStorageDirectory().getPath();
 		
 		scriptScrollView = (ScrollViewHelper) findViewById(R.id.scriptDisplayScrollView);
 		scriptScrollView.setOnScrollViewListener(new OnScrollViewListner() {
@@ -226,9 +235,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	{
 		gestureLib = new SPenGestureLibrary(MainMarkingScreenActivity.this);
         gestureLib.openSPenGestureEngine();
-        
-        // Get the path to external storage
-        String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
         
         // Load the gesture library from the SD Card
         if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
@@ -392,13 +398,26 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Reset the scroll view when a new tab is selected
 		scriptScrollView.setScrollY(0);
 		
-		if (tab.getText().equals("Question 2"))
+		if (tab.getText().equals("Page 2"))
 		{
 			scriptDisplay.setImageResource(R.drawable.page2200dpi);
 		}
 		else
 		{
-			scriptDisplay.setImageResource(R.drawable.page1200dpi);
+			//displayToast("Setting Image");
+			File page1 = new File (pathToSDCard + "/page1.png");
+			Bitmap imageBitmap = BitmapFactory.decodeFile(page1.getAbsolutePath());
+			
+			if (imageBitmap != null)
+			{
+				scriptDisplay.setImageBitmap(imageBitmap);
+			}
+			else
+			{
+				displayToast("ERROR setting image");
+			}
+			
+			//scriptDisplay.setImageResource(R.drawable.page1200dpi);
 		}
 	}
 

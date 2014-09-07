@@ -118,7 +118,7 @@ public class PDFProcessor
 				File imageToUpload = new File("page" + (i + 1)  + ".png");
 				ImageIO.write(tempImage, "png", imageToUpload);
 				
-				String filename = numberOfFiles + "-" + testName + "-" + uploadTime + "/page" + (i+1) + ".png";
+				String filename = numberOfFiles + "-" + testName + "-" + uploadTime + "*/page" + (i+1) + ".png";
 				directoryToSaveTo += filename;
 				
 				File temp = new File("page" + (i + 1) + ".png");
