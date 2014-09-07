@@ -6,7 +6,9 @@ import android.os.Environment;
 
 import com.samsung.spensdk.SCanvasView;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 public class ValueStoringHelperClass 
@@ -18,6 +20,9 @@ public class ValueStoringHelperClass
 	
 	private static String pathToSDCard;
 	private static ArrayList<Bitmap> pageBitmaps;
+	
+	// Stores the text of the memo
+	private static String memoText;
 	
 	public ValueStoringHelperClass()
 	{
@@ -38,6 +43,8 @@ public class ValueStoringHelperClass
 		drawingData = new byte[value][];
 	}
 	
+	public int getNumPage () {return numPages;}
+	
 	public boolean addPage (int pageNum)
 	{
 		File page = new File (pathToSDCard + "/page" + pageNum + ".png");
@@ -57,7 +64,31 @@ public class ValueStoringHelperClass
 	
 	public Bitmap getPage(int index) {return pageBitmaps.get(index);}
 	
-	public int getNumPage () {return numPages;}
+	public void setMemoText (String filename)
+	{
+		File textFile = new File (pathToSDCard + "/" + filename);
+		StringBuilder textBuilder = new StringBuilder();
+		
+		try
+		{
+			BufferedReader buffReader = new BufferedReader(new FileReader(textFile));
+			String currentLine;
+			
+			while ((currentLine = buffReader.readLine()) != null)
+			{
+				textBuilder.append(currentLine);
+				textBuilder.append("\n");
+			}
+			
+			memoText = textBuilder.toString();
+		}
+		catch (Exception e)
+		{
+			// Display error message
+		}
+	}
+
+	public String getMemoText () {return memoText;}
 	
 	public void setPageScore (int pageIndex, double score)
 	{

@@ -118,9 +118,10 @@ public class TestScriptBrowserActivity extends Activity {
 				String tempTestName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
 				tempTestName = tempTestName.replace("*", "\\*");
 				
-				String directory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
+				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
+				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/endMarkers.txt";
 				
-				new ServerConnect().execute("Download Files", directory);
+				new ServerConnect().execute("Download Files", fileDirectory, memoDirectory);
 				
 				return false;
 			}
@@ -289,7 +290,7 @@ public class TestScriptBrowserActivity extends Activity {
 				{
 					operationBeingPerformed = "Download Files";
 					connectToServer();
-					downloadFiles(params[1]);
+					downloadFiles(params[1], params[2]);
 				}	
 			}
 			
@@ -391,7 +392,7 @@ public class TestScriptBrowserActivity extends Activity {
 		}
 		
 		// Download the images needed for each test from the server
-		private void downloadFiles(String directory)
+		private void downloadFiles(String directory, String memoDir)
 		{
 	        // Get the path to external storage
 	        String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
@@ -424,7 +425,14 @@ public class TestScriptBrowserActivity extends Activity {
 						publishProgress(file + " ... File Downloaded   " + saved);
 					}
 				}
-			
+				
+				// Download the memo for this test
+				String saveDir = pathToSDCard + "/" + "memo.txt";
+				
+				sftpChannel.get(memoDir, saveDir);
+				valueStore.setMemoText("memo.txt");
+				publishProgress("Memo Downloaded");
+				
 				valueStore.setNumPages(numPages);
 				//displayToast("Downloaded files from " + directory);
 			}
