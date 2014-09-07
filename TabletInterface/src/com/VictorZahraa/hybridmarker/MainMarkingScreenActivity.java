@@ -342,7 +342,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			String pageNum = tab.getText().toString().split(" ")[1];
 			int page = Integer.parseInt(pageNum);
 			
-			currentPage = page + 1;
+			currentPage = page;
 			
 			/*if (valueStore.getStoredView(page) != null)
 			{
