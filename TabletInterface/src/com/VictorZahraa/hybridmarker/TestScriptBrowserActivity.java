@@ -119,7 +119,7 @@ public class TestScriptBrowserActivity extends Activity {
 				tempTestName = tempTestName.replace("*", "\\*");
 				
 				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
-				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/endMarkers.txt";
+				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/reformattedEndMarkers.txt";
 				
 				new ServerConnect().execute("Download Files", fileDirectory, memoDirectory);
 				

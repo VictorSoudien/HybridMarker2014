@@ -23,6 +23,9 @@ public class ValueStoringHelperClass
 	
 	// Stores the text of the memo
 	private static String memoText;
+	private static String[] questionsAndAnswers;
+	private static int currentQuestion;
+	private static int currentAnswer;
 	
 	public ValueStoringHelperClass()
 	{
@@ -81,6 +84,9 @@ public class ValueStoringHelperClass
 			}
 			
 			memoText = textBuilder.toString();
+			questionsAndAnswers = memoText.split("<split_marker>");
+			currentQuestion = -1;
+			currentAnswer = 0;
 		}
 		catch (Exception e)
 		{
@@ -89,6 +95,70 @@ public class ValueStoringHelperClass
 	}
 
 	public String getMemoText () {return memoText;}
+	
+	public String getNextQuestion()
+	{
+		try
+		{
+			currentQuestion += 2;
+			String q = questionsAndAnswers[currentQuestion];
+			
+			return q.trim();
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			currentQuestion -= 2;
+			return "No more questions";
+		}
+	}
+	
+	public String getNextAnswer()
+	{
+		try
+		{
+			currentAnswer += 2;
+			String ans = questionsAndAnswers[currentAnswer];
+			
+			return ans.trim();
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			currentAnswer -= 2;
+			return "No more answers";
+		}
+	}
+	
+	public String getPreviousQuestion()
+	{
+		try
+		{
+			currentQuestion -= 2;
+			String q = questionsAndAnswers[currentQuestion];		
+			
+			return q.trim();
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			currentQuestion += 2;
+			return "No more questions";
+		}
+	}
+	
+	public String getPreviousAnswer()
+	{
+		try
+		{
+			currentAnswer -= 2;
+			String ans = questionsAndAnswers[currentAnswer];
+			
+			return ans.trim();
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			currentAnswer += 2;
+			return "No more answers";
+		}
+	}
 	
 	public void setPageScore (int pageIndex, double score)
 	{

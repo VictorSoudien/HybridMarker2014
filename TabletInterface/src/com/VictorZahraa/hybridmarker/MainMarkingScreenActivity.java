@@ -119,11 +119,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 "\n Use a diagram to show how you solve the problem.");*/
 		
-		questionTextView.setText(valueStore.getMemoText());
+		questionTextView.setText(valueStore.getNextQuestion());
 		
 		answerTextView = (TextView) findViewById(R.id.answerText);
 		
-		answerTextView.setText("Consider the following problem. Answer it appropriately." + 
+		/*answerTextView.setText("Consider the following problem. Answer it appropriately." + 
 
 "\n The Petersens have recently moved to a new town and are arranging a surprise birthday party for their son Andre, and have invited three families from the neighbourhood, the Smiths, the Januarys and the Hectors. They plan to make up party packets for the kids to take home after the party, blue for boys and pink for girls. " +
 
@@ -133,7 +133,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 "\n You happen to be visiting the Petersens at this point, and want to impress them with the problem solving skills you’ve learnt at university. Using the information they’ve provided, determine how many of each colour party packet they need to buy and how many of each colour they need to allocate to each family and what the total number of party packets are." +
 
-"\n Use a diagram to show how you solve the problem.");
+"\n Use a diagram to show how you solve the problem.");*/
+		
+		answerTextView.setText(valueStore.getNextAnswer());
 		
 		//answerTextView.setText("Hello World! I'm the Answer.");
 		
@@ -257,6 +259,20 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
         		displayToast("Custom Gesture Library Loaded");
         	}
         }
+	}
+	
+	// Display the next question
+	public void nextQuestionAndAnswer(View view)
+	{
+		questionTextView.setText(valueStore.getNextQuestion());
+		answerTextView.setText(valueStore.getNextAnswer());
+	}
+	
+	// Display the previous question
+	public void prevQuestionAndAnswer(View view)
+	{
+		questionTextView.setText(valueStore.getPreviousQuestion());
+		answerTextView.setText(valueStore.getPreviousAnswer());
 	}
 	
 	@Override
