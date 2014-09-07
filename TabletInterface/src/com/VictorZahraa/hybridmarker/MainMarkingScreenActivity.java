@@ -28,8 +28,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.samsung.samm.common.SObject;
 import com.samsung.samm.common.SObjectStroke;
-import com.samsung.samm.common.SOptionSAMM;
-import com.samsung.samm.common.SOptionSCanvas;
 import com.samsung.sdraw.CanvasView.OnHistoryChangeListener;
 import com.samsung.spen.lib.gesture.SPenGestureInfo;
 import com.samsung.spen.lib.gesture.SPenGestureLibrary;
@@ -308,10 +306,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		if (tab.getText().equals("Mark Summary"))
 		{
 			// Display the mark summary screen
-			//sCanvasView.clearScreen();
-			//scriptDisplay.setImageBitmap(valueStore.getMergedBitmap());
-			
-			valueStore.getMergedBitmap();
 		}
 		else
 		{
@@ -326,22 +320,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				sCanvasView = valueStore.getStoredView(page);
 				sCanvasContainer.addView(sCanvasView);
 				sCanvasView.refreshDrawableState();*/
-				//sCanvasView.clearScreen();
-				//sCanvasView.setData(valueStore.getDrawingData(page));
-				
-				/*sCanvasView = valueStore.getStoredView(page);
-				
-				displayToast(sCanvasView.toString());
-				
-				sCanvasView.invalidate();*/
-				
-				/*SOptionSCanvas canvasOption = sCanvasView.getOption();
-				canvasOption.mSAMMOption.setSaveImageSize(SOptionSAMM.SAMM_LOAD_OPTION_CONVERT_SIZE_ORIGINAL);
-				sCanvasView.setOption(canvasOption);*/
-				
-				sCanvasView.loadSAMMData(valueStore.getSAMMData(page));
-				
-				//sCanvasView.updateSAMMObjectList(valueStore.getSObjectList(page), false);
+				sCanvasView.clearScreen();
+				sCanvasView.setData(valueStore.getDrawingData(page));
 			}
 			else
 			{
@@ -358,20 +338,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		tab.setText(tab.getText() + " [" + valueStore.getPageScore(currentPage) + "]");
 		currentPageScore = 0;
 		
-		/*SOptionSCanvas canvasOption = mSCanvas.getOption();					
-		if(canvasOption == null)
-			return false;
-		canvasOption.mSAMMOption.setSaveImageSize(SOptionSAMM.SAMM_SAVE_OPTION_ORIGINAL_SIZE);*/
+		valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData());
 		
-		/*SOptionSCanvas canvasOption = sCanvasView.getOption();
-		canvasOption.mSAMMOption.setSaveImageSize(SOptionSAMM.SAMM_SAVE_OPTION_ORIGINAL_SIZE);
-		sCanvasView.setOption(canvasOption);*/
-		
-		String sammData = sCanvasView.saveSAMMData();
-		
-		valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData(), sammData, sCanvasView.getSObjectList(true));
-		
-		initiliseSCanvas();
+		//sCanvasView.clearScreen();
 	}
 
 	@Override
