@@ -340,11 +340,28 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		else
 		{
 			String pageNum = tab.getText().toString().split(" ")[1];
-			int page = Integer.parseInt(pageNum) + 1;
+			int page = Integer.parseInt(pageNum);
 			
-			currentPage = page;
+			currentPage = page + 1;
 			
-			File page1 = new File (pathToSDCard + "/page" + page + ".png");
+			/*if (valueStore.getStoredView(page) != null)
+			{
+				sCanvasContainer.removeView(sCanvasView);
+				sCanvasContainer.addView(valueStore.getStoredView(page));
+			}
+			else
+			{
+				if (sCanvasView != null)
+				{
+					sCanvasContainer.removeView(sCanvasView);
+				}
+				
+				initiliseSCanvas();
+			}*/
+				
+			scriptDisplay.setImageBitmap(valueStore.getPage(page));
+			
+			/*File page1 = new File (pathToSDCard + "/page" + page + ".png");
 			Bitmap imageBitmap = BitmapFactory.decodeFile(page1.getAbsolutePath());
 			
 			if (imageBitmap != null)
@@ -354,7 +371,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			else
 			{
 				displayToast("ERROR setting image");
-			}
+			}*/
 		}
 	}
 
@@ -363,6 +380,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	{
 		tab.setText(tab.getText() + " [" + valueStore.getPageScore(currentPage) + "]");
 		currentPageScore = 0;
+		
+		//valueStore.addViewToCollection(currentPage, sCanvasView);
 		
 		sCanvasView.clearScreen();
 	}

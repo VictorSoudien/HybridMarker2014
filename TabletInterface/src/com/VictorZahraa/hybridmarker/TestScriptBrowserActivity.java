@@ -407,6 +407,8 @@ public class TestScriptBrowserActivity extends Activity {
 				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
 				int numPages = 0;
 				
+				valueStore.initPageCollection();
+				
 				for (String file : files)
 				{
 					file = file.trim();
@@ -418,7 +420,8 @@ public class TestScriptBrowserActivity extends Activity {
 						
 						sftpChannel.get(fileDir, saveDir);
 						numPages++;
-						publishProgress(file + " ... File Downloaded");
+						boolean saved = valueStore.addPage(numPages);
+						publishProgress(file + " ... File Downloaded   " + saved);
 					}
 				}
 			
