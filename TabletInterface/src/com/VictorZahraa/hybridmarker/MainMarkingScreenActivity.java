@@ -390,6 +390,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	
 	private class GestureRecognition extends AsyncTask<SCanvasView, String, Long>
 	{
+		String resultString = "";
+		
 		@Override
 		protected Long doInBackground(SCanvasView... params) 
 		{
@@ -480,20 +482,18 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	    						  "Half Ticks " + gestureCount.get("halfTick") + "\n" +
 	    						  "Crosses " + gestureCount.get("x");*/
 	    	
-	    	String resultString = "Ticks " + tickCount + "\n" +
+	    	resultString = "Ticks " + tickCount + "\n" +
 					  "Half Ticks " + halfTickCount + "\n" +
 					  "Crosses " + gestureCount.get("x");
 	    	
 	    	currentPageScore = tickCount + ((0.5) * halfTickCount);
 	    	valueStore.setPageScore(currentPage, currentPageScore);
-	    	
-	    	displayToast(resultString);
 		}
 		
 		@Override
 		protected void onPostExecute(Long params)
 		{
-			
+	    	displayToast(resultString);
 		}
 	}
 	
