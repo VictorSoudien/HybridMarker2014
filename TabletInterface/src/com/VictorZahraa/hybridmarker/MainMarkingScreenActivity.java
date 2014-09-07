@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -361,6 +363,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	{
 		tab.setText(tab.getText() + " [" + valueStore.getPageScore(currentPage) + "]");
 		currentPageScore = 0;
+		
+		sCanvasView.clearScreen();
 	}
 
 	@Override
@@ -484,7 +488,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	    	valueStore.setPageScore(currentPage, currentPageScore);
 	    	
 	    	displayToast(resultString);
-	    	//sCanvasView.clearScreen();
+		}
+		
+		@Override
+		protected void onPostExecute(Long params)
+		{
+			
 		}
 	}
 	
