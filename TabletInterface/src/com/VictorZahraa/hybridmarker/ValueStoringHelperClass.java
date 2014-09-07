@@ -72,7 +72,7 @@ public class ValueStoringHelperClass
 		drawingData[index] = drawData;
 	}
 	
-	public byte[] getDrawingData(int index){return drawingData[index];}
-	
 	public SCanvasView getStoredView (int index) {return sCanvasCollection[index];}
+	
+	public byte[] getDrawingData(int index){return drawingData[index];}
 }
