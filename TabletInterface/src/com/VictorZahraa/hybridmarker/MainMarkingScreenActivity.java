@@ -67,8 +67,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	// Required for gesture recognition
 	private SPenGestureLibrary gestureLib;
 	
-	// The path to the device's local storage
-	private String pathToSDCard;
+	private String pathToSDCard; // The path to the device's local storage
+	private int currentPage;
+	private double currentPageScore;
 	
 	// Allows for values to be stored and accessed across activities
 	private ValueStoringHelperClass valueStore;
@@ -81,6 +82,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		this.setTitle(R.string.app_name);
 		
 		valueStore = new ValueStoringHelperClass();
+		currentPageScore = 0;
 		
 		// Get the path to external storage
         pathToSDCard = Environment.getExternalStorageDirectory().getPath();
@@ -178,7 +180,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			   strokeInfo.setStrokeColor(Color.RED);
 			   strokeInfo.setStrokeWidth(1.0f);
 			   sCanvasView.setSettingStrokeInfo(strokeInfo);
-			   sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
 			}
 		});
         
@@ -239,6 +240,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			}
 		});
      
+        sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
         sCanvasContainer.addView(sCanvasView);
 	}
 
@@ -355,10 +357,20 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			}
     	}
     	
+    	int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
+    	int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
+
     	// Create the string to be displayed
-    	String resultString = "Ticks " + gestureCount.get("tick") + "\n" +
+    	/*String resultString = "Ticks " + gestureCount.get("tick") + "\n" +
     						  "Half Ticks " + gestureCount.get("halfTick") + "\n" +
-    						  "Crosses " + gestureCount.get("x");
+    						  "Crosses " + gestureCount.get("x");*/
+    	
+    	String resultString = "Ticks " + tickCount + "\n" +
+				  "Half Ticks " + halfTickCount + "\n" +
+				  "Crosses " + gestureCount.get("x");
+    	
+    	currentPageScore = tickCount + ((0.5) * halfTickCount);
+    	valueStore.setPageScore(currentPage, currentPageScore);
     	
     	displayToast(resultString);
     	//sCanvasView.clearScreen();
@@ -419,6 +431,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			String pageNum = tab.getText().toString().split(" ")[1];
 			int page = Integer.parseInt(pageNum) + 1;
 			
+			currentPage = page;
+			
 			File page1 = new File (pathToSDCard + "/page" + page + ".png");
 			Bitmap imageBitmap = BitmapFactory.decodeFile(page1.getAbsolutePath());
 			
@@ -434,9 +448,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	}
 
 	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-		
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) 
+	{
+		tab.setText(tab.getText() + " [" + valueStore.getPageScore(currentPage) + "]");
+		currentPageScore = 0;
 	}
 
 	@Override
