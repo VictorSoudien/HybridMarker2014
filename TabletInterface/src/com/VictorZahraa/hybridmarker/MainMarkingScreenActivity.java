@@ -236,7 +236,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			@Override
 			public void onHistoryChanged(boolean arg0, boolean arg1) 
 			{	
-				detectMultipleGestures(sCanvasView);
+				new GestureRecognition().execute(sCanvasView);
 			}
 		});
      
@@ -284,97 +284,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
         	}
         }
 	}
-	
-	// Detects multiple sPen gestures
-	public void detectMultipleGestures(SCanvasView view)
-    {
-    	LinkedList<SObject> sObjects = view.getSObjectList(true);
-    	
-    	// Used to keep track of the amount of each gesture
-    	HashMap<String, Integer> gestureCount = new HashMap<String, Integer>();
-    	
-    	if ((sObjects == null) || (sObjects.size() <= 0))
-    	{
-    		// No objects found
-    		return;
-    	}
-    	
-    	for (SObject objs : sObjects)
-    	{
-	    	PointF [][] currentPoints = new PointF[1][1];
-	    	currentPoints[0] = ((SObjectStroke) objs).getPoints();
-	    	/*int index = 0;
-	    	
-	    	for (SObject obj : sObjects)
-	    	{
-	    		currentPoints[index] = ((SObjectStroke) obj).getPoints();
-	    		index++;
-	    	}*/
-	    	
-	    	ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
-	
-	    	if ((gestureInfo == null) || (gestureInfo.size() <= 0))
-	    	{
-	    		// Gesture not recognized
-	    		return;
-	    	}
-			
-			int maxIndex = -1;
-			int maxValue = -100;
-			int scoreThreshold = 80; // The lower the number the greater the chance of false positives
-			
-			for (int i = 0; i < gestureInfo.size(); i++)
-			{
-				if ((gestureInfo.get(i).mScore > maxValue) && (gestureInfo.get(i).mScore >= scoreThreshold))
-				{
-					maxValue = gestureInfo.get(i).mScore;
-					maxIndex = i;
-				}
-			}
-			
-			if (maxIndex == -1)
-			{
-				//displayToast("Not recognised");
-				//sCanvasView.clearScreen();
-			}
-			else
-			{
-				//displayToast(gestureInfo.get(maxIndex).mName);
-				//sCanvasView.clearScreen();
-				
-				String key = gestureInfo.get(maxIndex).mName.trim();
-				int currentCount = -1;
-				
-				if (gestureCount.get(key) != null)
-				{
-					currentCount = gestureCount.get(key);
-					gestureCount.put(key, currentCount + 1);
-				}
-				else
-				{
-					gestureCount.put(key, 1);
-				}
-			}
-    	}
-    	
-    	int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
-    	int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
-
-    	// Create the string to be displayed
-    	/*String resultString = "Ticks " + gestureCount.get("tick") + "\n" +
-    						  "Half Ticks " + gestureCount.get("halfTick") + "\n" +
-    						  "Crosses " + gestureCount.get("x");*/
-    	
-    	String resultString = "Ticks " + tickCount + "\n" +
-				  "Half Ticks " + halfTickCount + "\n" +
-				  "Crosses " + gestureCount.get("x");
-    	
-    	currentPageScore = tickCount + ((0.5) * halfTickCount);
-    	valueStore.setPageScore(currentPage, currentPageScore);
-    	
-    	displayToast(resultString);
-    	//sCanvasView.clearScreen();
-    }
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -473,6 +382,110 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		}
 		
 		toast.show();
+	}
+	
+	private class GestureRecognition extends AsyncTask<SCanvasView, String, Long>
+	{
+		@Override
+		protected Long doInBackground(SCanvasView... params) 
+		{
+			if (params.length == 1)
+			{
+				performGestureRecog(params[0]);
+			}
+			
+			return null;
+		}
+		
+		private void performGestureRecog(SCanvasView view)
+		{
+	    	LinkedList<SObject> sObjects = view.getSObjectList(true);
+	    	
+	    	// Used to keep track of the amount of each gesture
+	    	HashMap<String, Integer> gestureCount = new HashMap<String, Integer>();
+	    	
+	    	if ((sObjects == null) || (sObjects.size() <= 0))
+	    	{
+	    		// No objects found
+	    		return;
+	    	}
+	    	
+	    	for (SObject objs : sObjects)
+	    	{
+		    	PointF [][] currentPoints = new PointF[1][1];
+		    	currentPoints[0] = ((SObjectStroke) objs).getPoints();
+		    	/*int index = 0;
+		    	
+		    	for (SObject obj : sObjects)
+		    	{
+		    		currentPoints[index] = ((SObjectStroke) obj).getPoints();
+		    		index++;
+		    	}*/
+		    	
+		    	ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
+		
+		    	if ((gestureInfo == null) || (gestureInfo.size() <= 0))
+		    	{
+		    		// Gesture not recognized
+		    		return;
+		    	}
+				
+				int maxIndex = -1;
+				int maxValue = -100;
+				int scoreThreshold = 80; // The lower the number the greater the chance of false positives
+				
+				for (int i = 0; i < gestureInfo.size(); i++)
+				{
+					if ((gestureInfo.get(i).mScore > maxValue) && (gestureInfo.get(i).mScore >= scoreThreshold))
+					{
+						maxValue = gestureInfo.get(i).mScore;
+						maxIndex = i;
+					}
+				}
+				
+				if (maxIndex == -1)
+				{
+					//displayToast("Not recognised");
+					//sCanvasView.clearScreen();
+				}
+				else
+				{
+					//displayToast(gestureInfo.get(maxIndex).mName);
+					//sCanvasView.clearScreen();
+					
+					String key = gestureInfo.get(maxIndex).mName.trim();
+					int currentCount = -1;
+					
+					if (gestureCount.get(key) != null)
+					{
+						currentCount = gestureCount.get(key);
+						gestureCount.put(key, currentCount + 1);
+					}
+					else
+					{
+						gestureCount.put(key, 1);
+					}
+				}
+	    	}
+	    	
+	    	int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
+	    	int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
+
+	    	// Create the string to be displayed
+	    	/*String resultString = "Ticks " + gestureCount.get("tick") + "\n" +
+	    						  "Half Ticks " + gestureCount.get("halfTick") + "\n" +
+	    						  "Crosses " + gestureCount.get("x");*/
+	    	
+	    	String resultString = "Ticks " + tickCount + "\n" +
+					  "Half Ticks " + halfTickCount + "\n" +
+					  "Crosses " + gestureCount.get("x");
+	    	
+	    	currentPageScore = tickCount + ((0.5) * halfTickCount);
+	    	valueStore.setPageScore(currentPage, currentPageScore);
+	    	
+	    	displayToast(resultString);
+	    	//sCanvasView.clearScreen();
+		}
 	}
 	
 	/**
