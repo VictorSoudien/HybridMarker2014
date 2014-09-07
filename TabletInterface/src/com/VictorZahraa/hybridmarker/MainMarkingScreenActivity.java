@@ -169,7 +169,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	{
 		// Set up the SCanvas on which marks will be made
 		context = this;
-        sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);    
+        sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);   
+        
+        sCanvasContainer.removeAllViews();
+        
         sCanvasView = new SCanvasView(context);
         
         // Set the properties of the SPen Stroke
@@ -197,39 +200,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			public void onLongPressed() 
 			{
 				displayToast ("Long Press");
-			}
-		});
-
-        sCanvasView.setSPenTouchListener(new SPenTouchListener() {
-			
-			@Override
-			public boolean onTouchPenEraser(View arg0, MotionEvent arg1) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public boolean onTouchPen(View arg0, MotionEvent arg1) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public boolean onTouchFinger(View arg0, MotionEvent arg1) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public void onTouchButtonUp(View arg0, MotionEvent arg1) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onTouchButtonDown(View arg0, MotionEvent arg1) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
         
@@ -344,20 +314,15 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			
 			currentPage = page;
 			
-			/*if (valueStore.getStoredView(page) != null)
+			if (valueStore.getStoredView(page) != null)
 			{
-				sCanvasContainer.removeView(sCanvasView);
+				sCanvasContainer.removeAllViews();
 				sCanvasContainer.addView(valueStore.getStoredView(page));
 			}
 			else
 			{
-				if (sCanvasView != null)
-				{
-					sCanvasContainer.removeView(sCanvasView);
-				}
-				
 				initiliseSCanvas();
-			}*/
+			}
 				
 			scriptDisplay.setImageBitmap(valueStore.getPage(page));
 			
@@ -381,9 +346,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		tab.setText(tab.getText() + " [" + valueStore.getPageScore(currentPage) + "]");
 		currentPageScore = 0;
 		
-		//valueStore.addViewToCollection(currentPage, sCanvasView);
+		valueStore.addViewToCollection(currentPage, sCanvasView);
 		
-		sCanvasView.clearScreen();
+		//sCanvasView.clearScreen();
 	}
 
 	@Override
