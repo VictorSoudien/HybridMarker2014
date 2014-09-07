@@ -14,6 +14,7 @@ public class ValueStoringHelperClass
 	private static int numPages;
 	private static double [] scorePerPage;
 	private static SCanvasView [] sCanvasCollection;
+	private static byte [][] drawingData;
 	
 	private static String pathToSDCard;
 	private static ArrayList<Bitmap> pageBitmaps;
@@ -34,6 +35,7 @@ public class ValueStoringHelperClass
 		numPages = value;
 		scorePerPage = new double [value];
 		sCanvasCollection = new SCanvasView [value];
+		drawingData = new byte[value][];
 	}
 	
 	public boolean addPage (int pageNum)
@@ -64,10 +66,13 @@ public class ValueStoringHelperClass
 	
 	public double getPageScore (int pageIndex) {return scorePerPage[pageIndex];}
 	
-	public void addViewToCollection (int index, SCanvasView view)
+	public void addViewToCollection (int index, SCanvasView view, byte [] drawData)
 	{
 		sCanvasCollection[index] = view;
+		drawingData[index] = drawData;
 	}
+	
+	public byte[] getDrawingData(int index){return drawingData[index];}
 	
 	public SCanvasView getStoredView (int index) {return sCanvasCollection[index];}
 }

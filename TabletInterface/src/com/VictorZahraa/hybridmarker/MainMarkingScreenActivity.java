@@ -316,8 +316,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			
 			if (valueStore.getStoredView(page) != null)
 			{
-				sCanvasContainer.removeAllViews();
-				sCanvasContainer.addView(valueStore.getStoredView(page));
+				/*sCanvasContainer.removeAllViews();
+				sCanvasView = valueStore.getStoredView(page);
+				sCanvasContainer.addView(sCanvasView);
+				sCanvasView.refreshDrawableState();*/
+				sCanvasView.clearScreen();
+				sCanvasView.setData(valueStore.getDrawingData(page));
 			}
 			else
 			{
@@ -346,7 +350,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		tab.setText(tab.getText() + " [" + valueStore.getPageScore(currentPage) + "]");
 		currentPageScore = 0;
 		
-		valueStore.addViewToCollection(currentPage, sCanvasView);
+		valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData());
 		
 		//sCanvasView.clearScreen();
 	}
