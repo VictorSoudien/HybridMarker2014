@@ -329,18 +329,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			}
 				
 			scriptDisplay.setImageBitmap(valueStore.getPage(page));
-			
-			/*File page1 = new File (pathToSDCard + "/page" + page + ".png");
-			Bitmap imageBitmap = BitmapFactory.decodeFile(page1.getAbsolutePath());
-			
-			if (imageBitmap != null)
-			{
-				scriptDisplay.setImageBitmap(imageBitmap);
-			}
-			else
-			{
-				displayToast("ERROR setting image");
-			}*/
 		}
 	}
 
