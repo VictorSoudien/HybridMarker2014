@@ -476,11 +476,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	    	
 	    	int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
 	    	int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
-
-	    	// Create the string to be displayed
-	    	/*String resultString = "Ticks " + gestureCount.get("tick") + "\n" +
-	    						  "Half Ticks " + gestureCount.get("halfTick") + "\n" +
-	    						  "Crosses " + gestureCount.get("x");*/
 	    	
 	    	resultString = "Ticks " + tickCount + "\n" +
 					  "Half Ticks " + halfTickCount + "\n" +
