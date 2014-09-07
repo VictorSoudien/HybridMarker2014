@@ -69,6 +69,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	
 	// The path to the device's local storage
 	private String pathToSDCard;
+	
+	// Allows for values to be stored and accessed across activities
+	private ValueStoringHelperClass valueStore;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -76,6 +79,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_marking_screen);
 		this.setTitle(R.string.app_name);
+		
+		valueStore = new ValueStoringHelperClass();
 		
 		// Get the path to external storage
         pathToSDCard = Environment.getExternalStorageDirectory().getPath();
@@ -95,19 +100,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Scale the image so that it fills the display area
 		scriptDisplay.setScaleX(1.1f);
 		scriptDisplay.setScaleY(1.1f);
-		
-		actionBar = this.getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		
-		// Add tabs to the action bar
-		actionBar.addTab(actionBar.newTab().setText("Page 1").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Page 2").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Page 3").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Page 4").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Page 5").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("Page 6").setTabListener(this));
-		
-		actionBar.addTab(actionBar.newTab().setText("Mark Summary").setTabListener(this));
 
 		questionTextView = (TextView) findViewById(R.id.questionText);
 		
@@ -139,6 +131,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		//answerTextView.setText("Hello World! I'm the Answer.");
 		
+		initTabs();
 		initiliseSCanvas();
 		loadGestureLibrary();
 		
@@ -146,6 +139,25 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
+	}
+	
+	// Initialises tab layout
+	private void initTabs()
+	{
+		actionBar = this.getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		
+		//int numPages = Integer.parseInt(getResources().getString(R.string.number_of_pages));
+		int numPages = valueStore.getNumPage();
+		
+		// Leave out the first page (cover page) -- could be changed
+		for (int i = 1; i < numPages; i++)
+		{
+			// Add tabs to the action bar
+			actionBar.addTab(actionBar.newTab().setText("Page " + i).setTabListener(this));
+		}
+		
+		actionBar.addTab(actionBar.newTab().setText("Mark Summary").setTabListener(this));
 	}
 	
 	// Initialise both the sCanvasContainer and sCanvasView
@@ -398,14 +410,16 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Reset the scroll view when a new tab is selected
 		scriptScrollView.setScrollY(0);
 		
-		if (tab.getText().equals("Page 2"))
+		if (tab.getText().equals("Mark Summary"))
 		{
-			scriptDisplay.setImageResource(R.drawable.page2200dpi);
+			// Display the mark summary screen
 		}
 		else
 		{
-			//displayToast("Setting Image");
-			File page1 = new File (pathToSDCard + "/page1.png");
+			String pageNum = tab.getText().toString().split(" ")[1];
+			int page = Integer.parseInt(pageNum) + 1;
+			
+			File page1 = new File (pathToSDCard + "/page" + page + ".png");
 			Bitmap imageBitmap = BitmapFactory.decodeFile(page1.getAbsolutePath());
 			
 			if (imageBitmap != null)
@@ -416,8 +430,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			{
 				displayToast("ERROR setting image");
 			}
-			
-			//scriptDisplay.setImageResource(R.drawable.page1200dpi);
 		}
 	}
 

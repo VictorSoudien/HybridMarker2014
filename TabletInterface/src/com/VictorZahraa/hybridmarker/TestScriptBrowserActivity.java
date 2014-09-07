@@ -68,6 +68,9 @@ public class TestScriptBrowserActivity extends Activity {
 	// Used top determine whether a refresh is currently being performed
 	private boolean viewBeingRefreshed;
 	
+	// Allows for values to be stored and accessed across activities
+	private ValueStoringHelperClass valueStore;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,6 +80,8 @@ public class TestScriptBrowserActivity extends Activity {
 		actionBar = this.getActionBar();
 		selectedItemInDrawer = "";
 		viewBeingRefreshed = false;
+		
+		valueStore = new ValueStoringHelperClass();
 		
 		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
 		
@@ -400,6 +405,7 @@ public class TestScriptBrowserActivity extends Activity {
 				Channel commChannel = sshSession.openChannel("sftp");
 				commChannel.connect();
 				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
+				int numPages = 0;
 				
 				for (String file : files)
 				{
@@ -411,10 +417,12 @@ public class TestScriptBrowserActivity extends Activity {
 						String fileDir = directory + file;
 						
 						sftpChannel.get(fileDir, saveDir);
+						numPages++;
 						publishProgress(file + " ... File Downloaded");
 					}
 				}
 			
+				valueStore.setNumPages(numPages);
 				//displayToast("Downloaded files from " + directory);
 			}
 			catch (Exception e)
