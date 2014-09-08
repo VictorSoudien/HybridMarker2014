@@ -3,8 +3,10 @@ package com.VictorZahraa.hybridmarker;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,11 +19,13 @@ import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -291,6 +295,24 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				item.setIcon(R.drawable.ic_action_edit);
 				sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
 			}
+		}
+		else if (id == R.id.action_flag_script)
+		{
+			final EditText input = new EditText(context);
+			
+			new AlertDialog.Builder(context)
+		    .setTitle("Flag Script")
+		    .setMessage("Please state the reason for flagging this script:")
+		    .setView(input)
+		    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int whichButton) {
+		            Editable value = input.getText(); 
+		        }
+		    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int whichButton) {
+		            // Do nothing.
+		        }
+		    }).show();
 		}
 		return super.onOptionsItemSelected(item);
 	}

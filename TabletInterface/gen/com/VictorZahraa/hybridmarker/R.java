@@ -28,19 +28,21 @@ public final class R {
         public static final int ic_action_edit_selected=0x7f020003;
         public static final int ic_action_refresh=0x7f020004;
         public static final int ic_action_undo=0x7f020005;
-        public static final int ic_drawer=0x7f020006;
-        public static final int ic_launcher=0x7f020007;
-        public static final int page1200dpi=0x7f020008;
-        public static final int page2200dpi=0x7f020009;
-        public static final int page3200dpi=0x7f02000a;
-        public static final int page4200dpi=0x7f02000b;
-        public static final int page5200dpi=0x7f02000c;
-        public static final int warlock=0x7f02000d;
+        public static final int ic_action_warning=0x7f020006;
+        public static final int ic_drawer=0x7f020007;
+        public static final int ic_launcher=0x7f020008;
+        public static final int page1200dpi=0x7f020009;
+        public static final int page2200dpi=0x7f02000a;
+        public static final int page3200dpi=0x7f02000b;
+        public static final int page4200dpi=0x7f02000c;
+        public static final int page5200dpi=0x7f02000d;
+        public static final int warlock=0x7f02000e;
     }
     public static final class id {
         public static final int action_add_comment=0x7f09001d;
-        public static final int action_mark_pdf=0x7f090022;
-        public static final int action_refresh=0x7f090023;
+        public static final int action_flag_script=0x7f09001e;
+        public static final int action_mark_pdf=0x7f090023;
+        public static final int action_refresh=0x7f090024;
         public static final int action_settings=0x7f09001b;
         public static final int action_undo=0x7f09001c;
         public static final int answerText=0x7f090004;
@@ -59,10 +61,10 @@ public final class R {
         public static final int list_update_progress_bar=0x7f090019;
         public static final int markText=0x7f090006;
         public static final int markingScreenCanvasContainer=0x7f09000b;
-        public static final int menu_option_Eraser=0x7f09001f;
-        public static final int menu_option_Pen=0x7f09001e;
-        public static final int menu_option_recog_gesture=0x7f090020;
-        public static final int menu_option_view_pdf=0x7f090021;
+        public static final int menu_option_Eraser=0x7f090020;
+        public static final int menu_option_Pen=0x7f09001f;
+        public static final int menu_option_recog_gesture=0x7f090021;
+        public static final int menu_option_view_pdf=0x7f090022;
         public static final int next_button=0x7f090007;
         public static final int previous_button=0x7f090005;
         public static final int progress_bar_layout=0x7f090018;
@@ -99,9 +101,10 @@ public final class R {
     }
     public static final class string {
         public static final int action_add_comment=0x7f060009;
-        public static final int action_next=0x7f06000e;
-        public static final int action_prev=0x7f06000d;
-        public static final int action_refresh=0x7f06000b;
+        public static final int action_flag_script=0x7f06000a;
+        public static final int action_next=0x7f06000f;
+        public static final int action_prev=0x7f06000e;
+        public static final int action_refresh=0x7f06000c;
         public static final int action_settings=0x7f060002;
         public static final int action_undo=0x7f060008;
         public static final int app_name=0x7f060000;
@@ -109,10 +112,10 @@ public final class R {
         public static final int menu_option_Eraser=0x7f060004;
         public static final int menu_option_Pen=0x7f060003;
         public static final int menu_option_recog_gesture=0x7f060005;
-        public static final int nav_drawer_open=0x7f06000c;
+        public static final int nav_drawer_open=0x7f06000d;
         public static final int title_activity_main_marking_screen=0x7f060007;
         public static final int title_activity_pdf_display_screen=0x7f060006;
-        public static final int title_activity_test_script_browser=0x7f06000a;
+        public static final int title_activity_test_script_browser=0x7f06000b;
     }
     public static final class style {
         /** 
