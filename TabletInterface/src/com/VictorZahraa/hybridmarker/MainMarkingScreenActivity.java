@@ -74,6 +74,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	
 	private String pathToSDCard; // The path to the device's local storage
 	private int currentPage;
+	private double prevScore;
 	private double currentPageScore;
 	
 	// Allows for values to be stored and accessed across activities
@@ -192,6 +193,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				new GestureRecognition().execute(sCanvasView);
 			}
 		});
+        
+        
      
         sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
         sCanvasContainer.addView(sCanvasView);
@@ -310,6 +313,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			int page = Integer.parseInt(pageNum);
 			
 			currentPage = page;
+			prevScore = valueStore.getPageScore(currentPage); // Get the previous mark for this page
 			
 			pageMarkTextView.setText("" + valueStore.getPageScore(currentPage));
 			
@@ -335,6 +339,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) 
 	{
 		/*tab.setText(tab.getText() + " [" + valueStore.getPageScore(currentPage) + "]");*/
+		
+		valueStore.setPageScore(currentPage, currentPageScore + prevScore);
 		currentPageScore = 0;
 		
 		valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData());
@@ -393,83 +399,89 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	    	if ((sObjects == null) || (sObjects.size() <= 0))
 	    	{
 	    		// No objects found
+	    		currentPageScore = 0;
 	    		return;
 	    	}
-	    	
-	    	for (SObject objs : sObjects)
+	    	else
 	    	{
-		    	PointF [][] currentPoints = new PointF[1][1];
-		    	currentPoints[0] = ((SObjectStroke) objs).getPoints();
-		    	/*int index = 0;
-		    	
-		    	for (SObject obj : sObjects)
+		    	for (SObject objs : sObjects)
 		    	{
-		    		currentPoints[index] = ((SObjectStroke) obj).getPoints();
-		    		index++;
-		    	}*/
-		    	
-		    	ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
-		
-		    	if ((gestureInfo == null) || (gestureInfo.size() <= 0))
-		    	{
-		    		// Gesture not recognized
-		    		return;
-		    	}
-				
-				int maxIndex = -1;
-				int maxValue = -100;
-				int scoreThreshold = 80; // The lower the number the greater the chance of false positives
-				
-				for (int i = 0; i < gestureInfo.size(); i++)
-				{
-					if ((gestureInfo.get(i).mScore > maxValue) && (gestureInfo.get(i).mScore >= scoreThreshold))
+			    	PointF [][] currentPoints = new PointF[1][1];
+			    	currentPoints[0] = ((SObjectStroke) objs).getPoints();
+			    	/*int index = 0;
+			    	
+			    	for (SObject obj : sObjects)
+			    	{
+			    		currentPoints[index] = ((SObjectStroke) obj).getPoints();
+			    		index++;
+			    	}*/
+			    	
+			    	ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
+			
+			    	if ((gestureInfo == null) || (gestureInfo.size() <= 0))
+			    	{
+			    		// Gesture not recognized
+			    		return;
+			    	}
+					
+					int maxIndex = -1;
+					int maxValue = -100;
+					int scoreThreshold = 80; // The lower the number the greater the chance of false positives
+					
+					for (int i = 0; i < gestureInfo.size(); i++)
 					{
-						maxValue = gestureInfo.get(i).mScore;
-						maxIndex = i;
+						if ((gestureInfo.get(i).mScore > maxValue) && (gestureInfo.get(i).mScore >= scoreThreshold))
+						{
+							maxValue = gestureInfo.get(i).mScore;
+							maxIndex = i;
+						}
 					}
-				}
-				
-				if (maxIndex == -1)
-				{
-					//displayToast("Not recognised");
-					//sCanvasView.clearScreen();
-				}
-				else
-				{
-					//displayToast(gestureInfo.get(maxIndex).mName);
-					//sCanvasView.clearScreen();
 					
-					String key = gestureInfo.get(maxIndex).mName.trim();
-					int currentCount = -1;
-					
-					if (gestureCount.get(key) != null)
+					if (maxIndex == -1)
 					{
-						currentCount = gestureCount.get(key);
-						gestureCount.put(key, currentCount + 1);
+						//displayToast("Not recognised");
+						//sCanvasView.clearScreen();
 					}
 					else
 					{
-						gestureCount.put(key, 1);
+						//displayToast(gestureInfo.get(maxIndex).mName);
+						//sCanvasView.clearScreen();
+						
+						String key = gestureInfo.get(maxIndex).mName.trim();
+						int currentCount = -1;
+						
+						if (gestureCount.get(key) != null)
+						{
+							currentCount = gestureCount.get(key);
+							gestureCount.put(key, currentCount + 1);
+						}
+						else
+						{
+							gestureCount.put(key, 1);
+						}
 					}
-				}
+		    	}
+		    	
+		    	int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
+		    	int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
+		    	
+		    	resultString = "Ticks " + tickCount + "\n" +
+						  "Half Ticks " + halfTickCount + "\n" +
+						  "Crosses " + gestureCount.get("x");
+		    	
+		    	currentPageScore = tickCount + ((0.5) * halfTickCount);
 	    	}
-	    	
-	    	int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
-	    	int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
-	    	
-	    	resultString = "Ticks " + tickCount + "\n" +
-					  "Half Ticks " + halfTickCount + "\n" +
-					  "Crosses " + gestureCount.get("x");
-	    	
-	    	currentPageScore = tickCount + ((0.5) * halfTickCount);
-	    	valueStore.setPageScore(currentPage, currentPageScore);
 		}
 		
 		@Override
 		protected void onPostExecute(Long params)
 		{
-			pageMarkTextView.setText("" + currentPageScore);
-	    	displayToast(resultString);
+			pageMarkTextView.setText("" +(prevScore + currentPageScore));
+			
+			if (!resultString.equals(""))
+			{
+				displayToast(resultString);
+			}
 		}
 	}
 	
