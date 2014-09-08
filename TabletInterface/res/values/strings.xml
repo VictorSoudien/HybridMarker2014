@@ -11,13 +11,13 @@
     <string name="title_activity_main_marking_screen">MainMarkingScreenActivity</string>
     <string name="action_undo">Undo</string>
     <string name="action_add_comment">Add Comment</string>
+    <String name="action_upload_script">Upload Script</String>
     <string name="action_flag_script">Flag Script</string>
     <string name="title_activity_test_script_browser">TestScriptBrowserActivity</string>
     <string name="action_refresh">Refresh</string>
-    
     <string name="nav_drawer_open">Navigation Drawer Open</string>
-    
-     <string name="action_prev">Previous</string>
-     <string name="action_next">Next</string>
+    <string name="action_prev">Previous</string>
+    <string name="action_next">Next</string>
+    <string name="title_activity_script_finalize_and_upload_activity">Script_finalize_and_upload_activity</string>
 
 </resources>
