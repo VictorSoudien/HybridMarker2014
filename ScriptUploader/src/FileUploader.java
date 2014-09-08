@@ -176,9 +176,8 @@ public class FileUploader
 			
 			while ((nextIn = inStream.read()) != -1)
 			{
-				result = result + Character.toString((char)nextIn);
+				result += Character.toString((char)nextIn);
 			}
-			
 			
 			return result;
  		}
