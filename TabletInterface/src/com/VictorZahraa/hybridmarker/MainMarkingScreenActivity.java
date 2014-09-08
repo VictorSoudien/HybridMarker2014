@@ -11,7 +11,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -106,8 +108,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		scriptDisplay = (ImageView) findViewById(R.id.scriptDisplay);
 		
 		// Scale the image so that it fills the display area
-		scriptDisplay.setScaleX(1.1f);
-		scriptDisplay.setScaleY(1.1f);
+		scriptDisplay.setScaleX(1.05f);
+		scriptDisplay.setScaleY(1.05f);
 
 		questionTextView = (TextView) findViewById(R.id.questionText);
 		questionTextView.setText(valueStore.getNextQuestion());
@@ -193,9 +195,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				new GestureRecognition().execute(sCanvasView);
 			}
 		});
-        
-        
-     
+
         sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
         sCanvasContainer.addView(sCanvasView);
 	}
@@ -439,6 +439,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					
 					if (maxIndex == -1)
 					{
+						// Gesture not recognized
+						
 						//displayToast("Not recognised");
 						//sCanvasView.clearScreen();
 					}
@@ -503,8 +505,17 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			Bitmap temp = Bitmap.createBitmap(baseBitmap.getWidth(), baseBitmap.getHeight(), baseBitmap.getConfig());
 			Canvas drawCanvas = new Canvas (temp);
 			
+			// Used to increase quality of saved overlay
+			Paint painter = new Paint();
+			painter.setFilterBitmap(true);
+			
+			int overlayWidth = overlay.getWidth();
+			int overlayHeight = overlay.getHeight();
+			double scalingFactor = 2.3;
+			
 			drawCanvas.drawBitmap(baseBitmap, new Matrix(), null);
-			drawCanvas.drawBitmap(overlay, new Matrix(), null);
+			drawCanvas.drawBitmap(overlay, null, new Rect(0, 115, (int) (overlayWidth * scalingFactor), (int) (overlayHeight * scalingFactor)), painter);
+			//drawCanvas.drawBitmap(overlay, new Matrix(), null);
 			
 			valueStore.merged = temp;
 		}
