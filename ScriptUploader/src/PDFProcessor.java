@@ -63,7 +63,16 @@ public class PDFProcessor
 					line = line.replaceAll(" ", "_");
 					uploadDirectory += line + "/";
 					
+					uploadDirectory = "CSC1010H/Class_Test_2/";
+					line = "Class_Test_2";
+					
 					prepareFileForUpload(fileToProcess, uploadDirectory, line);
+					
+					// Test if directory is correct
+					/*if (!uploadDirectory.equalsIgnoreCase("CSC1010H/Class_Test_2/"))
+					{
+						System.out.println (fileToProcess.getName() + "\t-\t" +  uploadDirectory);
+					}*/
 					
 					break;
 				}
@@ -153,8 +162,24 @@ public class PDFProcessor
 	public static void main(String[] args) 
 	{
 		//File imageFile = new File("201408080948.pdf");
-		File imageFile = new File("ScannedScript.pdf");
+		//File imageFile = new File("ScannedScript.pdf");
+		
 		PDFProcessor proc = new PDFProcessor();
-		proc.processDocument(imageFile);
+		
+		//imageFiles[0] = new File ("scanned_class_test_2/201408201304.pdf");
+		
+		File dir = new File("scanned_class_test_2");
+		File imageFiles [] = dir.listFiles();
+		int count = 1;
+		
+		for (File f : imageFiles)
+		{
+			System.out.print ("Uploading file " + count);
+			proc.processDocument(f);
+			System.out.println ();
+			count++;
+		}		
+		
+		System.out.println ("Upload complete");
 	}
 }

@@ -171,7 +171,16 @@ public class FileUploader
 			InputStream inStream = commChannel.getInputStream();
 			commChannel.connect();
 			
-			return Character.toString((char) inStream.read());
+			String result = "";
+			int nextIn;
+			
+			while ((nextIn = inStream.read()) != -1)
+			{
+				result = result + Character.toString((char)nextIn);
+			}
+			
+			
+			return result;
  		}
 		catch (Exception e)
 		{
