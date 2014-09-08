@@ -76,6 +76,15 @@
 	                android:text="@string/action_prev"
 	                android:onClick="prevQuestionAndAnswer" />
 	            
+	            <TextView
+	                    android:id="@+id/markText"
+	                    android:layout_width="255dp"
+	                    android:layout_height="match_parent"
+	                    android:text="10"
+	                    android:gravity="center"
+	                    android:textSize="40sp"
+	                    android:textAppearance="?android:attr/textAppearanceLarge" />
+	            
 	            <Button
 	                android:id="@+id/next_button"
 	                android:layout_width="150dp"

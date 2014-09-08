@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -54,6 +56,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 {
 	private TextView questionTextView;
 	private TextView answerTextView;
+	private TextView pageMarkTextView;
 	private ScrollViewHelper scriptScrollView;
 	private ImageView scriptDisplay;
 	
@@ -106,38 +109,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		scriptDisplay.setScaleY(1.1f);
 
 		questionTextView = (TextView) findViewById(R.id.questionText);
-		
-		/*questionTextView.setText("Consider the following problem. Answer it appropriately." + 
-
-"\n The Petersens have recently moved to a new town and are arranging a surprise birthday party for their son Andre, and have invited three families from the neighbourhood, the Smiths, the Januarys and the Hectors. They plan to make up party packets for the kids to take home after the party, blue for boys and pink for girls. " +
-
-"\n Being super organised, Mrs Petersen with the help of Mr Petersen wants to determine how many of each colour party packet she needs to buy, and also how many of each colour she needs to put aside for each family." +
-
-"\n They sit down and come up with the following information. Mrs Petersen remembers that the Hectors have a “pigeon pair”, i.e. a boy and a girl. Mr Petersen recalls that the Januarys only have a set of identical twin boys. Mrs Petersen notes that she’s only ever noticed two girls from these local families to come over to play. Mr Petersen notes that the Smiths have three children, since the family fits nicely into their family sedan when they go out." +
-
-"\n You happen to be visiting the Petersens at this point, and want to impress them with the problem solving skills you’ve learnt at university. Using the information they’ve provided, determine how many of each colour party packet they need to buy and how many of each colour they need to allocate to each family and what the total number of party packets are." +
-
-"\n Use a diagram to show how you solve the problem.");*/
-		
 		questionTextView.setText(valueStore.getNextQuestion());
 		
 		answerTextView = (TextView) findViewById(R.id.answerText);
-		
-		/*answerTextView.setText("Consider the following problem. Answer it appropriately." + 
-
-"\n The Petersens have recently moved to a new town and are arranging a surprise birthday party for their son Andre, and have invited three families from the neighbourhood, the Smiths, the Januarys and the Hectors. They plan to make up party packets for the kids to take home after the party, blue for boys and pink for girls. " +
-
-"\n Being super organised, Mrs Petersen with the help of Mr Petersen wants to determine how many of each colour party packet she needs to buy, and also how many of each colour she needs to put aside for each family." +
-
-"\n They sit down and come up with the following information. Mrs Petersen remembers that the Hectors have a “pigeon pair”, i.e. a boy and a girl. Mr Petersen recalls that the Januarys only have a set of identical twin boys. Mrs Petersen notes that she’s only ever noticed two girls from these local families to come over to play. Mr Petersen notes that the Smiths have three children, since the family fits nicely into their family sedan when they go out." +
-
-"\n You happen to be visiting the Petersens at this point, and want to impress them with the problem solving skills you’ve learnt at university. Using the information they’ve provided, determine how many of each colour party packet they need to buy and how many of each colour they need to allocate to each family and what the total number of party packets are." +
-
-"\n Use a diagram to show how you solve the problem.");*/
-		
 		answerTextView.setText(valueStore.getNextAnswer());
 		
-		//answerTextView.setText("Hello World! I'm the Answer.");
+		pageMarkTextView = (TextView) findViewById(R.id.markText);
 		
 		initTabs();
 		initiliseSCanvas();
@@ -321,9 +298,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Reset the scroll view when a new tab is selected
 		scriptScrollView.setScrollY(0);
 		
-		if (tab.getText().equals("Mark Summary"))
+		if (tab.getText().toString().contains("Mark Summary"))
 		{
 			// Display the mark summary screen
+			sCanvasView.clearScreen();
+			scriptDisplay.setImageBitmap(valueStore.merged);
 		}
 		else
 		{
@@ -331,6 +310,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			int page = Integer.parseInt(pageNum);
 			
 			currentPage = page;
+			
+			pageMarkTextView.setText("" + valueStore.getPageScore(currentPage));
 			
 			if (valueStore.getStoredView(page) != null)
 			{
@@ -353,10 +334,15 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) 
 	{
-		tab.setText(tab.getText() + " [" + valueStore.getPageScore(currentPage) + "]");
+		/*tab.setText(tab.getText() + " [" + valueStore.getPageScore(currentPage) + "]");*/
 		currentPageScore = 0;
 		
 		valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData());
+		
+		if (tab.getText().toString().contains("Page 1"))
+		{
+			new BitmapMerger().execute(valueStore.getPage(currentPage), sCanvasView.getBitmap(true));
+		}
 		
 		//sCanvasView.clearScreen();
 	}
@@ -482,7 +468,33 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		@Override
 		protected void onPostExecute(Long params)
 		{
+			pageMarkTextView.setText("" + currentPageScore);
 	    	displayToast(resultString);
+		}
+	}
+	
+	private class BitmapMerger extends AsyncTask<Bitmap, String, Long>
+	{
+		@Override
+		protected Long doInBackground(Bitmap... params) 
+		{
+			if (params.length == 2)
+			{
+				merge(params[0], params[1]);
+			}
+			
+			return null;
+		}
+		
+		private void merge(Bitmap baseBitmap, Bitmap overlay)
+		{
+			Bitmap temp = Bitmap.createBitmap(baseBitmap.getWidth(), baseBitmap.getHeight(), baseBitmap.getConfig());
+			Canvas drawCanvas = new Canvas (temp);
+			
+			drawCanvas.drawBitmap(baseBitmap, new Matrix(), null);
+			drawCanvas.drawBitmap(overlay, new Matrix(), null);
+			
+			valueStore.merged = temp;
 		}
 	}
 	

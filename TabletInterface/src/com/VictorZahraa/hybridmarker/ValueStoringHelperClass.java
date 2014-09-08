@@ -27,6 +27,8 @@ public class ValueStoringHelperClass
 	private static int currentQuestion;
 	private static int currentAnswer;
 	
+	public static Bitmap merged;
+	
 	public ValueStoringHelperClass()
 	{
 		// Get the path to external storage

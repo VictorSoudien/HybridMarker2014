@@ -345,7 +345,7 @@ public class TestScriptBrowserActivity extends Activity {
 			}
 			catch (Exception e)
 			{
-				displayToast("ERROR: Could not execute command ( "  + command + " ) on server" );
+				displayToast("ERROR: Could not execute command ( "  + command + " ) on server\n" + e.getMessage());
 			}
 			
 			return result;
