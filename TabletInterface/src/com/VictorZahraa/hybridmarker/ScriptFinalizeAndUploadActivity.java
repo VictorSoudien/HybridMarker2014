@@ -9,15 +9,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.os.Build;
 
 public class ScriptFinalizeAndUploadActivity extends Activity {
 
+	ImageView studentNumberImageView;
+	ValueStoringHelperClass valueStore;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_script_finalize_and_upload);
+		
+		valueStore = new ValueStoringHelperClass();
 
+		studentNumberImageView = (ImageView) findViewById(R.id.script_student_number_display);
+		studentNumberImageView.setImageBitmap(valueStore.getPage(0));
+				
+		studentNumberImageView.setScaleX(2);
+		studentNumberImageView.setScaleY(2);
+		
+		studentNumberImageView.setScrollY(540);
+		studentNumberImageView.setScrollX(-85);
+		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();

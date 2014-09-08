@@ -1,8 +1,70 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal" 
     tools:context="com.VictorZahraa.hybridmarker.ScriptFinalizeAndUploadActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame" >
+
+   <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+       <ScrollView
+           android:id="@+id/scrollView1"
+           android:layout_width="match_parent"
+           android:layout_height="100dp" >
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical" >
+
+               <ImageView
+                   android:id="@+id/script_student_number_display"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:background="@android:color/darker_gray"
+                   android:scaleType="fitCenter"
+                   android:src="@drawable/ic_launcher" />
+           </LinearLayout>
+       </ScrollView>
+
+       <TextView
+           android:id="@+id/instruction_enter_student_number_text_view"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/instruction_enter_student_number"
+           android:textAppearance="?android:attr/textAppearanceLarge" />
+
+       <EditText
+           android:id="@+id/student_number_field"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:ems="10" >
+
+           <requestFocus />
+       </EditText>
+
+       <Button
+           android:id="@+id/upload_button"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center"
+           android:text="@string/action_upload_script" />
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/tempLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+    </LinearLayout>
+    
+</LinearLayout>
 
