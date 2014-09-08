@@ -54,7 +54,8 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_gravity="center"
-           android:text="@string/action_upload_script" />
+           android:text="@string/action_upload_script"
+           android:onClick="uploadScript" />
         
     </LinearLayout>
     

@@ -2,19 +2,25 @@ package com.VictorZahraa.hybridmarker;
 
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.os.Build;
 
 public class ScriptFinalizeAndUploadActivity extends Activity {
 
 	ImageView studentNumberImageView;
+	EditText studentNumberInput;
+	
 	ValueStoringHelperClass valueStore;
 	
 	@Override
@@ -32,6 +38,8 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		
 		studentNumberImageView.setScrollY(540);
 		studentNumberImageView.setScrollX(-85);
+		
+		studentNumberInput = (EditText) findViewById(R.id.student_number_field);
 		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -57,6 +65,26 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	// Called when the upload script button is clicked
+	public void uploadScript(View view)
+	{
+		String studentNum = studentNumberInput.getText().toString();
+		
+		if (studentNum.equals("") || studentNum.length() != 9)
+		{
+			// Display the flagging dialog
+			new AlertDialog.Builder(this)
+		    .setTitle("Invalid Student Number")
+		    .setMessage("Please enter a valid student number")
+		    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int whichButton) 
+		        {
+		            // Dismiss the dialog
+		        }}
+		    ).show();
+		}
 	}
 
 	/*
