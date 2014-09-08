@@ -19,6 +19,12 @@
        	android:title="@string/action_add_comment"
     	android:icon="@drawable/ic_action_edit" 
     	android:showAsAction="ifRoom"/>
+    
+    <item 
+        android:id="@+id/action_upload_script"
+       	android:title="@string/action_upload_script"
+    	android:icon="@drawable/ic_action_upload" 
+    	android:showAsAction="ifRoom"/>
     	
     <item 
         android:id="@+id/action_flag_script"

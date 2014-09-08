@@ -298,6 +298,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		}
 		else if (id == R.id.action_flag_script)
 		{
+			// Display the flagging dialog
 			final EditText input = new EditText(context);
 			
 			new AlertDialog.Builder(context)
@@ -313,6 +314,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		            // Do nothing.
 		        }
 		    }).show();
+		}
+		else if (id == R.id.action_upload_script)
+		{
+			Intent scriptUploadScreen = new Intent(MainMarkingScreenActivity.this, ScriptFinalizeAndUploadActivity.class);
+        	startActivity(scriptUploadScreen);
 		}
 		return super.onOptionsItemSelected(item);
 	}
