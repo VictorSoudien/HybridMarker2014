@@ -296,6 +296,8 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 		        	/*Intent scriptUploadScreen = new Intent(ScriptFinalizeAndUploadActivity.this, TestScriptBrowserActivity.class);
 			    	startActivity(scriptUploadScreen);*/
 		        	
+		        	valueStore.recycleBitmaps();
+		        	
 		        	// Restart the application
 		        	Intent i = getBaseContext().getPackageManager()
 		                    .getLaunchIntentForPackage( getBaseContext().getPackageName() );

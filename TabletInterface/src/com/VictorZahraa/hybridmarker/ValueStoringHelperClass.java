@@ -221,4 +221,16 @@ public class ValueStoringHelperClass
 	{
 		return mergedBitmaps.get(index);
 	}
+	
+	public void recycleBitmaps()
+	{
+		for (Bitmap b : pageBitmaps)
+		{
+			b.recycle();
+		}
+		for (Bitmap bitmap : mergedBitmaps)
+		{
+			bitmap.recycle();
+		}
+	}
 }
