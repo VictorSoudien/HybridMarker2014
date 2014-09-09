@@ -29,15 +29,25 @@ public class ValueStoringHelperClass
 	
 	public static Bitmap merged;
 	
+	// The list of merged bitmaps
+	private static ArrayList<Bitmap> mergedBitmaps;
+	
+	// The directory of the currentTest
+	public static String currentDirectory;
+	
 	public ValueStoringHelperClass()
 	{
 		// Get the path to external storage
         pathToSDCard = Environment.getExternalStorageDirectory().getPath();
 	}
 	
+	public void setCurrentDirectory (String value) {currentDirectory = value;}
+	public String getCurrentDirectory () {return currentDirectory;}
+	
 	public void initPageCollection()
 	{
 		pageBitmaps = new ArrayList<Bitmap>();
+		mergedBitmaps = new ArrayList<Bitmap>();
 	}
 	
 	public void setNumPages (int value) 
@@ -89,6 +99,8 @@ public class ValueStoringHelperClass
 			questionsAndAnswers = memoText.split("<split_marker>");
 			currentQuestion = -1;
 			currentAnswer = 0;
+			
+			buffReader.close();
 		}
 		catch (Exception e)
 		{
@@ -178,4 +190,14 @@ public class ValueStoringHelperClass
 	public SCanvasView getStoredView (int index) {return sCanvasCollection[index];}
 	
 	public byte[] getDrawingData(int index){return drawingData[index];}
+	
+	public void addMergedBitmap (Bitmap merged)
+	{
+		mergedBitmaps.add(merged);
+	}
+	
+	public Bitmap getMergedBitmap (int index)
+	{
+		return mergedBitmaps.get(index);
+	}
 }

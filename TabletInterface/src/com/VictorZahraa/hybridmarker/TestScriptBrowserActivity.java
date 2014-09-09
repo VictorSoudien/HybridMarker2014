@@ -354,6 +354,9 @@ public class TestScriptBrowserActivity extends Activity {
 		// Populate the expandable list layout
 		private void populateLists(String courseCode)
 		{
+			// Store the current directory
+			valueStore.setCurrentDirectory("Honours_Project/" + courseCode + "/");
+			
 			String listOfTests = executeCommandOnServer("cd Honours_Project/" + courseCode + "/ && ls");
 			String [] tests = listOfTests.split("\n");
 			

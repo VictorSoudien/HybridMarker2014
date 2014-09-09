@@ -317,8 +317,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		}
 		else if (id == R.id.action_upload_script)
 		{
-			Intent scriptUploadScreen = new Intent(MainMarkingScreenActivity.this, ScriptFinalizeAndUploadActivity.class);
-        	startActivity(scriptUploadScreen);
+			new BitmapMerger().execute();
+			
+			//new BitmapMerger().execute(pageBitmaps);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -373,10 +374,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData());
 		
-		if (tab.getText().toString().contains("Page 1"))
+		/*if (tab.getText().toString().contains("Page 1"))
 		{
 			new BitmapMerger().execute(valueStore.getPage(currentPage), sCanvasView.getBitmap(true));
-		}
+		}*/
 		
 		//sCanvasView.clearScreen();
 	}
@@ -520,10 +521,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		@Override
 		protected Long doInBackground(Bitmap... params) 
 		{
-			if (params.length == 2)
+			/*if (params.length == 2)
 			{
 				merge(params[0], params[1]);
-			}
+			}*/
+			
+			prepareMergedBitmaps();
 			
 			return null;
 		}
@@ -546,6 +549,71 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			//drawCanvas.drawBitmap(overlay, new Matrix(), null);
 			
 			valueStore.merged = temp;
+		}
+		
+		private void prepareMergedBitmaps()
+		{
+			// Store the data for the current question
+			valueStore.setPageScore(currentPage, currentPageScore + prevScore);
+			currentPageScore = 0;
+			
+			valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData());
+			
+			int pageCount = actionBar.getTabCount() - 1;
+			Bitmap [] pageBitmaps = new Bitmap[pageCount];
+			
+			// Loops through each page and merge the overlays with the bitmap
+			for (int i = 0; i < pageCount; i++)
+			{
+				sCanvasView.clearScreen();
+				sCanvasView.setData(valueStore.getDrawingData(i + 1));
+				
+				pageBitmaps[i] = sCanvasView.getBitmap(true);
+			}
+			
+			mergeBitmaps(pageBitmaps);
+		}
+		
+		// Merge all pages with their overlays
+		private void mergeBitmaps (Bitmap... overlays)
+		{
+			// Used to increase quality of saved overlay
+			Paint painter = new Paint();
+			painter.setFilterBitmap(true);
+			
+			double scalingFactor = 2.3;
+			int counter = 1;
+			
+			for (Bitmap overlay : overlays)
+			{	
+				Bitmap baseBitmap = valueStore.getPage(counter);
+				Bitmap temp = Bitmap.createBitmap(baseBitmap.getWidth(), baseBitmap.getHeight(), baseBitmap.getConfig());
+				Canvas drawCanvas = new Canvas (temp);
+				
+				int overlayWidth = overlay.getWidth();
+				int overlayHeight = overlay.getHeight();
+				
+				drawCanvas.drawBitmap(baseBitmap, new Matrix(), null);
+				drawCanvas.drawBitmap(overlay, null, new Rect(0, 115, (int) (overlayWidth * scalingFactor), (int) (overlayHeight * scalingFactor)), painter);
+				
+				valueStore.addMergedBitmap(temp);
+				
+				publishProgress("Processed Bitmap " + counter);
+				counter++;
+			}
+		}
+
+		@Override
+		protected void onProgressUpdate(String... message)
+		{
+			displayToast(message[0]);
+		}
+		
+		@Override
+		protected void onPostExecute(Long params)
+		{
+			Intent scriptUploadScreen = new Intent(MainMarkingScreenActivity.this, ScriptFinalizeAndUploadActivity.class);
+	    	startActivity(scriptUploadScreen);
 		}
 	}
 	
