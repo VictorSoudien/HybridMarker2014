@@ -5,6 +5,7 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -36,15 +37,19 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 	private ImageView studentNumberImageView;
 	private EditText studentNumberInput;
-	
 	private ImageView testDisplay;
 	
+	private Context context;
+	
 	private ValueStoringHelperClass valueStore;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_script_finalize_and_upload);
+		
+		context = this;
 		
 		valueStore = new ValueStoringHelperClass();
 
@@ -230,8 +235,17 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		{
 			progressDialog.dismiss();
 			
-			Intent scriptUploadScreen = new Intent(ScriptFinalizeAndUploadActivity.this, TestScriptBrowserActivity.class);
-	    	startActivity(scriptUploadScreen);
+			new AlertDialog.Builder(context)
+		    .setTitle("Script Upload")
+		    .setMessage("File uploaded successfully")
+		    .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int whichButton) 
+		        {
+		        	// Return the user to the script browser screen
+		        	Intent scriptUploadScreen = new Intent(ScriptFinalizeAndUploadActivity.this, TestScriptBrowserActivity.class);
+			    	startActivity(scriptUploadScreen);
+		        }}
+		    ).show();
 		}
 	}
 	
