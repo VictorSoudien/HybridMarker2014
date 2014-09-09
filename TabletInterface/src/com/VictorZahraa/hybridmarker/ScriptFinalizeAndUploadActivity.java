@@ -88,7 +88,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 	// Called when the upload script button is clicked
 	public void uploadScript(View view)
 	{
-		String studentNum = studentNumberInput.getText().toString();
+		String studentNum = studentNumberInput.getText().toString().trim();
 		
 		if (studentNum.equals("") || studentNum.length() != 9)
 		{
@@ -159,70 +159,24 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				commChannel.connect();
 				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
 				
-				String uploadDirectory = valueStore.getCurrentDirectory();
-				publishProgress(uploadDirectory);
+				String baseDirectory =  valueStore.getCurrentDirectory() + studentNumber + "/";
 				
-				File f = new File (pathToSDCard + "/page4.png");
+				// Rename the directory to the student number
+				sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
 				
-				String tempUploadDir = uploadDirectory + "page4.png";
+				File f = new File (pathToSDCard + "/page1.png");
+				
+				String tempUploadDir = baseDirectory + "Markedpage1.png";
 				
 				sftpChannel.put(new FileInputStream(f), tempUploadDir);
-				//sftpChannel.put(valueStore.getPage(0));
+				
+				sftpChannel.disconnect();
 			}
 			catch (Exception e)
 			{
 				// Handle the error
 				publishProgress("ERROR\n" + e.getMessage());
 			}
-			
-	        // Get the path to external storage
-	        //String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
-			
-			/*try
-			{
-				String filenames = executeCommandOnServer("cd " + directory + " && ls");
-				//displayToast(directory);
-				String [] files = filenames.split("\n");
-				
-				Channel commChannel = sshSession.openChannel("sftp");
-				commChannel.connect();
-				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
-				int numPages = 0;
-				
-				valueStore.initPageCollection();
-				
-				for (String file : files)
-				{
-					file = file.trim();
-					
-					if (file.contains(".png"))
-					{
-						String saveDir = pathToSDCard + "/" + file;
-						String fileDir = directory + file;
-						
-						
-						
-						sftpChannel.get(fileDir, saveDir);
-						numPages++;
-						boolean saved = valueStore.addPage(numPages);
-						publishProgress(file + " ... File Downloaded   " + saved);
-					}
-				}
-				
-				// Download the memo for this test
-				String saveDir = pathToSDCard + "/" + "memo.txt";
-				
-				sftpChannel.get(memoDir, saveDir);
-				valueStore.setMemoText("memo.txt");
-				publishProgress("Memo Downloaded");
-				
-				valueStore.setNumPages(numPages);
-				//displayToast("Downloaded files from " + directory);
-			}
-			catch (Exception e)
-			{
-				displayToast("Error: Could not download file \n" + e);
-			}*/
 		}
 		
 		@Override

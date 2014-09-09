@@ -34,6 +34,7 @@ public class ValueStoringHelperClass
 	
 	// The directory of the currentTest
 	public static String currentDirectory;
+	public static String nameOfTestBeingMarked;
 	
 	public ValueStoringHelperClass()
 	{
@@ -43,6 +44,9 @@ public class ValueStoringHelperClass
 	
 	public void setCurrentDirectory (String value) {currentDirectory = value;}
 	public String getCurrentDirectory () {return currentDirectory;}
+	
+	public void setTestName (String value) {nameOfTestBeingMarked = value;}
+	public String getTestName () {return nameOfTestBeingMarked;}
 	
 	public void initPageCollection()
 	{

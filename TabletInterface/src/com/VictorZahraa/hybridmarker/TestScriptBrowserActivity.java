@@ -121,8 +121,9 @@ public class TestScriptBrowserActivity extends Activity {
 				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
 				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/reformattedEndMarkers.txt";
 				
-				// Store the current directory
+				// Store the current directory and test name
 				valueStore.setCurrentDirectory("Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/");
+				valueStore.setTestName(tempTestName);
 				
 				new ServerConnect().execute("Download Files", fileDirectory, memoDirectory);
 				
