@@ -88,6 +88,8 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	
+	
 	// Called when the upload script button is clicked
 	public void uploadScript(View view)
 	{

@@ -98,6 +98,12 @@ public class TestScriptBrowserActivity extends Activity {
 		}*/
 	}
 	
+	@Override
+	public void onBackPressed()
+	{
+		// Handle the pressing of the 'physical' back button
+	}
+	
 	// Sets up the expandable list view used to display tests for each course
 	private void initExpandableListView()
 	{
