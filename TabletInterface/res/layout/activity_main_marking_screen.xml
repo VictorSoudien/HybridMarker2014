@@ -127,6 +127,8 @@
 	    android:layout_alignParentLeft="true"
 	    android:background="@android:color/transparent" >
 
+		
+
 	</RelativeLayout>
 	
 	<RelativeLayout
@@ -137,6 +139,5 @@
 	    android:layout_toRightOf="@id/canvasAnchorPoint"
 	    android:background="@android:color/transparent" >
 	</RelativeLayout>
-	
 </RelativeLayout>
 

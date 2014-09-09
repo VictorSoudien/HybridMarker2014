@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,7 +94,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_marking_screen);
 		this.setTitle(R.string.app_name);
-		
+				
 		valueStore = new ValueStoringHelperClass();
 		currentPageScore = 0;
 		
@@ -518,6 +520,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	
 	private class BitmapMerger extends AsyncTask<Bitmap, String, Long>
 	{
+		ProgressDialog progressDialog;
+		
 		@Override
 		protected Long doInBackground(Bitmap... params) 
 		{
@@ -598,20 +602,22 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				
 				valueStore.addMergedBitmap(temp);
 				
-				publishProgress("Processed Bitmap " + counter);
 				counter++;
 			}
 		}
-
+		
 		@Override
-		protected void onProgressUpdate(String... message)
+		protected void onPreExecute()
 		{
-			displayToast(message[0]);
+			progressDialog = ProgressDialog.show(MainMarkingScreenActivity.this, "", 
+                    "Preparing Files...", true);
 		}
 		
 		@Override
 		protected void onPostExecute(Long params)
 		{
+			progressDialog.dismiss();
+			
 			Intent scriptUploadScreen = new Intent(MainMarkingScreenActivity.this, ScriptFinalizeAndUploadActivity.class);
 	    	startActivity(scriptUploadScreen);
 		}
