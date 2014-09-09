@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.jcraft.jsch.Session;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.Properties;
 
 public class ScriptFinalizeAndUploadActivity extends Activity {
@@ -165,14 +167,27 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				// Rename the directory to the student number
 				sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
 				
-				File f = new File (pathToSDCard + "/page1.png");
+				File temp;// = new File (pathToSDCard + "/tempCoverPage.png");
+				FileOutputStream fileOut;
+				String basePageName = "page";
 				
-				String tempUploadDir = baseDirectory + "Markedpage1.png";
-				
-				sftpChannel.put(new FileInputStream(f), tempUploadDir);
-				
-				f.delete();
-				
+				// Subtract 1 because I don't reupload the cover page
+				for (int i = 0; i < valueStore.getNumPage() - 1; i++)
+				{
+					temp = new File (pathToSDCard + "/tempMarkedPage.png");
+					fileOut = new FileOutputStream(temp);
+					
+					Bitmap currentPage = valueStore.getMergedBitmap(i);
+					currentPage.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
+					
+
+					String tempUploadDir = baseDirectory + basePageName + (i+2) + ".png";
+					sftpChannel.put(new FileInputStream(temp), tempUploadDir);
+					
+					// Delete the temp file that was created
+					temp.delete();
+				}
+
 				sftpChannel.disconnect();
 				
 				deleteDownloadedFiles();
