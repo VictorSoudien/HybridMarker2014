@@ -179,7 +179,7 @@ public class FileUploader
 				result += Character.toString((char)nextIn);
 			}
 			
-			return result;
+			return result.trim();
  		}
 		catch (Exception e)
 		{

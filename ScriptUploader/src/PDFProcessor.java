@@ -168,7 +168,7 @@ public class PDFProcessor
 		
 		//imageFiles[0] = new File ("scanned_class_test_2/201408201304.pdf");
 		
-		/*File dir = new File("scanned_class_test_2");
+		File dir = new File("scanned_class_test_2");
 		File imageFiles [] = dir.listFiles();
 		int count = 1;
 		
@@ -178,12 +178,12 @@ public class PDFProcessor
 			proc.processDocument(f);
 			System.out.println ();
 			count++;
-		}*/	
-		File imageFile = new File("scanned_class_test_2/201408201312.pdf");
+		}
+		/*File imageFile = new File("scanned_class_test_2/201408201312.pdf");
 		proc.processDocument(imageFile);
 		
 		imageFile = new File("scanned_class_test_2/201408201316 (2).pdf");
-		proc.processDocument(imageFile);
+		proc.processDocument(imageFile);*/
 		
 		System.out.println ("Upload complete");
 	}
