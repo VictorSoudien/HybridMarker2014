@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -169,7 +170,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				
 				File temp;// = new File (pathToSDCard + "/tempCoverPage.png");
 				FileOutputStream fileOut;
-				String basePageName = "page";
+				String basePageName = "MarkedPage";
 				
 				// Subtract 1 because I don't reupload the cover page
 				for (int i = 0; i < valueStore.getNumPage() - 1; i++)
@@ -226,6 +227,9 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		protected void onPostExecute(String param)
 		{
 			progressDialog.dismiss();
+			
+			Intent scriptUploadScreen = new Intent(ScriptFinalizeAndUploadActivity.this, TestScriptBrowserActivity.class);
+	    	startActivity(scriptUploadScreen);
 		}
 	}
 	
