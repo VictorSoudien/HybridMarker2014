@@ -117,10 +117,14 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		
 		private ProgressDialog progressDialog;
 		
+		private String pathToSDCard;
+		
 		@Override
 		protected String doInBackground(String... params) 
 		{
-			// TODO Auto-generated method stub
+			// Get the path to external storage
+			pathToSDCard = Environment.getExternalStorageDirectory().getPath();
+			
 			connectToServer();
 			uploadFiles(params[0]);
 			return null;
@@ -149,10 +153,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		
 		// Download the images needed for each test from the server
 		private void uploadFiles(String studentNumber)
-		{
-			// Get the path to external storage
-			String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
-			
+		{	
 			try
 			{
 				Channel commChannel = sshSession.openChannel("sftp");
@@ -173,11 +174,23 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				f.delete();
 				
 				sftpChannel.disconnect();
+				
+				deleteDownloadedFiles();
 			}
 			catch (Exception e)
 			{
 				// Handle the error
 				publishProgress("ERROR\n" + e.getMessage());
+			}
+		}
+		
+		// Deletes the files that were downloaded
+		private void deleteDownloadedFiles()
+		{
+			for (int i = 0; i < valueStore.getNumPage(); i++)
+			{
+				File temp = new File (pathToSDCard + "/page" + (i+1) + ".png");
+				temp.delete();
 			}
 		}
 		
