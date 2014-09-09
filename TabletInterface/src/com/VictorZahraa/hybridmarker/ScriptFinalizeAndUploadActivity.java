@@ -14,13 +14,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.view.View.OnClickListener;
 import android.os.Build;
 
 import com.jcraft.jsch.Channel;
@@ -33,15 +38,25 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-public class ScriptFinalizeAndUploadActivity extends Activity {
+public class ScriptFinalizeAndUploadActivity extends Activity implements OnClickListener {
 
+	private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    private GestureDetector gestureDetector;
+    View.OnTouchListener gestureListener;
+	
 	private ImageView studentNumberImageView;
 	private EditText studentNumberInput;
 	private ImageView testDisplay;
+	private TextView markTextView;
 	
 	private Context context;
 	
 	private ValueStoringHelperClass valueStore;
+	
+	private int numMarkedPages;
+	private int currentPageBeingShown;
 	
 	
 	@Override
@@ -52,6 +67,9 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		context = this;
 		
 		valueStore = new ValueStoringHelperClass();
+		
+		numMarkedPages = valueStore.getNumPage() - 1;
+		currentPageBeingShown = 0;
 
 		studentNumberImageView = (ImageView) findViewById(R.id.script_student_number_display);
 		studentNumberImageView.setImageBitmap(valueStore.getPage(0));
@@ -64,8 +82,21 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		
 		studentNumberInput = (EditText) findViewById(R.id.student_number_field);
 		
+		// Gesture detection
+        gestureDetector = new GestureDetector(this, new MyGestureDetector());
+        gestureListener = new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        };
+		
 		testDisplay = (ImageView) findViewById(R.id.testDisplay);
-		testDisplay.setImageBitmap(valueStore.getMergedBitmap(0));
+		testDisplay.setImageBitmap(valueStore.getMergedBitmap(currentPageBeingShown));
+		 
+		testDisplay.setOnTouchListener(gestureListener);
+		
+		markTextView = (TextView) findViewById(R.id.scoreTextView);
+		markTextView.setText("" + valueStore.getPageScore(currentPageBeingShown + 1));
 		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -248,6 +279,48 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		    ).show();
 		}
 	}
+
+	
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+	}
+	
+	// From http://stackoverflow.com/questions/937313/android-basic-gesture-detection
+	class MyGestureDetector extends SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                {
+                    return false;
+                }
+                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) 
+                {
+                	// Left Swipe
+                	currentPageBeingShown = (currentPageBeingShown == numMarkedPages) ? currentPageBeingShown : (currentPageBeingShown + 1);
+                	testDisplay.setImageBitmap(valueStore.getMergedBitmap(currentPageBeingShown));
+                	markTextView.setText("" + valueStore.getPageScore(currentPageBeingShown + 1));
+                } 
+                else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) 
+                {
+                    // Right Swipe
+                	currentPageBeingShown = (currentPageBeingShown == 0) ? 0 : (currentPageBeingShown - 1);
+                	testDisplay.setImageBitmap(valueStore.getMergedBitmap(currentPageBeingShown));
+                	markTextView.setText("" + valueStore.getPageScore(currentPageBeingShown + 1));
+                }
+            } catch (Exception e) 
+            {
+                // nothing
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+              return true;
+        }
+    }
 	
 	/*
 	/**
