@@ -66,6 +66,14 @@
         android:layout_weight="1"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/scoreTextView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
         <ImageView
             android:id="@+id/testDisplay"
             android:layout_width="match_parent"

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,6 +25,8 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Properties;
 
 public class ScriptFinalizeAndUploadActivity extends Activity {
@@ -99,19 +103,26 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		        }}
 		    ).show();
 		}
+		else
+		{
+			new UploadFile().execute(studentNum);
+		}
 	}
 
 	// Upload the script to the server
-	private class UploadFile extends AsyncTask<String, Integer, String>
+	private class UploadFile extends AsyncTask<String, String, String>
 	{
 		private JSch jsch;
 		private Session sshSession;
+		
+		private ProgressDialog progressDialog;
 		
 		@Override
 		protected String doInBackground(String... params) 
 		{
 			// TODO Auto-generated method stub
 			connectToServer();
+			uploadFiles(params[0]);
 			return null;
 		}
 		
@@ -137,8 +148,11 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		}
 		
 		// Download the images needed for each test from the server
-		private void uploadFiles()
+		private void uploadFiles(String studentNumber)
 		{
+			// Get the path to external storage
+			String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
+			
 			try
 			{
 				Channel commChannel = sshSession.openChannel("sftp");
@@ -146,14 +160,23 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
 				
 				String uploadDirectory = valueStore.getCurrentDirectory();
+				publishProgress(uploadDirectory);
+				
+				File f = new File (pathToSDCard + "/page4.png");
+				
+				String tempUploadDir = uploadDirectory + "page4.png";
+				
+				sftpChannel.put(new FileInputStream(f), tempUploadDir);
+				//sftpChannel.put(valueStore.getPage(0));
 			}
 			catch (Exception e)
 			{
 				// Handle the error
+				publishProgress("ERROR\n" + e.getMessage());
 			}
 			
 	        // Get the path to external storage
-	        String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
+	        //String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
 			
 			/*try
 			{
@@ -200,6 +223,25 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			{
 				displayToast("Error: Could not download file \n" + e);
 			}*/
+		}
+		
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog = ProgressDialog.show(ScriptFinalizeAndUploadActivity.this, "", 
+                    "Uploading Script", true);
+		}
+		
+		@Override
+		protected void onProgressUpdate(String... messages)
+		{
+			progressDialog.setMessage(messages[0]);
+		}
+		
+		@Override
+		protected void onPostExecute(String param)
+		{
+			progressDialog.dismiss();
 		}
 	}
 	

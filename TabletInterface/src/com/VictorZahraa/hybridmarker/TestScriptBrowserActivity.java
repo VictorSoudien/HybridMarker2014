@@ -121,6 +121,9 @@ public class TestScriptBrowserActivity extends Activity {
 				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
 				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/reformattedEndMarkers.txt";
 				
+				// Store the current directory
+				valueStore.setCurrentDirectory("Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/");
+				
 				new ServerConnect().execute("Download Files", fileDirectory, memoDirectory);
 				
 				return false;
@@ -353,10 +356,7 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		// Populate the expandable list layout
 		private void populateLists(String courseCode)
-		{
-			// Store the current directory
-			valueStore.setCurrentDirectory("Honours_Project/" + courseCode + "/");
-			
+		{	
 			String listOfTests = executeCommandOnServer("cd Honours_Project/" + courseCode + "/ && ls");
 			String [] tests = listOfTests.split("\n");
 			
@@ -396,7 +396,7 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		// Download the images needed for each test from the server
 		private void downloadFiles(String directory, String memoDir)
-		{
+		{	
 	        // Get the path to external storage
 	        String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
 			
