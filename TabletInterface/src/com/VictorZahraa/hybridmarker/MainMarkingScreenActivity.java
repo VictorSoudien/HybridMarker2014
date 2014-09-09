@@ -568,14 +568,16 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			
 			for (Bitmap overlay : overlays)
 			{	
-				Bitmap baseBitmap = valueStore.getPage(counter);
-				Bitmap temp = Bitmap.createBitmap(baseBitmap.getWidth(), baseBitmap.getHeight(), baseBitmap.getConfig());
+				//Bitmap baseBitmap = valueStore.getPage(counter);
+				Bitmap temp = Bitmap.createBitmap(valueStore.getPage(counter).getWidth(), valueStore.getPage(counter).getHeight(), valueStore.getPage(counter).getConfig());
 				Canvas drawCanvas = new Canvas (temp);
+				
+				drawCanvas.drawColor(Color.WHITE);
 				
 				int overlayWidth = overlay.getWidth();
 				int overlayHeight = overlay.getHeight();
 				
-				drawCanvas.drawBitmap(baseBitmap, new Matrix(), null);
+				drawCanvas.drawBitmap(valueStore.getPage(counter), new Matrix(), null);
 				drawCanvas.drawBitmap(overlay, null, new Rect(0, 115, (int) (overlayWidth * scalingFactor), (int) (overlayHeight * scalingFactor)), painter);
 				
 				valueStore.addMergedBitmap(temp);

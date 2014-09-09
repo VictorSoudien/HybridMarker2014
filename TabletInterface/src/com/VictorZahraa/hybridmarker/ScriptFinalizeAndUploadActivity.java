@@ -293,8 +293,14 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 		        public void onClick(DialogInterface dialog, int whichButton) 
 		        {
 		        	// Return the user to the script browser screen
-		        	Intent scriptUploadScreen = new Intent(ScriptFinalizeAndUploadActivity.this, TestScriptBrowserActivity.class);
-			    	startActivity(scriptUploadScreen);
+		        	/*Intent scriptUploadScreen = new Intent(ScriptFinalizeAndUploadActivity.this, TestScriptBrowserActivity.class);
+			    	startActivity(scriptUploadScreen);*/
+		        	
+		        	// Restart the application
+		        	Intent i = getBaseContext().getPackageManager()
+		                    .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+			       i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			       startActivity(i);
 		        }}
 		    ).show();
 		}
