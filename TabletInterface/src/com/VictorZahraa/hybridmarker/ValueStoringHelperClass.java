@@ -15,6 +15,7 @@ public class ValueStoringHelperClass
 {
 	private static int numPages;
 	private static double [] scorePerPage;
+	private static int totalMarks;
 	private static SCanvasView [] sCanvasCollection;
 	private static byte [][] drawingData;
 	
@@ -47,6 +48,20 @@ public class ValueStoringHelperClass
 	
 	public void setTestName (String value) {nameOfTestBeingMarked = value;}
 	public String getTestName () {return nameOfTestBeingMarked;}
+	
+	public int getTotalMark () {return totalMarks;}
+	
+	public double getSumOfPageScores ()
+	{
+		double sum = 0;
+		
+		for (double num : scorePerPage)
+		{
+			sum += num;
+		}
+		
+		return sum;
+	}
 	
 	public void initPageCollection()
 	{
@@ -104,6 +119,8 @@ public class ValueStoringHelperClass
 			currentQuestion = -1;
 			currentAnswer = 0;
 			
+			totalMarks = Integer.parseInt(questionsAndAnswers[0].split("\n")[0]);
+			
 			buffReader.close();
 		}
 		catch (Exception e)
@@ -111,7 +128,7 @@ public class ValueStoringHelperClass
 			// Display error message
 		}
 	}
-
+	
 	public String getMemoText () {return memoText;}
 	
 	public String getNextQuestion()

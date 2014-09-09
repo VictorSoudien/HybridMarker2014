@@ -96,7 +96,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 		testDisplay.setOnTouchListener(gestureListener);
 		
 		markTextView = (TextView) findViewById(R.id.scoreTextView);
-		markTextView.setText("" + valueStore.getPageScore(currentPageBeingShown + 1));
+		markTextView.setText("Final Mark: " + valueStore.getSumOfPageScores() + " / " + valueStore.getTotalMark() + "\t\tMarks for this page: "  + valueStore.getPageScore(currentPageBeingShown + 1));
 		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -300,14 +300,14 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
                 	// Left Swipe
                 	currentPageBeingShown = (currentPageBeingShown == numMarkedPages) ? currentPageBeingShown : (currentPageBeingShown + 1);
                 	testDisplay.setImageBitmap(valueStore.getMergedBitmap(currentPageBeingShown));
-                	markTextView.setText("" + valueStore.getPageScore(currentPageBeingShown + 1));
+                	markTextView.setText("Final Mark: " + valueStore.getSumOfPageScores() + " / " + valueStore.getTotalMark() + "\t\tMarks for this page: "  + valueStore.getPageScore(currentPageBeingShown + 1));
                 } 
                 else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) 
                 {
                     // Right Swipe
                 	currentPageBeingShown = (currentPageBeingShown == 0) ? 0 : (currentPageBeingShown - 1);
                 	testDisplay.setImageBitmap(valueStore.getMergedBitmap(currentPageBeingShown));
-                	markTextView.setText("" + valueStore.getPageScore(currentPageBeingShown + 1));
+                	markTextView.setText("Final Mark: " + valueStore.getSumOfPageScores() + " / " + valueStore.getTotalMark() + "\t\tMarks for this page: "  + valueStore.getPageScore(currentPageBeingShown + 1));
                 }
             } catch (Exception e) 
             {
