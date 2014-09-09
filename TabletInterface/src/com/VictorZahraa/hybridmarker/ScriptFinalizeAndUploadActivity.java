@@ -118,13 +118,33 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		
+		if (id == R.id.action_settings) 
+		{
 			return true;
+		}
+		else if (id == R.id.action_flag_script)
+		{
+			// Display the flagging dialog
+			final EditText input = new EditText(context);
+			
+			new AlertDialog.Builder(context)
+		    .setTitle("Flag Script")
+		    .setMessage("Please state the reason for flagging this script:")
+		    .setView(input)
+		    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int whichButton) {
+		            Editable value = input.getText(); 
+		        }
+		    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int whichButton) {
+		            // Do nothing.
+		        }
+		    }).show();
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
+
 	
 	// Called when the upload script button is clicked
 	public void uploadScript(View view)

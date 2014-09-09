@@ -2,6 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.VictorZahraa.hybridmarker.ScriptFinalizeAndUploadActivity" >
 
+    <item 
+        android:id="@+id/action_flag_script"
+       	android:title="@string/action_flag_script"
+    	android:icon="@drawable/ic_action_warning" 
+    	android:showAsAction="ifRoom"/>
+    
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
