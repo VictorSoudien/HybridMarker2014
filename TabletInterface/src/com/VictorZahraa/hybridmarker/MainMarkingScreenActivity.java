@@ -150,8 +150,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			// Add tabs to the action bar
 			actionBar.addTab(actionBar.newTab().setText("Page " + i).setTabListener(this));
 		}
-		
-		actionBar.addTab(actionBar.newTab().setText("Mark Summary").setTabListener(this));
 	}
 	
 	// Initialise both the sCanvasContainer and sCanvasView
@@ -320,8 +318,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		else if (id == R.id.action_upload_script)
 		{
 			new BitmapMerger().execute();
-			
-			//new BitmapMerger().execute(pageBitmaps);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -331,57 +327,39 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	{
 		// Reset the scroll view when a new tab is selected
 		scriptScrollView.setScrollY(0);
+
+		String pageNum = tab.getText().toString().split(" ")[1];
+		int page = Integer.parseInt(pageNum);
 		
-		if (tab.getText().toString().contains("Mark Summary"))
+		currentPage = page;
+		prevScore = valueStore.getPageScore(currentPage); // Get the previous mark for this page
+		
+		pageMarkTextView.setText("" + valueStore.getPageScore(currentPage));
+		
+		if (valueStore.getStoredView(page) != null)
 		{
-			// Display the mark summary screen
+			/*sCanvasContainer.removeAllViews();
+			sCanvasView = valueStore.getStoredView(page);
+			sCanvasContainer.addView(sCanvasView);
+			sCanvasView.refreshDrawableState();*/
 			sCanvasView.clearScreen();
-			scriptDisplay.setImageBitmap(valueStore.merged);
+			sCanvasView.setData(valueStore.getDrawingData(page));
 		}
 		else
 		{
-			String pageNum = tab.getText().toString().split(" ")[1];
-			int page = Integer.parseInt(pageNum);
-			
-			currentPage = page;
-			prevScore = valueStore.getPageScore(currentPage); // Get the previous mark for this page
-			
-			pageMarkTextView.setText("" + valueStore.getPageScore(currentPage));
-			
-			if (valueStore.getStoredView(page) != null)
-			{
-				/*sCanvasContainer.removeAllViews();
-				sCanvasView = valueStore.getStoredView(page);
-				sCanvasContainer.addView(sCanvasView);
-				sCanvasView.refreshDrawableState();*/
-				sCanvasView.clearScreen();
-				sCanvasView.setData(valueStore.getDrawingData(page));
-			}
-			else
-			{
-				initiliseSCanvas();
-			}
-				
-			scriptDisplay.setImageBitmap(valueStore.getPage(page));
+			initiliseSCanvas();
 		}
+			
+		scriptDisplay.setImageBitmap(valueStore.getPage(page));
 	}
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) 
 	{
-		/*tab.setText(tab.getText() + " [" + valueStore.getPageScore(currentPage) + "]");*/
-		
 		valueStore.setPageScore(currentPage, currentPageScore + prevScore);
 		currentPageScore = 0;
 		
 		valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData());
-		
-		/*if (tab.getText().toString().contains("Page 1"))
-		{
-			new BitmapMerger().execute(valueStore.getPage(currentPage), sCanvasView.getBitmap(true));
-		}*/
-		
-		//sCanvasView.clearScreen();
 	}
 
 	@Override
@@ -563,7 +541,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			
 			valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData());
 			
-			int pageCount = actionBar.getTabCount() - 1;
+			int pageCount = actionBar.getTabCount();
 			Bitmap [] pageBitmaps = new Bitmap[pageCount];
 			
 			// Loops through each page and merge the overlays with the bitmap

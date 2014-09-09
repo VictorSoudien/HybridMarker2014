@@ -159,7 +159,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				commChannel.connect();
 				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
 				
-				String baseDirectory =  valueStore.getCurrentDirectory() + studentNumber + "/";
+				String baseDirectory =  valueStore.getCurrentDirectory() + studentNumber + "+/";
 				
 				// Rename the directory to the student number
 				sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
@@ -169,6 +169,8 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				String tempUploadDir = baseDirectory + "Markedpage1.png";
 				
 				sftpChannel.put(new FileInputStream(f), tempUploadDir);
+				
+				f.delete();
 				
 				sftpChannel.disconnect();
 			}
