@@ -40,13 +40,13 @@ public final class R {
         public static final int warlock=0x7f02000f;
     }
     public static final class id {
-        public static final int action_add_comment=0x7f090024;
-        public static final int action_flag_script=0x7f090026;
-        public static final int action_mark_pdf=0x7f09002b;
-        public static final int action_refresh=0x7f09002c;
-        public static final int action_settings=0x7f090022;
-        public static final int action_undo=0x7f090023;
-        public static final int action_upload_script=0x7f090025;
+        public static final int action_add_comment=0x7f090025;
+        public static final int action_flag_script=0x7f090027;
+        public static final int action_mark_pdf=0x7f09002c;
+        public static final int action_refresh=0x7f09002d;
+        public static final int action_settings=0x7f090023;
+        public static final int action_undo=0x7f090024;
+        public static final int action_upload_script=0x7f090026;
         public static final int answerText=0x7f090004;
         public static final int answerTextScrollView=0x7f090003;
         public static final int button_recog_gesture=0x7f09000e;
@@ -57,17 +57,18 @@ public final class R {
         public static final int drawer_layout=0x7f09001c;
         public static final int icon_test_marked=0x7f09001b;
         public static final int imageView1=0x7f090010;
+        public static final int instructionText=0x7f090020;
         public static final int instruction_enter_student_number_text_view=0x7f090012;
-        public static final int left_drawer=0x7f090021;
+        public static final int left_drawer=0x7f090022;
         public static final int listHeader=0x7f090019;
         public static final int listItem=0x7f09001a;
-        public static final int list_update_progress_bar=0x7f090020;
+        public static final int list_update_progress_bar=0x7f090021;
         public static final int markText=0x7f090006;
         public static final int markingScreenCanvasContainer=0x7f09000b;
-        public static final int menu_option_Eraser=0x7f090028;
-        public static final int menu_option_Pen=0x7f090027;
-        public static final int menu_option_recog_gesture=0x7f090029;
-        public static final int menu_option_view_pdf=0x7f09002a;
+        public static final int menu_option_Eraser=0x7f090029;
+        public static final int menu_option_Pen=0x7f090028;
+        public static final int menu_option_recog_gesture=0x7f09002a;
+        public static final int menu_option_view_pdf=0x7f09002b;
         public static final int next_button=0x7f090007;
         public static final int previous_button=0x7f090005;
         public static final int progress_bar_layout=0x7f09001f;

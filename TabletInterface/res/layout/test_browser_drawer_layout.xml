@@ -6,7 +6,7 @@
     android:layout_height="match_parent">    
     
     <!-- The main content view -->
-    <FrameLayout
+  	<FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -17,7 +17,7 @@
 	        android:layout_height="fill_parent" >
 	    </ExpandableListView>
 	    
-	    <GridLayout
+	   	<GridLayout
 	        android:id="@+id/progress_bar_layout"
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
@@ -25,6 +25,14 @@
 	        android:layout_alignParentTop="true" 
 	        android:columnCount="1"
 	        android:rowCount="1" >
+
+	   		<TextView
+	   		    android:id="@+id/instructionText"
+	   		    android:layout_gravity="center"
+	   		    android:text="Press the app icon in the top left to display the list of courses"
+	   		    android:layout_column="0"
+	   		    android:layout_row="0"
+	   		    android:textAppearance="?android:attr/textAppearanceLarge" />
 	
 	        <ProgressBar
 	            android:id="@+id/list_update_progress_bar"
@@ -34,9 +42,7 @@
 	            android:layout_column="0"
 	            android:layout_gravity="center"
 	            android:layout_row="0" />
-        
     	</GridLayout>
-    
 	</FrameLayout>
     
     <!-- The navigation drawer -->

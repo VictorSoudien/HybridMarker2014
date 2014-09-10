@@ -27,6 +27,7 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Build;
 
@@ -48,6 +49,7 @@ public class TestScriptBrowserActivity extends Activity {
 	private Context context;
 	private Toast toast;
 	private ActionBar actionBar;
+	private TextView instructionText;
 	
 	private ProgressBar listUpdateProgressBar;
 	
@@ -80,6 +82,7 @@ public class TestScriptBrowserActivity extends Activity {
 		actionBar = this.getActionBar();
 		selectedItemInDrawer = "";
 		viewBeingRefreshed = false;
+		instructionText = (TextView) findViewById(R.id.instructionText);
 		
 		valueStore = new ValueStoringHelperClass();
 		
@@ -156,6 +159,9 @@ public class TestScriptBrowserActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) 
 			{
+				// Remove the instruction text
+				instructionText.setVisibility(View.INVISIBLE);
+				
 				drawerListView.setItemChecked(position, true);
 				drawerLayout.closeDrawer(drawerListView);
 				getActionBar().setTitle(drawerItems[position]);

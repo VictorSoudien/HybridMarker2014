@@ -79,7 +79,7 @@
 	            
 	            <TextView
 	                    android:id="@+id/markText"
-	                    android:layout_width="255dp"
+	                    android:layout_width="260dp"
 	                    android:layout_height="match_parent"
 	                    android:text="10"
 	                    android:gravity="center"
@@ -102,7 +102,8 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1" 
-	        android:background="@android:color/darker_gray">
+	        android:background="@android:color/darker_gray"
+	        android:fadeScrollbars="false" >
 	
 	       	<LinearLayout
 	       	    android:layout_width="match_parent"
