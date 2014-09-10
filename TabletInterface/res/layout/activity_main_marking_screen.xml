@@ -44,7 +44,8 @@
 	            android:id="@+id/answerTextScrollView"
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent" 
-	            android:layout_weight="1">
+	            android:layout_weight="1"
+	            android:background="#A7FF9F" >
 	
 	            <LinearLayout
 	                android:layout_width="match_parent"
