@@ -7,7 +7,7 @@
 
 	if (ssh2_auth_password($connection, 'zmathews', '800hazhtM')) 
 	{
-		echo "Authentication successful";
+		//echo "Authentication successful";
 	}
 	else 
 	{
@@ -31,6 +31,15 @@
 	$password = $_POST['password'];
 	
 	// Get the result from the database
+	$query = "SELECT * FROM staff";
+	$result = mysql_query($query)or die(mysql_error());
+	$row = mysql_fetch_array($result);
+	$data = $row[0];
 	
-	echo "Hi there";
+	if ($data)
+	{
+		echo $data;
+	}
+	
+	echo $result;
 ?>
