@@ -1,9 +1,6 @@
 package com.VictorZahraa.hybridmarker;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,10 +15,13 @@ public class LoginHelper
 		private final EditText passwordField;
 		private final TextView messageDisplay;
 		
-		public PositiveLoginButtonClicked(Dialog dia, View lView)
+		private TestScriptBrowserActivity callingActivity;
+		
+		public PositiveLoginButtonClicked(Dialog dia, View lView, TestScriptBrowserActivity caller)
 		{
 			dialog = dia;
 			loginView = lView;
+			callingActivity = caller;
 			
 			usernameField = (EditText) loginView.findViewById(R.id.usernameInput);
 			passwordField = (EditText) loginView.findViewById(R.id.passwordInput);
@@ -41,10 +41,15 @@ public class LoginHelper
 			}
 			else
 			{
+				//checkCredentials(username, password);
+				//controller.
+				
 				dialog.dismiss();
 			}
 		}
 	}
+	
+	
 	
 	public static class NegativeButtonClicked implements View.OnClickListener
 	{

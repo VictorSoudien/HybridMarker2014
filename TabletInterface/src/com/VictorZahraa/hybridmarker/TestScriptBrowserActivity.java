@@ -45,8 +45,13 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +103,9 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		toast = Toast.makeText(context, "initialise", Toast.LENGTH_SHORT); // Initialise the toast but don't display this message
 		
-		if (login() == true)
+		//new LoginToServer().execute("username", "password");
+		
+		//if (login() == true)
 		{
 			initExpandableListView();
 			initNavDrawer();
@@ -128,7 +135,7 @@ public class TestScriptBrowserActivity extends Activity {
 	}
 	
 	// Displays the login dialog
-	private boolean login()
+	/*private boolean login()
 	{
 		final boolean returnValue = true;
 		
@@ -147,14 +154,14 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		// Add a listener to the positive button
 		Button positiveButton = loginDialog.getButton(Dialog.BUTTON_POSITIVE);
-		positiveButton.setOnClickListener(new LoginHelper.PositiveLoginButtonClicked(loginDialog, loginView));
+		positiveButton.setOnClickListener(new LoginHelper.PositiveLoginButtonClicked(loginDialog, loginView, this));
 		
 		// Add a listener to the negative button
 		Button negativeButton = loginDialog.getButton(Dialog.BUTTON_NEGATIVE);
 		negativeButton.setOnClickListener(new LoginHelper.NegativeButtonClicked(this));
 		
 		return returnValue;
-	}
+	}*/
 	
 	// Sets up the expandable list view used to display tests for each course
 	private void initExpandableListView()
@@ -549,6 +556,100 @@ public class TestScriptBrowserActivity extends Activity {
 	        	startActivity(pdfViewScreen);
 			}
 		}
+	}
+	
+	private class LoginToServer extends AsyncTask<String, Integer, Long>
+	{				
+		@Override
+		protected Long doInBackground(String... params)
+		{
+			//checkCredentials(/*params[0], params[1]*/);
+			return null;
+		}
+		
+		// Connect to the database to confirm credentials
+		public void checkCredentials(/*String username, String password*/)
+		{
+			String link = "http://people.cs.uct.ac.za/~vsoudien/testPost.php?";
+			
+			try
+			{
+				URL url = new URL(link);
+				//String data = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username,"UTF-8");
+				//data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password,"UTF-8");
+				String data = URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode("Victor", "UTF-8");
+				URLConnection connection = url.openConnection();
+				connection.setDoOutput(true);
+				
+				// Write data to the link
+				OutputStreamWriter outWriter = new OutputStreamWriter(connection.getOutputStream());
+				outWriter.write(data);
+				outWriter.flush();
+				
+				// Read the response from the server
+				BufferedReader buffReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				
+				String response = "";
+				String currentLine = "";
+				
+				while ((currentLine = buffReader.readLine()) != null)
+				{
+					response += currentLine;
+				}
+				
+				buffReader.close();
+				
+				/*new AlertDialog.Builder(context)
+			    .setTitle("Server Response")
+			    .setMessage(response)
+			    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int whichButton) {
+			           
+			        }
+			    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int whichButton) {
+			            // Do nothing.
+			        }
+			    }).show();*/
+				
+				//displayAlert(response);
+			}
+			catch (Exception e)
+			{
+				// Handle the exception
+				
+				/*new AlertDialog.Builder(context)
+			    .setTitle("ERROR")
+			    .setMessage(e.toString())
+			    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int whichButton) {
+			           
+			        }
+			    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int whichButton) {
+			            // Do nothing.
+			        }
+			    }).show();*/
+				
+				//displayAlert(e.toString());
+			}
+		}
+	}
+	
+	public void displayAlert(String message)
+	{
+		new AlertDialog.Builder(context)
+	    .setTitle("Server Response")
+	    .setMessage(message)
+	    .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {
+	           
+	        }
+	    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {
+	            // Do nothing.
+	        }
+	    }).show();
 	}
 
 	/*
