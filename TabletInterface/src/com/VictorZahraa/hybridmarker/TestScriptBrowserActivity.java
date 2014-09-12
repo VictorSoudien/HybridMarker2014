@@ -2,8 +2,12 @@ package com.VictorZahraa.hybridmarker;
 
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.DataSetObserver;
@@ -15,6 +19,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +27,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -31,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Build;
 
+import com.VictorZahraa.hybridmarker.LoginHelper.PositiveLoginButtonClicked;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
@@ -90,10 +98,13 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		toast = Toast.makeText(context, "initialise", Toast.LENGTH_SHORT); // Initialise the toast but don't display this message
 		
-		initExpandableListView();
-		initNavDrawer();
+		if (login() == true)
+		{
+			initExpandableListView();
+			initNavDrawer();
 		
-		new ServerConnect().execute("Update Nav Drawer");
+			new ServerConnect().execute("Update Nav Drawer");
+		}
 		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -105,6 +116,44 @@ public class TestScriptBrowserActivity extends Activity {
 	public void onBackPressed()
 	{
 		// Handle the pressing of the 'physical' back button
+	}
+	
+	// Close the application
+	public void endApplication()
+	{
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_HOME);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
+	
+	// Displays the login dialog
+	private boolean login()
+	{
+		final boolean returnValue = true;
+		
+		LayoutInflater inflater = this.getLayoutInflater();
+		
+		final View loginView = inflater.inflate(R.layout.login_layout, null);
+		final TextView messageDisplay = (TextView) loginView.findViewById(R.id.loginMessageDisplay);
+		messageDisplay.setVisibility(View.INVISIBLE);
+
+		AlertDialog loginDialog = new AlertDialog.Builder(context)
+	    .setTitle("Login")
+	    .setView(loginView)
+	    .setPositiveButton("Log In", null)
+	    .setNegativeButton("Exit", null)
+	    .show();
+		
+		// Add a listener to the positive button
+		Button positiveButton = loginDialog.getButton(Dialog.BUTTON_POSITIVE);
+		positiveButton.setOnClickListener(new LoginHelper.PositiveLoginButtonClicked(loginDialog, loginView));
+		
+		// Add a listener to the negative button
+		Button negativeButton = loginDialog.getButton(Dialog.BUTTON_NEGATIVE);
+		negativeButton.setOnClickListener(new LoginHelper.NegativeButtonClicked(this));
+		
+		return returnValue;
 	}
 	
 	// Sets up the expandable list view used to display tests for each course
@@ -269,6 +318,8 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		toast.show();
 	}
+	
+	
 	
 	private class ServerConnect extends AsyncTask<String, String, Long>
 	{
