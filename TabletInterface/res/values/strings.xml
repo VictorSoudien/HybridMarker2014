@@ -19,10 +19,9 @@
     <string name="action_prev">Previous</string>
     <string name="action_next">Next</string>
     <string name="title_activity_script_finalize_and_upload">ScriptFinalizeAndUploadActivity</string>
-    
     <string name="instruction_enter_student_number">Please enter the student number:</string>
-    
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
+    <string name="title_activity_login">LoginActivity</string>
 
 </resources>
