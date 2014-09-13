@@ -6,8 +6,11 @@
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.util.PDFTextStripper;
 
 public class MemoProcessor
@@ -21,7 +24,8 @@ public class MemoProcessor
 		memoName += ".txt";
 		
 		openFile(filename);
-		getMemoText();
+		getAdditionalInformation();
+		//getMemoText();
 	}
 	
 	// Loads the file into memory
@@ -39,6 +43,46 @@ public class MemoProcessor
 		System.out.println ("File opened successfully");
 	}
 	
+	// Get additional information from the text of the memo
+	private void getAdditionalInformation()
+	{
+		try
+		{
+			PDDocument pdfDoc = PDDocument.load(memoToProcess);
+			
+			TextStripperHelper textHelper = new TextStripperHelper();
+			List<PDPage> pages = pdfDoc.getDocumentCatalog().getAllPages();
+			
+			int num = 0;
+			
+			for (PDPage page : pages)
+			{
+				num++;
+				System.out.println ("Processing page... " + num);
+				
+				PDStream stream = page.getContents();
+				if (stream != null)
+				{
+					textHelper.processStream(page, page.findResources(), page.getContents().getStream());
+				}
+			}
+			
+			/*PDFTextStripper txtStripper = new PDFTextStripper();
+			txtStripper.setStartPage(2);
+
+			String docText = txtStripper.getText(pdfDoc);
+			
+			System.out.println (docText);*/
+			
+			// Close the file when processing completes
+			pdfDoc.close();
+		}
+		catch (Exception e)
+		{
+			System.out.println ("Error in getAdditionalInfo\n" + e.getMessage());
+		}
+	}
+	
 	// Get the text from the memo
 	private void getMemoText()
 	{
@@ -51,6 +95,9 @@ public class MemoProcessor
 			String extractedText = textStripper.getText(pdf);
 			
 			splitTextIntoQuestions(extractedText);
+			
+			// Close the file when processing completes
+			pdf.close();
 		}
 		catch (IOException e)
 		{
