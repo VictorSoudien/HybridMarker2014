@@ -30,16 +30,35 @@
 	$username = $_POST['username'];
 	$password = $_POST['password'];
 	
-	// Get the result from the database
-	$query = "SELECT * FROM staff";
-	$result = mysql_query($query)or die(mysql_error());
-	$row = mysql_fetch_array($result);
+	// Get the operation that needs to be performed
+	$operation = $_POST['operation'];
+	
+	if (strcmp($operation,"insert") == 0)
+	{
+		$query = "INSERT INTO staff (name,Course,Type,Password) VALUES ('Victor', 'CSC1010H', 'admin', 'admin')";
+		$result = mysql_query($query)or die(mysql_error());
+		echo "Insert complete";
+	}
+	else if (strcmp($operation, "select") == 0)
+	{
+		// Get the result from the database
+		$query = "SELECT * FROM staff";
+		$result = mysql_query($query)or die(mysql_error());
+		
+		while($row = mysql_fetch_array($result))
+		{
+			echo $row['name'] . " " . $row['Password'];
+			echo "<br>";
+		}
+	}
+	
+	/*$row = mysql_fetch_array($result);
 	$data = $row[0];
 	
 	if ($data)
 	{
 		echo $data;
-	}
+	}*/
 	
-	echo $result;
+	//echo $result;
 ?>

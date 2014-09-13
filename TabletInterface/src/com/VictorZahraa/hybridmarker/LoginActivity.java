@@ -92,7 +92,8 @@ public class LoginActivity extends Activity {
 			
 			try
 			{
-				String data  = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
+				String data  = URLEncoder.encode("operation", "UTF-8") + "=" + URLEncoder.encode("select", "UTF-8");
+				data += "&" + URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
 	            data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
 				
 				//String data  = URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode("Victor", "UTF-8");
