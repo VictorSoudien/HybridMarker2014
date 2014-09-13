@@ -1,5 +1,5 @@
 <?php
 	$name = $_POST['name'];
 	
-	echo $name;
+	echo $name . " welcome to PHP ";
 ?>

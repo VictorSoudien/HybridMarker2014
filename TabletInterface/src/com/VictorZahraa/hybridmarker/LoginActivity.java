@@ -1,16 +1,21 @@
 package com.VictorZahraa.hybridmarker;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends Activity {
 
@@ -19,6 +24,30 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
+		AsyncTask<String, Integer, String> s = new PHPCommunication().execute("username", "password");
+		
+		try {
+			String result = s.get();
+			new AlertDialog.Builder(this)
+		    .setTitle("Server Result")
+		    .setMessage(result)
+		    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int whichButton) {
+		            
+		        }
+		    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int whichButton) {
+		            // Do nothing.
+		        }
+		    }).show();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
@@ -51,12 +80,48 @@ public class LoginActivity extends Activity {
 		protected String doInBackground(String... params) 
 		{
 			// TODO Auto-generated method stub
-			return null;
+			
+			return loginToServer(params[0], params[1]);
+			
+			//return null;
 		}
 		
-		public void loginToServer(String username, String password)
+		public String loginToServer(String username, String password)
 		{
+			String link = "http://people.cs.uct.ac.za/~vsoudien/login.php";
 			
+			try
+			{
+				String data  = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
+	            data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
+				
+				//String data  = URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode("Victor", "UTF-8");
+	            
+	            URL url = new URL(link);
+	            URLConnection urlConn = url.openConnection();
+	            urlConn.setDoOutput(true);
+	            
+	            OutputStreamWriter outWriter = new OutputStreamWriter(urlConn.getOutputStream()); 
+	            outWriter.write(data); 
+	            outWriter.flush();
+	            
+	            BufferedReader reader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+                String result = "";
+                String line = null;
+                // Read Server Response
+                while((line = reader.readLine()) != null)
+                {
+                   result += line;
+                   break;
+                }
+                
+                return result;
+			}
+			catch (Exception e)
+			{
+				// Handle exception
+				return "Error";
+			}
 		}
 	}
 	
