@@ -22,7 +22,7 @@ public class TextStripperHelper extends PDFTextStripper
 	@Override
 	protected void processTextPosition(TextPosition textPosition)
 	{
-		float current = textPosition.getYDirAdj();
+		float current = textPosition.getY();
 		
 		if (current != previous)
 		{

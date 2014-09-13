@@ -58,11 +58,23 @@ public class MemoProcessor
 			for (PDPage page : pages)
 			{
 				num++;
+				
+				// Skip the first page
+				if (num == 1)
+				{
+					continue;
+				}
+				
 				System.out.println ("Processing page... " + num);
 				
 				PDStream stream = page.getContents();
 				if (stream != null)
 				{
+					/*List<?> list = stream.getStream().getStreamTokens();
+					for (int i = 0; i < list.size(); i++)
+					{
+						System.out.println (list.get(i));
+					}*/
 					textHelper.processStream(page, page.findResources(), page.getContents().getStream());
 				}
 			}
