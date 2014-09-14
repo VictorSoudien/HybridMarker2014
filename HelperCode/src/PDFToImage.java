@@ -60,7 +60,7 @@ public class PDFToImage
 	
 	public static void main (String [] args)
 	{
-		PDFToImage toImage = new PDFToImage("Scanned Script.pdf");
+		PDFToImage toImage = new PDFToImage("ClassTest2SpacingAdjusted.pdf");
 		toImage.convertToImages();
 	}
 }

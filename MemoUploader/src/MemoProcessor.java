@@ -50,7 +50,7 @@ public class MemoProcessor
 		{
 			PDDocument pdfDoc = PDDocument.load(memoToProcess);
 			
-			TextStripperHelper textHelper = new TextStripperHelper();
+			/*TextStripperHelper textHelper = new TextStripperHelper();
 			List<PDPage> pages = pdfDoc.getDocumentCatalog().getAllPages();
 			
 			int num = 0;
@@ -70,21 +70,21 @@ public class MemoProcessor
 				PDStream stream = page.getContents();
 				if (stream != null)
 				{
-					/*List<?> list = stream.getStream().getStreamTokens();
-					for (int i = 0; i < list.size(); i++)
-					{
-						System.out.println (list.get(i));
-					}*/
+					//List<?> list = stream.getStream().getStreamTokens();
+					//for (int i = 0; i < list.size(); i++)
+					//{
+						//System.out.println (list.get(i));
+					//}
 					textHelper.processStream(page, page.findResources(), page.getContents().getStream());
 				}
-			}
+			}*/
 			
-			/*PDFTextStripper txtStripper = new PDFTextStripper();
+			PDFTextStripper txtStripper = new PDFTextStripper();
 			txtStripper.setStartPage(2);
 
 			String docText = txtStripper.getText(pdfDoc);
 			
-			System.out.println (docText);*/
+			System.out.println (docText);
 			
 			// Close the file when processing completes
 			pdfDoc.close();
