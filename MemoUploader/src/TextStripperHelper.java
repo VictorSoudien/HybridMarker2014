@@ -12,9 +12,15 @@ import org.apache.pdfbox.util.TextPosition;
 public class TextStripperHelper extends PDFTextStripper
 {
 	float previous = -1;
+	private String result;
+	
+	private final double PIXEL_MAPPING_VALUE = 2.770641;
+	
+	public String getResult () {return result;}
 	
 	public TextStripperHelper() throws IOException 
 	{
+		result = "";
 		super.setSortByPosition(true);
 	}
 	
@@ -26,7 +32,8 @@ public class TextStripperHelper extends PDFTextStripper
 		
 		if (current != previous)
 		{
-			System.out.println ("y: " + current);
+			result += (current * PIXEL_MAPPING_VALUE) + "\n";
+			//System.out.println ("y: " + current);
 			previous = current;
 		}
 	}

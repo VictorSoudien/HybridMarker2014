@@ -18,13 +18,21 @@ public class MemoProcessor
 	private File memoToProcess;
 	private String memoName;
 	
+	private ArrayList<Double> pixelCoords;
+	private ArrayList<Integer> arrayOffset;
+	
 	public MemoProcessor(String filename)
-	{
+	{	
 		memoName = filename.split("\\.")[0].replaceAll(" ", "_");
 		memoName += ".txt";
 		
+		pixelCoords = new ArrayList<Double>();
+		arrayOffset = new ArrayList<Integer>();
+		arrayOffset.add(0); // offset of the first entry is zero
+		
 		openFile(filename);
-		getAdditionalInformation();
+		getTextInformation();
+		//getAdditionalInformation();
 		//getMemoText();
 	}
 	
@@ -43,6 +51,65 @@ public class MemoProcessor
 		System.out.println ("File opened successfully");
 	}
 	
+	// Gets the text and pixel locations of the text on the pdf
+	private void getTextInformation()
+	{
+		try
+		{
+			PDDocument pdf = PDDocument.load(memoToProcess);
+			TextStripperHelper txtHelper = new TextStripperHelper();
+			List<PDPage> pages = pdf.getDocumentCatalog().getAllPages();
+			
+			PDFTextStripper txtStripper = new PDFTextStripper();
+			
+			// Start from 1 since the cover page does not need to be processed
+			for (int i = 1; i < pages.size(); i++)
+			{
+				System.out.println ("Processing Page..." + i);
+				PDStream pageContent = pages.get(i).getContents();
+				
+				if (pageContent != null)
+				{
+					PDPage currentPage = pages.get(i);
+					txtHelper.processStream(currentPage, currentPage.findResources(), currentPage.getContents().getStream());
+					
+					String [] currentCoords = txtHelper.getResult().split("\\n");
+					
+					for (String s : currentCoords)
+					{
+						pixelCoords.add(Double.parseDouble(s));
+					}
+					
+					// Calculate the offset of the current data in the pixelCoords array
+					int offset = arrayOffset.get(i - 1) + currentCoords.length;
+					arrayOffset.add(offset);
+				}
+			}
+			
+			txtStripper.setStartPage(2);
+			String docText = txtStripper.getText(pdf);
+			processMemoText(docText);
+			//splitTextIntoQuestions(docText);			
+		}
+		catch (Exception e)
+		{
+			System.out.println ("Error while retrieving text: " + e.getMessage());
+		}
+	}
+	
+	//<CONTINUE HERE>
+	
+	// Processes the text in order to split it into questions and answers
+	private void processMemoText(String memoText)
+	{
+		String [] lines = memoText.split("\\n");
+		
+		for (String line : lines)
+		{
+			System.out.println (line);
+		}
+	}
+	
 	// Get additional information from the text of the memo
 	private void getAdditionalInformation()
 	{
@@ -50,7 +117,7 @@ public class MemoProcessor
 		{
 			PDDocument pdfDoc = PDDocument.load(memoToProcess);
 			
-			/*TextStripperHelper textHelper = new TextStripperHelper();
+			TextStripperHelper textHelper = new TextStripperHelper();
 			List<PDPage> pages = pdfDoc.getDocumentCatalog().getAllPages();
 			
 			int num = 0;
@@ -77,14 +144,14 @@ public class MemoProcessor
 					//}
 					textHelper.processStream(page, page.findResources(), page.getContents().getStream());
 				}
-			}*/
+			}
 			
-			PDFTextStripper txtStripper = new PDFTextStripper();
+			/*PDFTextStripper txtStripper = new PDFTextStripper();
 			txtStripper.setStartPage(2);
 
 			String docText = txtStripper.getText(pdfDoc);
 			
-			System.out.println (docText);
+			System.out.println (docText);*/
 			
 			// Close the file when processing completes
 			pdfDoc.close();
@@ -144,7 +211,7 @@ public class MemoProcessor
 			}
 		}
 		
-		// Add the lines of the last quesiton
+		// Add the lines of the last question
 		questions.add(temp);
 		
 		splitIntoQuestionsAndAnswers(questions);
@@ -256,6 +323,6 @@ public class MemoProcessor
 	
 	public static void main (String [] args)
 	{
-		MemoProcessor mProc = new MemoProcessor("endMarkers.pdf");
+		MemoProcessor mProc = new MemoProcessor("ClassTest2SpacingAdjusted.pdf");
 	}
 }
