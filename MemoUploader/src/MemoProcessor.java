@@ -22,8 +22,12 @@ public class MemoProcessor
 	private ArrayList<Double> pixelCoords;
 	private ArrayList<Integer> arrayOffset;
 	
+	private ArrayList<String> mainQuestions;
 	private ArrayList<String> subQuestions;
 	private ArrayList<String> answers;
+	
+	// Keeps track of which question a set of sub-questions and answers belongs to
+	private ArrayList<Integer> mainQuestionIndex;
 	
 	// The strings which will be written to the file
 	private String outputHeader;
@@ -37,8 +41,10 @@ public class MemoProcessor
 		arrayOffset = new ArrayList<Integer>();
 		arrayOffset.add(0); // offset of the first entry is zero
 		
+		mainQuestions = new ArrayList<String>();
 		subQuestions = new ArrayList<String>();
 		answers = new ArrayList<String>();
+		mainQuestionIndex = new ArrayList<Integer>();
 		
 		openFile(filename);
 		getTextInformation();
@@ -124,6 +130,11 @@ public class MemoProcessor
 		
 		for (int i = 0; i < lines.length; i++)
 		{
+			if (lines[i].equalsIgnoreCase(""))
+			{
+				continue;
+			}
+			
 			currentLine = lines[i].trim(); 
 			currentLine += "\n";
 			
@@ -134,6 +145,9 @@ public class MemoProcessor
 			
 			if ((currentLine.indexOf("Question") == 0) || (currentLine.indexOf("question") == 0))
 			{
+				mainQuestionIndex.add(subQuestions.size());
+				mainQuestions.add(currentLine.replaceAll("[ ]+", " "));
+				
 				// Anything before this can be assumed to be additional information e.g. page numbers
 				tempSection = "";
 				
@@ -153,7 +167,7 @@ public class MemoProcessor
 					
 					tempSection += currentLine.substring(0, indexOfEndMarker);
 					
-					tempSection += "Pixel Values: Start - " + pixelCoords.get(answerStartIndex) + "  End - " + pixelCoords.get(answerEndIndex);
+					tempSection += "\n{CoordSplit}\n" + pixelCoords.get(answerStartIndex) + "\n" + pixelCoords.get(answerEndIndex);
 					
 					answers.add(tempSection);
 					tempSection = "";
@@ -182,8 +196,42 @@ public class MemoProcessor
 			}
 		}
 		
-		System.out.println ();
-		System.out.println(answers.get(0));
+		//System.out.println ();
+		//System.out.println(answers.get(2));
+		
+		writeMetaFile();
+	}
+	
+	// Write the metadata to the file
+	private void writeMetaFile ()
+	{
+		int lowerBound = 0;
+		int upperBound = 0;
+		
+		for (int i = 0; i < mainQuestions.size(); i++)
+		{
+			System.out.print (mainQuestions.get(i));
+			
+			if (i != (mainQuestions.size() - 1))
+			{
+				upperBound = mainQuestionIndex.get(i + 1);
+			}
+			else
+			{
+				upperBound = subQuestions.size();
+			}
+			
+			for (int iter = lowerBound; iter < upperBound; iter++)
+			{
+				System.out.print ("Question: " + subQuestions.get(iter));
+				System.out.println ("{QASplit}");
+				System.out.println ("Answer: " + answers.get(iter));
+				System.out.println ("{SubQEnd}");
+			}
+			
+			System.out.println ("{MainQEnd}");
+			lowerBound = upperBound;
+		}
 	}
 	
 	// Get additional information from the text of the memo
@@ -399,6 +447,6 @@ public class MemoProcessor
 	
 	public static void main (String [] args)
 	{
-		new MemoProcessor("ClassTest2SpacingAdjusted.pdf");
+		new MemoProcessor("test.pdf");
 	}
 }
