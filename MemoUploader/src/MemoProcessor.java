@@ -77,6 +77,7 @@ public class MemoProcessor
 					
 					for (String s : currentCoords)
 					{
+						//System.out.println (s);
 						pixelCoords.add(Double.parseDouble(s));
 					}
 					
@@ -88,7 +89,7 @@ public class MemoProcessor
 			
 			txtStripper.setStartPage(2);
 			String docText = txtStripper.getText(pdf);
-			processMemoText(docText);
+			processMemoText(docText, txtStripper.getLineSeparator());
 			//splitTextIntoQuestions(docText);			
 		}
 		catch (Exception e)
@@ -100,13 +101,13 @@ public class MemoProcessor
 	//<CONTINUE HERE>
 	
 	// Processes the text in order to split it into questions and answers
-	private void processMemoText(String memoText)
+	private void processMemoText(String memoText, String lineSeparator)
 	{
-		String [] lines = memoText.split("\\n");
+		String [] lines = memoText.split(lineSeparator);
 		
-		for (String line : lines)
+		for (int i = 0; i < lines.length; i++)
 		{
-			System.out.println (line);
+			System.out.println (lines[i]);
 		}
 	}
 	
