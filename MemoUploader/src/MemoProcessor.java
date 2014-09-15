@@ -18,17 +18,27 @@ public class MemoProcessor
 	private File memoToProcess;
 	private String memoName;
 	
+	// Used to track the coordinates of answer sections
 	private ArrayList<Double> pixelCoords;
 	private ArrayList<Integer> arrayOffset;
 	
+	private ArrayList<String> subQuestions;
+	private ArrayList<String> answers;
+	
+	// The strings which will be written to the file
+	private String outputHeader;
 	public MemoProcessor(String filename)
 	{	
 		memoName = filename.split("\\.")[0].replaceAll(" ", "_");
 		memoName += ".txt";
 		
+		outputHeader = "";
 		pixelCoords = new ArrayList<Double>();
 		arrayOffset = new ArrayList<Integer>();
 		arrayOffset.add(0); // offset of the first entry is zero
+		
+		subQuestions = new ArrayList<String>();
+		answers = new ArrayList<String>();
 		
 		openFile(filename);
 		getTextInformation();
@@ -98,17 +108,82 @@ public class MemoProcessor
 		}
 	}
 	
-	//<CONTINUE HERE>
-	
 	// Processes the text in order to split it into questions and answers
 	private void processMemoText(String memoText, String lineSeparator)
 	{
 		String [] lines = memoText.split(lineSeparator);
 		
+		String currentLine = "";
+		boolean inAnswerSection = false;
+		
+		int answerStartIndex = 0;
+		int answerEndIndex = 0;
+		
+		// Holds the current unassigned lines. Lines are assigned as being either question or answer sections.
+		String tempSection = "";
+		
 		for (int i = 0; i < lines.length; i++)
 		{
-			System.out.println (lines[i]);
+			currentLine = lines[i].trim(); 
+			currentLine += "\n";
+			
+			if (currentLine.contains("]$"))
+			{
+				System.out.println (currentLine);
+			}
+			
+			if ((currentLine.indexOf("Question") == 0) || (currentLine.indexOf("question") == 0))
+			{
+				// Anything before this can be assumed to be additional information e.g. page numbers
+				tempSection = "";
+				
+				// Make sure there are only single spaces in the text
+				outputHeader += currentLine.replaceAll("[ ]+", " ") + "\n";
+				continue;
+			}
+			else if (inAnswerSection == true)
+			{
+				int indexOfEndMarker = currentLine.indexOf("{end}");
+				
+				// Check if this is the last line of the answer
+				if (indexOfEndMarker != -1)
+				{
+					inAnswerSection = false;
+					answerEndIndex = i;
+					
+					tempSection += currentLine.substring(0, indexOfEndMarker);
+					
+					//tempSection += "Pixel Values: Start - " + answerStartIndex + "  End - " + answerEndIndex;
+					
+					answers.add(tempSection);
+					tempSection = "";
+				}
+				else
+				{
+					tempSection += currentLine;
+				}
+				
+				continue;
+			}
+			else if (currentLine.split("]$").length != 1)
+			{
+				inAnswerSection = true;
+				answerStartIndex = (i + 1);
+				
+				tempSection += currentLine;
+				subQuestions.add(tempSection);
+				tempSection = "";
+				
+				continue;
+			}
+			else 
+			{
+				tempSection += currentLine;
+			}
 		}
+		
+		System.out.println ();
+		System.out.println(answers.get(1));
 	}
 	
 	// Get additional information from the text of the memo
@@ -324,6 +399,6 @@ public class MemoProcessor
 	
 	public static void main (String [] args)
 	{
-		MemoProcessor mProc = new MemoProcessor("ClassTest2SpacingAdjusted.pdf");
+		new MemoProcessor("ClassTest2SpacingAdjusted.pdf");
 	}
 }
