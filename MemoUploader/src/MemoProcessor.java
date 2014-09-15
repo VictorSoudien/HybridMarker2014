@@ -223,9 +223,9 @@ public class MemoProcessor
 			
 			for (int iter = lowerBound; iter < upperBound; iter++)
 			{
-				System.out.print ("Question: " + subQuestions.get(iter));
+				System.out.print (subQuestions.get(iter));
 				System.out.println ("{QASplit}");
-				System.out.println ("Answer: " + answers.get(iter));
+				System.out.println (answers.get(iter));
 				System.out.println ("{SubQEnd}");
 			}
 			
