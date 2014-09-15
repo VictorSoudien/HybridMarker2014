@@ -153,7 +153,7 @@ public class MemoProcessor
 					
 					tempSection += currentLine.substring(0, indexOfEndMarker);
 					
-					//tempSection += "Pixel Values: Start - " + answerStartIndex + "  End - " + answerEndIndex;
+					tempSection += "Pixel Values: Start - " + pixelCoords.get(answerStartIndex) + "  End - " + pixelCoords.get(answerEndIndex);
 					
 					answers.add(tempSection);
 					tempSection = "";
@@ -183,7 +183,7 @@ public class MemoProcessor
 		}
 		
 		System.out.println ();
-		System.out.println(answers.get(1));
+		System.out.println(answers.get(0));
 	}
 	
 	// Get additional information from the text of the memo
