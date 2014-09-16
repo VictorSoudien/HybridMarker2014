@@ -20,6 +20,9 @@
             android:layout_height="wrap_content"
             android:textSize="30sp"
             android:padding="15dp"
+            android:shadowColor="@android:color/background_dark"
+            android:shadowDx="5"
+            android:shadowDy="5"
             android:text="TextView" />
 
     </LinearLayout>
