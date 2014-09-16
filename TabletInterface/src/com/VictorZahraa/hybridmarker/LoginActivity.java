@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CalendarView;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -22,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends Activity {
 
+	private TextView informationTextView;
 	private CalendarView deadlineCal;
 	
 	@Override
@@ -29,9 +32,11 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
+		informationTextView = (TextView) findViewById(R.id.remaining_marking_text_view );
+		informationTextView.setText("CSC1010H\nClass Test 2");
+		
 		deadlineCal = (CalendarView) findViewById(R.id.deadline_calendar);
 		deadlineCal.setFirstDayOfWeek(Calendar.MONDAY);
-		deadlineCal.setSelectedWeekBackgroundColor(Color.WHITE);
 
 		AsyncTask<String, Integer, String> s = new PHPCommunication().execute("username", "password");
 		
