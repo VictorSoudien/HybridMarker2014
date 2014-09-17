@@ -148,20 +148,35 @@ public class MemoProcessor
 			currentLine = lines[i].trim(); 
 			currentLine += "\n";
 			
-			if ((currentLine.equalsIgnoreCase("")) || (currentLine.indexOf("Question") == 0) || (currentLine.indexOf("question") == 0))
+			//System.out.print (currentLine);
+			
+			if (currentLine.equalsIgnoreCase("\n"))
 			{
 				continue;
 			}
-			else if (currentLine.split("]$").length != 1)
+			else if ((currentLine.split("]$").length != 1) && (currentLine.indexOf("Question") != 0) && (currentLine.indexOf("question") != 0))
 			{
+				if (inAnswerSection ==  true)
+				{
+					yEnd = pixelCoords.get(i);
+					ArrayList<Double> temp = new ArrayList<Double>();
+					temp.add(yStart);
+					temp.add(yEnd);
+					
+					answerCoords.add(temp);
+					
+					yEnd = -1;
+					inAnswerSection = false;
+				}
+				
 				inAnswerSection = true;
 				yStart = pixelCoords.get(i + 1);
 			}
-			else
+			else 
 			{
 				if (inAnswerSection == true)
 				{
-					yEnd = pixelCoords.get(i - 1);
+					yEnd = pixelCoords.get(i);
 					ArrayList<Double> temp = new ArrayList<Double>();
 					temp.add(yStart);
 					temp.add(yEnd);
