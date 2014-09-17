@@ -25,6 +25,7 @@ public class MemoProcessor
 	
 	private ArrayList<String> mainQuestions;
 	private ArrayList<String> subQuestions;
+	private ArrayList<ArrayList<Double>> answerCoords;
 	private ArrayList<String> answers;
 	
 	// Keeps track of which question a set of sub-questions and answers belongs to
@@ -45,6 +46,7 @@ public class MemoProcessor
 		
 		mainQuestions = new ArrayList<String>();
 		subQuestions = new ArrayList<String>();
+		answerCoords = new ArrayList<ArrayList<Double>>();
 		answers = new ArrayList<String>();
 		mainQuestionIndex = new ArrayList<Integer>();
 		
@@ -118,12 +120,69 @@ public class MemoProcessor
 			PDDocument memoPDF = PDDocument.load(memoToProcess);
 			txtStripper.setStartPage(2);
 			String docText = txtStripper.getText(memoPDF);
+			
+			String blankScriptText = txtStripper.getText(blankScriptPDF);
+			
+			storeAnswerCoords(blankScriptText, txtStripper.getLineSeparator());
 			processMemoText(docText, txtStripper.getLineSeparator());
 			//splitTextIntoQuestions(docText);			
 		}
 		catch (Exception e)
 		{
 			System.out.println ("Error while retrieving text: " + e.getMessage());
+		}
+	}
+	
+	// Get the coordinates of the answer sections
+	public void storeAnswerCoords (String text, String lineSeparator)
+	{
+		String [] lines = text.split(lineSeparator);
+		boolean inAnswerSection = false;
+		
+		double yStart = 0;
+		double yEnd = 0;
+		String currentLine;
+			
+		for (int i = 0; i < lines.length; i++)
+		{
+			currentLine = lines[i].trim(); 
+			currentLine += "\n";
+			
+			if ((currentLine.equalsIgnoreCase("")) || (currentLine.indexOf("Question") == 0) || (currentLine.indexOf("question") == 0))
+			{
+				continue;
+			}
+			else if (currentLine.split("]$").length != 1)
+			{
+				inAnswerSection = true;
+				yStart = pixelCoords.get(i + 1);
+			}
+			else
+			{
+				if (inAnswerSection == true)
+				{
+					yEnd = pixelCoords.get(i - 1);
+					ArrayList<Double> temp = new ArrayList<Double>();
+					temp.add(yStart);
+					temp.add(yEnd);
+					
+					answerCoords.add(temp);
+					
+					yEnd = -1;
+					inAnswerSection = false;
+				}
+			}
+		}
+		
+		// Add the end coord if the end of the doc is reached
+		if (yEnd == -1)
+		{
+			yEnd = pixelCoords.get(pixelCoords.size() - 1);
+			ArrayList<Double> temp = new ArrayList<Double>();
+			temp.add(yStart);
+			temp.add(yEnd);
+			
+			answerCoords.add(temp);
 		}
 	}
 	
@@ -137,6 +196,8 @@ public class MemoProcessor
 		
 		int answerStartIndex = 0;
 		int answerEndIndex = 0;
+		
+		int answerCounter = 0;
 		
 		// Holds the current unassigned lines. Lines are assigned as being either question or answer sections.
 		String tempSection = "";
@@ -180,7 +241,9 @@ public class MemoProcessor
 					
 					tempSection += currentLine.substring(0, indexOfEndMarker);
 					
-					tempSection += "\n{CoordSplit}\n" + pixelCoords.get(answerStartIndex) + "\n" + pixelCoords.get(answerEndIndex);
+					//tempSection += "\n{CoordSplit}\n" + pixelCoords.get(answerStartIndex) + "\n" + pixelCoords.get(answerEndIndex);
+					tempSection += "\n{CoordSplit}\n" + answerCoords.get(answerCounter).get(0) + "\n" + answerCoords.get(answerCounter).get(1);
+					answerCounter++;
 					
 					answers.add(tempSection);
 					tempSection = "";
