@@ -83,9 +83,10 @@ public class MemoProcessor
 	{
 		try
 		{
-			PDDocument pdf = PDDocument.load(memoToProcess);
+			// Process the blank script to get accurate text coords
+			PDDocument blankScriptPDF = PDDocument.load(blankScript);
 			TextStripperHelper txtHelper = new TextStripperHelper();
-			List<PDPage> pages = pdf.getDocumentCatalog().getAllPages();
+			List<PDPage> pages = blankScriptPDF.getDocumentCatalog().getAllPages();
 			
 			PDFTextStripper txtStripper = new PDFTextStripper();
 			
@@ -114,8 +115,9 @@ public class MemoProcessor
 				}
 			}
 			
+			PDDocument memoPDF = PDDocument.load(memoToProcess);
 			txtStripper.setStartPage(2);
-			String docText = txtStripper.getText(pdf);
+			String docText = txtStripper.getText(memoPDF);
 			processMemoText(docText, txtStripper.getLineSeparator());
 			//splitTextIntoQuestions(docText);			
 		}
