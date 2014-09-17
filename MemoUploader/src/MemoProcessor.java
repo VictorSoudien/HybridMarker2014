@@ -170,7 +170,7 @@ public class MemoProcessor
 				}
 				
 				inAnswerSection = true;
-				yStart = pixelCoords.get(i + 1);
+				yStart = pixelCoords.get(i);
 			}
 			else 
 			{
@@ -538,6 +538,6 @@ public class MemoProcessor
 	
 	public static void main (String [] args)
 	{
-		new MemoProcessor("test.pdf", "testAsHandedToStudents.pdf");
+		new MemoProcessor("test.pdf", "noPageNums.pdf");
 	}
 }
