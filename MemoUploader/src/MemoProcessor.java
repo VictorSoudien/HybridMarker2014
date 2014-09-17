@@ -16,6 +16,7 @@ import org.apache.pdfbox.util.PDFTextStripper;
 public class MemoProcessor
 {
 	private File memoToProcess;
+	private File blankScript;
 	private String memoName;
 	
 	// Used to track the coordinates of answer sections
@@ -31,7 +32,8 @@ public class MemoProcessor
 	
 	// The strings which will be written to the file
 	private String outputHeader;
-	public MemoProcessor(String filename)
+	
+	public MemoProcessor(String filename, String blankScriptFilename)
 	{	
 		memoName = filename.split("\\.")[0].replaceAll(" ", "_");
 		memoName += ".txt";
@@ -46,14 +48,14 @@ public class MemoProcessor
 		answers = new ArrayList<String>();
 		mainQuestionIndex = new ArrayList<Integer>();
 		
-		openFile(filename);
+		openFiles(filename, blankScriptFilename);
 		getTextInformation();
 		//getAdditionalInformation();
 		//getMemoText();
 	}
 	
 	// Loads the file into memory
-	private void openFile(String filename)
+	private void openFiles(String filename, String blankScriptFilename)
 	{
 		memoToProcess = new File(filename);
 		
@@ -64,7 +66,16 @@ public class MemoProcessor
 			System.exit(0);
 		}
 		
-		System.out.println ("File opened successfully");
+		blankScript = new File(blankScriptFilename);
+		
+		// Check if the file exists
+		if (!blankScript.exists())
+		{
+			System.out.println ("Unable to open file: " + blankScriptFilename);
+			System.exit(0);
+		}
+		
+		System.out.println ("Files opened successfully");
 	}
 	
 	// Gets the text and pixel locations of the text on the pdf
@@ -447,6 +458,6 @@ public class MemoProcessor
 	
 	public static void main (String [] args)
 	{
-		new MemoProcessor("test.pdf");
+		new MemoProcessor("test.pdf", "testAsHandedToStudents.pdf");
 	}
 }
