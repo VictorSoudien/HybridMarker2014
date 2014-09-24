@@ -1,5 +1,12 @@
-Question 1	[5 marks]
-Question:
+35
+Question 1. [5 marks]
+Question 2. [7 marks]
+Question 3. [6 marks]
+Question 4. [7 marks]
+Question 5. [4 marks]
+Question 6. [6 marks]
+{HeaderEnd}
+Question 1. [5 marks]
 
 Consider the following problem. Answer it appropriately.
 
@@ -24,8 +31,9 @@ determine how many of each colour party packet they need to buy and how many of 
 colour they need to allocate to each family and what the total number of party packets are.
 
 Use a diagram to show how you solve the problem.      [5]
+{QASplit}
 
-Answer:
+
 
 Smiths Januaries Hectors
 Blue/boys 2 2 1 5
@@ -36,61 +44,68 @@ Pink/girls 1 0 1 2
 # 1 for headings/labels
 # 0.5 * 6 = 3 for given values
 # 0.5 * 6 = 3 for derived values 
-Question 2	[7 marks]
-Question:
+840;1540
+{SubQEnd}
+{MainQEnd}
+Question 2. [7 marks]
 
 Answer the following questions:
 
 a) When using debugging features in an IDE, what should the user typically do once
 execution has reached the breakpoint?       [2]
-
-Answer:
+{QASplit}
 
 Step over each line in program #1
 
 Watches variables #1     
-Question:
+288;488
+{SubQEnd}
+
+
 
 b) When a new module has been defined, how do you ensure that it is accessible and can be
 imported into a program with no problems, i.e. “import newmodule” works?  [1]
-
-Answer:
+{QASplit}
 
 Save it in same file #1 or   Save it in Python\Lib directory #1 
-Question:
+536;626
+{SubQEnd}
 
 c) Explain what happens in memory when Python makes successive recursive function calls.
 [1]
-
-Answer:
+{QASplit}
 
 Each function call/copy is placed on runtime/memory stack #1  
-Question:
+674;822
+{SubQEnd}
+
+
 
 Indicate whether the following statements are True or False.
 
 d) The accepted Python coding convention for module names is long descriptive names in
 uppercase.           [1]
-
-Answer:
+{QASplit}
 
 false         
-Question:
+923;1015
+{SubQEnd}
 
 e) Curly brackets {} are used to enclose parameters to a function.    [1]
-
-Answer:
+{QASplit}
 
 false         
-Question:
+1033;1125
+{SubQEnd}
 
 f) The print() function can be used to write to a file.      [1]
-
-Answer:
+{QASplit}
 
 true         
-Question 3	[6 marks]
-Question:
+1144;1236
+{SubQEnd}
+{MainQEnd}
+Question 3. [6 marks]
 
 Write a Python function called draw_line() which draws a line of horizontal line of characters.
 The draw_line() function should take two parameters, with the first being the size of the line
@@ -102,16 +117,19 @@ corresponding output:
 
 draw_line(5)   produces   *****
 draw_line(6,’$’)      $$$$$$ [6]
+{QASplit}
 
-Answer:
+
 
 def draw_line(size,char='*'): #2
 for i in range(size): #1
 print(char,end='') #2
 print() #1    or  print(char * size) #4
 
-Question 4	[7 marks]
-Question:
+397;936
+{SubQEnd}
+{MainQEnd}
+Question 4. [7 marks]
 
 Consider the following recursive function definition:
 
@@ -122,38 +140,39 @@ else:
 return str(stuff[0] * 2) + do_this(stuff[1:])
 
 a) What datatype can the parameter to this function be?     [2]
-
-Answer:
+{QASplit}
 
 List, string #2
 
 Or sequence #2       
-Question:
+1239;1384
+{SubQEnd}
 
 b) What is the base case for this function?       [1]
-
-Answer:
+{QASplit}
 
 Empty list/string/sequence #1      
-Question:
+1405;1497
+{SubQEnd}
 5
 
 c)   Based on the do_this() function definition, what will the following statements display?
 
 i. print(do_this([1,2,3]))       [2]
-
-Answer:
+{QASplit}
 
 246 #2       
-Question:
+236;328
+{SubQEnd}
 
 ii. print(do_this(“123”))       [2]
-
-Answer:
+{QASplit}
 
 112233 #2      
-Question 5	[4 marks]
-Question:
+347;439
+{SubQEnd}
+{MainQEnd}
+Question 5. [4 marks]
 
 Consider the following Python program and answer the questions below:
 
@@ -169,33 +188,34 @@ f.close()
 main()
 
 a) What is the name of the file created?       [1]
-
-Answer:
+{QASplit}
 
 To_do_list.txt       
-Question:
+865;957
+{SubQEnd}
 
 b)  What mode is the file created in?        [1]
-
-Answer:
+{QASplit}
 
 append        
-Question:
+967;1059
+{SubQEnd}
 
 c)  Looking at the code, how does the user terminate the program?    [1]
-
-Answer:
+{QASplit}
 
 Entering done       
-Question:
+1068;1160
+{SubQEnd}
 
 d)  How will the information that the user enters be written in the file?    [1]
-
-Answer:
+{QASplit}
 
 Each thing on a new line     
-Question 6	[6 marks]
-Question:
+1169;1261
+{SubQEnd}
+{MainQEnd}
+Question 6. [6 marks]
 
 Consider the following definition of the classify_weight() function. Specify test cases which
 thoroughly test the function, using equivalence classes and boundary value. For each test case
@@ -210,8 +230,8 @@ return "heavy"
 else:
 return "error"
 [6]
+{QASplit}
 
-Answer:
 
 any value between 0 and 60 – equivalence class value #1
 any value between 60 and 120 – equivalence class value #1
@@ -221,3 +241,7 @@ any value not between 0 and 120 – equivalence class value #1
 120 – boundary value #1
 
 
+
+489;967
+{SubQEnd}
+{MainQEnd}
