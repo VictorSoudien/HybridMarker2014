@@ -114,8 +114,10 @@ public final class R {
         public static final int main_marking_screen=0x7f080001;
         public static final int main_screen=0x7f080002;
         public static final int pdf_display_screen=0x7f080003;
-        public static final int script_finalize_and_upload=0x7f080004;
-        public static final int test_script_browser=0x7f080005;
+        public static final int per_question_marking=0x7f080004;
+        public static final int script_finalize_and_upload=0x7f080005;
+        public static final int test_per_question_layout=0x7f080006;
+        public static final int test_script_browser=0x7f080007;
     }
     public static final class raw {
         public static final int marking_gesture_data=0x7f040000;
@@ -141,7 +143,9 @@ public final class R {
         public static final int title_activity_login=0x7f060015;
         public static final int title_activity_main_marking_screen=0x7f060007;
         public static final int title_activity_pdf_display_screen=0x7f060006;
+        public static final int title_activity_per_question_marking=0x7f060017;
         public static final int title_activity_script_finalize_and_upload=0x7f060011;
+        public static final int title_activity_test_per_question_layout=0x7f060016;
         public static final int title_activity_test_script_browser=0x7f06000c;
     }
     public static final class style {

@@ -128,9 +128,6 @@
 	    android:layout_height="match_parent"
 	    android:layout_alignParentLeft="true"
 	    android:background="@android:color/transparent" >
-
-		
-
 	</RelativeLayout>
 	
 	<RelativeLayout

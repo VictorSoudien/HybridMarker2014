@@ -23,5 +23,7 @@
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_test_per_question_layout">TestPerQuestionLayoutActivity</string>
+    <string name="title_activity_per_question_marking">PerQuestionMarkingActivity</string>
 
 </resources>

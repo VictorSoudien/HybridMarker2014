@@ -61,11 +61,6 @@ public class LoginActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		/*if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}*/
 	}
 
 	@Override
@@ -93,11 +88,7 @@ public class LoginActivity extends Activity {
 		@Override
 		protected String doInBackground(String... params) 
 		{
-			// TODO Auto-generated method stub
-			
 			return loginToServer(params[0], params[1]);
-			
-			//return null;
 		}
 		
 		public String loginToServer(String username, String password)
@@ -139,21 +130,4 @@ public class LoginActivity extends Activity {
 			}
 		}
 	}
-	
-	/*
-	/**
-	 * A placeholder fragment containing a simple view.
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_login,
-					container, false);
-			return rootView;
-		}
-	}*/
 }
