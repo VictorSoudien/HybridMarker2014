@@ -37,13 +37,27 @@ public class FinalMemoProcessor
 	// The strings which will be written to the file
 	private String outputHeader;
 
-	public FinalMemoProcessor (String memoFileName, String blankScriptFileName)
+	public FinalMemoProcessor (String memoFileName, String blankScriptFileName, String dir)
 	{
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 
+		dir = dir.trim();
+		
+		// Verify the ouput directory
+		isDirValid(dir);
+		
 		outputFileName = memoFileName.split("\\.")[0].replaceAll(" ", "_");
 		outputFileName += ".txt";
 		
+		if (dir.endsWith("/"))
+		{
+			outputFileName = dir + outputFileName;
+		}
+		else
+		{
+			outputFileName = dir + "/" + outputFileName;
+		}
+
 		outputHeader = "";
 
 		answerRegions = new ArrayList<String>();
@@ -55,6 +69,20 @@ public class FinalMemoProcessor
 		openFiles(memoFileName, blankScriptFileName);
 		getAnswerRegions();
 		getMemoText();
+	}
+
+	// Test whether the output directory is valid
+	private boolean isDirValid(String directory)
+	{
+		File dirCheck = new File (directory);
+
+		if ((dirCheck.exists() == true) && (dirCheck.isDirectory() == false))
+		{
+			System.out.println ("Please provide a valid output directory");
+			System.exit(0);
+		}
+
+		return true;
 	}
 
 	// Load the files that need to be processed into memory
@@ -226,7 +254,7 @@ public class FinalMemoProcessor
 		int upperBound = 0;
 
 		PrintWriter fileWriter = null;
-		
+
 		try
 		{
 			fileWriter = new PrintWriter(new File (outputFileName));
@@ -255,7 +283,7 @@ public class FinalMemoProcessor
 					System.out.println (answers.get(iter));
 					System.out.println (answerRegions.get(iter));
 					System.out.println ("{SubQEnd}");*/
-					
+
 					fileWriter.append (subQuestions.get(iter));
 					fileWriter.append ("{QASplit}\n");
 					fileWriter.append (answers.get(iter) + "\n");
@@ -287,27 +315,27 @@ public class FinalMemoProcessor
 	private int calculateTestTotal()
 	{
 		int total = 0;
-		
+
 		String [] questions = outputHeader.split("\\n");
-		
+
 		for (String q : questions)
 		{
 			String marks = q.substring(q.indexOf("[") + 1).split(" ")[0];
 			total += Integer.parseInt(marks);
 		}
-		
+
 		return total;
 	}
-	
+
 	public static void main (String [] args)
 	{
 		// Ensure that the file names have been provided
-		if (args.length != 2)
+		if (args.length != 3)
 		{
-			System.out.println ("Please provide the name of the memo and test script files");
+			System.out.println ("Usage: java -jar ProcessMemo.jar memoFilename.pdf blankScript.pdf directoryToStoreMetaData");
 			System.exit(0);
 		}
 
-		FinalMemoProcessor memoProc = new FinalMemoProcessor(args[0], args[1]);
+		FinalMemoProcessor memoProc = new FinalMemoProcessor(args[0], args[1], args[2]);
 	}
 }
