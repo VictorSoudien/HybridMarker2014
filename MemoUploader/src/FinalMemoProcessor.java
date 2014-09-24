@@ -38,7 +38,7 @@ public class FinalMemoProcessor
 	private String outputHeader;
 
 	public FinalMemoProcessor (String memoFileName, String blankScriptFileName, String dir)
-	{
+	{		
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 
 		dir = dir.trim();
