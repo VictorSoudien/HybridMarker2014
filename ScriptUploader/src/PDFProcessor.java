@@ -39,6 +39,7 @@ public class PDFProcessor
 	// Used to control the use of the successful upload window
 	private TimerTask windowReset;
 	private Timer windowTimer;
+	private final int WINDOW_DURATION = 300;
 	
 	public PDFProcessor()
 	{
@@ -55,8 +56,7 @@ public class PDFProcessor
 		
 		populateListOfTestsFromServer();
 		
-		windowReset = new ResetUploadWindow();
-		windowTimer = new Timer(true);
+		windowTimer = new Timer();
 	}
 	
 	public boolean isInList (String temp, Operation op)
@@ -162,8 +162,8 @@ public class PDFProcessor
 					uploadDirectory += line + "/";
 					
 					if (isInList(line, Operation.TEST) && isInList(courseName, Operation.COURSE))
-					{
-						//windowTimer.cancel(); // Cancel a timer that is currently executing
+					{	
+						windowTimer.cancel();
 						
 						prepareFileForUpload(fileToProcess, uploadDirectory, line);
 						
@@ -181,13 +181,13 @@ public class PDFProcessor
 						currentUploadDirectory = uploadDirectory;
 						
 						inSuccessfulUploadWindow = true;
-						//windowTimer = new Timer(true);
-						//windowTimer.schedule(windowReset, 300 * 1000); // time in milliseconds (seconds * 1000)
+						windowTimer = new Timer();
+						windowTimer.schedule(new ResetUploadWindow(), WINDOW_DURATION * 1000); // time in milliseconds (seconds * 1000)
 					}
-					/*else if (inSuccessfulUploadWindow == true)
+					else if (inSuccessfulUploadWindow == true)
 					{
 						prepareFileForUpload(fileToProcess, currentUploadDirectory, currentTestName);
-					}*/
+					}
 					else
 					{
 						fileBacklog.add(fileToProcess);
