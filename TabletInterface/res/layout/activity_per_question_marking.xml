@@ -95,17 +95,42 @@
                 android:orientation="vertical"
                 android:background="@android:color/black"
                 android:layout_weight="1" >
-
+                
                 <ImageButton
-                    android:id="@+id/imageButton1"
+                    android:id="@+id/prevQuestionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_launcher" />
+                    android:src="@drawable/ic_action_previous_item"
+                    android:onClick="prevQuestion" />
+
+                <ImageButton
+                    android:id="@+id/nextQuestionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_action_next_item"
+                    android:onClick="nextQuestion" />
 
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
+    
+    <RelativeLayout
+        android:id="@+id/canvasAnchorPoint"
+        android:layout_width="match_parent"
+        android:layout_height="305dp"
+        android:layout_alignParentLeft="true"
+        android:background="@android:color/transparent" >
+	</RelativeLayout>
+	
+	<RelativeLayout
+	    android:id="@+id/markingScreenCanvasContainer"
+	    android:layout_width="1200dp"
+	    android:layout_marginTop="305dp"
+	    android:layout_height="390dp"
+	    android:background="@android:color/transparent" >
+	</RelativeLayout>
 
 </RelativeLayout>

@@ -51,7 +51,7 @@
         </activity>
         <activity
             android:name="com.VictorZahraa.hybridmarker.PerQuestionMarkingActivity"
-            android:label="@string/title_activity_per_question_marking" 
+            android:label="@string/app_name" 
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

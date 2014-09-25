@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 
@@ -33,6 +35,22 @@ public class PerQuestionMarkingActivity extends Activity
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.per_question_marking, menu);
 		return true;
+	}
+	
+	// Display the next question
+	public void nextQuestion(View view)
+	{
+		/*questionTextView.setText(valueStore.getNextQuestion());
+		answerTextView.setText(valueStore.getNextAnswer());*/
+		scriptScrollView.scrollTo(scriptScrollView.getScrollX(), 536);
+	}
+	
+	// Display the next question
+	public void prevQuestion(View view)
+	{
+		/*questionTextView.setText(valueStore.getNextQuestion());
+		answerTextView.setText(valueStore.getNextAnswer());*/
+		scriptScrollView.scrollTo(scriptScrollView.getScrollX(), 288);
 	}
 
 	@Override
