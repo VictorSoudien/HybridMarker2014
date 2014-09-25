@@ -107,13 +107,13 @@ public class PerQuestionMarkingActivity extends Activity
 			@Override
 			public void onLongPressed(float arg0, float arg1) 
 			{
-				//displayToast ("Long Press Args");
+				displayToast ("Long Press Args");
 			}
 
 			@Override
 			public void onLongPressed() 
 			{
-				//displayToast ("Long Press");
+				displayToast ("Long Press");
 			}
 		});
 
@@ -139,7 +139,7 @@ public class PerQuestionMarkingActivity extends Activity
 		// Load the gesture library from the SD Card
 		if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
 		{
-			//displayToast("Custom Gesture Library Loaded");
+			displayToast("Custom Gesture Library Loaded");
 		}
 		else // if the file is not found, then load it onto the SD Card
 		{	
@@ -161,12 +161,12 @@ public class PerQuestionMarkingActivity extends Activity
 			}
 			catch (Exception e)
 			{
-				//displayToast("ERROR:" + e.getMessage());
+				displayToast("ERROR:" + e.getMessage());
 			}
 
 			if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
 			{
-				//displayToast("Custom Gesture Library Loaded");
+				displayToast("Custom Gesture Library Loaded");
 			}
 		}
 	}
