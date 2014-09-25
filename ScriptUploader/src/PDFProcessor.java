@@ -23,10 +23,23 @@ import net.sourceforge.tess4j.*;
 public class PDFProcessor
 {
 	private FileUploader uploader;
+	private enum Operation {TEST, COURSE};
 	
 	public PDFProcessor()
 	{
 		uploader = new FileUploader();
+	}
+	
+	public void getMatch (String temp, Operation op)
+	{
+		if (op.equals(Operation.TEST))
+		{
+			
+		}
+		else
+		{
+			
+		}
 	}
 	
 	// Finds the course code and name of a given test

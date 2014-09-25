@@ -112,6 +112,9 @@ public class EmailMonitor
 								PDFProcessor pdfProc = new PDFProcessor();
 								pdfProc.processDocument(scannedPDF);
 								
+								// Delete the temp file that was created
+								scannedPDF.delete();
+								
 								System.out.println("Attachment Saved");
 							}
 						}
