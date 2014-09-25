@@ -153,6 +153,7 @@ public class PDFProcessor
 				{
 					String [] temp = line.split(" ");
 					String courseName = temp[temp.length - 1];
+					
 					// I know the course code is the last element since this is specified in the template
 					uploadDirectory += courseName + "/";
 					
@@ -195,17 +196,6 @@ public class PDFProcessor
 						System.out.println ("File stored in backlog");
 					}
 					
-					//uploadDirectory = "CSC1010H/Class_Test_2/";
-					//line = "Class_Test_2";
-					
-					//prepareFileForUpload(fileToProcess, uploadDirectory, line);
-					
-					// Test if directory is correct
-					/*if (!uploadDirectory.equalsIgnoreCase("CSC1010H/Class_Test_2/"))
-					{
-						System.out.println (fileToProcess.getName() + "\t-\t" +  uploadDirectory);
-					}*/
-					
 					break;
 				}
 			}
@@ -242,8 +232,6 @@ public class PDFProcessor
 		String fileName = numberOfFiles + "-" + testName + "-" + uploadTime + ".pdf";
 		
 		///////////////// Upload pdf as multiple images /////////////////////////////
-		//String filename = numberOfFiles + "-" + testName + "-" + uploadTime + "/";
-		//directoryToSaveTo += filename;
 		String originalDir =  directoryToSaveTo;
 		
 		try
@@ -272,7 +260,7 @@ public class PDFProcessor
 					System.exit(0);
 				}
 				
-				//uploader.uploadFileToServer(directoryToSaveTo, temp);
+				uploader.uploadFileToServer(directoryToSaveTo, temp);
 				
 				// Delete the file on the local file system
 				temp.delete();
@@ -285,12 +273,6 @@ public class PDFProcessor
 			System.out.println ("Error while trying to convert pdf to images");
 		}
 		/////////////////////////////////////////////////////////////////////////////
-		
-		//directoryToSaveTo += fileName;
-		//uploader.uploadFileToServer(directoryToSaveTo, fileToUpload);
-		
-		// Delete the temp file that was created
-		//fileToUpload.delete();
 		
 		System.out.println ("File Uploaded PDF");
 	}

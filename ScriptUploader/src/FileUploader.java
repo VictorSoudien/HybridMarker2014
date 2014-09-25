@@ -45,10 +45,6 @@ public class FileUploader
 				SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(systemOptions, true);
 				SftpFileSystemConfigBuilder.getInstance().setTimeout(systemOptions, 1000);
 				
-				// Get the filename from the path
-				//String [] pathComponents = filePath.split("/");
-				//String filename = pathComponents[pathComponents.length - 1];
-				
 				// Create the URI to connect to
 				String uri = "sftp://" + username + ":" + password + "@nightmare.cs.uct.ac.za/Honours_Project/" + pathOnServer;/* + filename*/;
 				
@@ -103,10 +99,6 @@ public class FileUploader
 				SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(systemOptions, "no");
 				SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(systemOptions, true);
 				SftpFileSystemConfigBuilder.getInstance().setTimeout(systemOptions, 1000);
-				
-				// Get the filename from the path
-				//String [] pathComponents = filePath.split("/");
-				//String filename = pathComponents[pathComponents.length - 1];
 				
 				// Create the URI to connect to
 				String uri = "sftp://" + username + ":" + password + "@nightmare.cs.uct.ac.za/Honours_Project/" + pathOnServer;/* + filename*/;
