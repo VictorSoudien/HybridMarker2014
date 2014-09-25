@@ -202,6 +202,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
         sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
         sCanvasContainer.addView(sCanvasView);
+        sCanvasContainer.setVisibility(View.INVISIBLE);
 	}
 
 	// Load the custom gesture library
