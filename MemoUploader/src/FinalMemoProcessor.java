@@ -23,6 +23,10 @@ public class FinalMemoProcessor
 
 	// The name of the output file
 	private String outputFileName;
+	
+	// The name of the text file which contains the answers per page
+	private String answersPerPageOutputFile;
+	private String answersPerPageText; // The data to be written to the file
 
 	// Stores the answer regions in terms of their start and end y position
 	private ArrayList<String> answerRegions;
@@ -47,18 +51,23 @@ public class FinalMemoProcessor
 		isDirValid(dir);
 		
 		outputFileName = memoFileName.split("\\.")[0].replaceAll(" ", "_");
+		answersPerPageOutputFile = outputFileName + "_answersPerPage.txt";
+		
 		outputFileName += ".txt";
 		
 		if (dir.endsWith("/"))
 		{
 			outputFileName = dir + outputFileName;
+			answersPerPageOutputFile = dir + answersPerPageOutputFile;
 		}
 		else
 		{
 			outputFileName = dir + "/" + outputFileName;
+			answersPerPageOutputFile = dir + "/" + answersPerPageOutputFile;
 		}
 
 		outputHeader = "";
+		answersPerPageText = "";
 
 		answerRegions = new ArrayList<String>();
 		mainQuestionIndex = new ArrayList<Integer>();
@@ -150,7 +159,16 @@ public class FinalMemoProcessor
 			txtStripper.setStartPage(2);
 			String docText = txtStripper.getText(memoPDF);
 
-			processMemoText(docText, txtStripper.getLineSeparator());
+			for (int i = 2; i <= memoPDF.getNumberOfPages(); i++)
+			{
+				txtStripper.setStartPage(i);
+				txtStripper.setEndPage(i);
+				String tempText = txtStripper.getText(memoPDF);
+				getMemoTextPerPage(tempText, txtStripper.getLineSeparator(), (i == memoPDF.getNumberOfPages()));
+			}
+			
+			// Process the entire document
+			processMemoText(docText, txtStripper.getLineSeparator(), true);
 		}
 		catch (Exception e)
 		{
@@ -159,9 +177,37 @@ public class FinalMemoProcessor
 			System.exit(0);
 		}
 	}
+	
+	// Get memo text for each page
+	private void getMemoTextPerPage(String text, String lineSeparator, boolean lastPage)
+	{
+		processMemoText(text, lineSeparator, false);
+		
+		for (int i = 0; i < answers.size(); i++)
+		{
+			answersPerPageText += answers.get(i);
+			
+			if (i != answers.size() - 1)
+			{
+				answersPerPageText += "\n{AnswerSplit}";
+			}
+		}
+		
+		if (lastPage == false)
+		{
+			answersPerPageText += "\n{Page}";
+		}
+		
+		mainQuestionIndex.clear();
+		mainQuestions.clear();
+		answers.clear();
+		subQuestions.clear();
+		
+		outputHeader = "";
+	}
 
 	// Processes the text in order to split it into questions and answers
-	private void processMemoText(String memoText, String lineSeparator)
+	private void processMemoText(String memoText, String lineSeparator, boolean writeOut)
 	{
 		String [] lines = memoText.split(lineSeparator);
 
@@ -172,6 +218,8 @@ public class FinalMemoProcessor
 		int answerEndIndex = 0;
 
 		int answerCounter = 0;
+		
+		int lastPagePrintIndex = 0;
 
 		// Holds the current unassigned lines. Lines are assigned as being either question or answer sections.
 		String tempSection = "";
@@ -195,7 +243,7 @@ public class FinalMemoProcessor
 			{
 				mainQuestionIndex.add(subQuestions.size());
 				mainQuestions.add(currentLine.replaceAll("[ ]+", " "));
-
+					
 				// Anything before this can be assumed to be additional information e.g. page numbers
 				tempSection = "";
 
@@ -244,16 +292,20 @@ public class FinalMemoProcessor
 			}
 		}
 
-		writeMetaFile();
+		if (writeOut == true)
+		{
+			writeMetaFiles();
+		}
 	}
 
 	// Write the metadata to the file
-	private void writeMetaFile ()
+	private void writeMetaFiles ()
 	{
 		int lowerBound = 0;
 		int upperBound = 0;
 
 		PrintWriter fileWriter = null;
+		PrintWriter answerPerPageWriter = null;
 
 		try
 		{
@@ -261,6 +313,9 @@ public class FinalMemoProcessor
 			fileWriter.append(calculateTestTotal() + "\n");
 			fileWriter.append(outputHeader);
 			fileWriter.append("{HeaderEnd}\n");
+			
+			answerPerPageWriter = new PrintWriter(new File (answersPerPageOutputFile));
+			answerPerPageWriter.append(answersPerPageText);
 
 			for (int i = 0; i < mainQuestions.size(); i++)
 			{
@@ -287,6 +342,7 @@ public class FinalMemoProcessor
 					fileWriter.append (subQuestions.get(iter));
 					fileWriter.append ("{QASplit}\n");
 					fileWriter.append (answers.get(iter) + "\n");
+					fileWriter.append ("{CoordsSplit}\n");
 					fileWriter.append (answerRegions.get(iter) + "\n");
 					fileWriter.append ("{SubQEnd}\n");
 				}
@@ -308,9 +364,13 @@ public class FinalMemoProcessor
 			{
 				fileWriter.close();
 			}
+			if (answerPerPageWriter != null)
+			{
+				answerPerPageWriter.close();
+			}
 		}
 	}
-
+ 
 	// Calculate the total of the test
 	private int calculateTestTotal()
 	{
