@@ -67,7 +67,7 @@
             android:orientation="horizontal"
             android:layout_weight="1" >
 
-            <ScrollView
+            <com.VictorZahraa.hybridmarker.ScrollViewHelper
                 android:id="@+id/scriptDisplayScrollView"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
@@ -87,7 +87,7 @@
                         android:layout_weight="1"
                         android:src="@drawable/page2200dpi" />
                 </LinearLayout>
-            </ScrollView>
+            </com.VictorZahraa.hybridmarker.ScrollViewHelper>
 
             <LinearLayout
                 android:layout_width="160dp"
@@ -129,7 +129,8 @@
 	    android:id="@+id/markingScreenCanvasContainer"
 	    android:layout_width="1200dp"
 	    android:layout_marginTop="305dp"
-	    android:layout_height="390dp"
+	   	android:layout_marginBottom="-500dp"
+	    android:layout_height="match_parent"
 	    android:background="@android:color/transparent" >
 	</RelativeLayout>
 
