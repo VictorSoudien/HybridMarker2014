@@ -4,30 +4,38 @@
  * Student Number: SDNVIC001
  */
 
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.List;
-import java.util.Properties;
-
-import javax.imageio.ImageIO;
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.interactive.action.PDPageAdditionalActions;
 
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
 import net.sourceforge.tess4j.*;
 
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.*;
+import java.net.URL;
+import java.net.URLConnection;
+
+import javax.imageio.ImageIO;
+
 public class PDFProcessor
 {
 	private FileUploader uploader;
 	private enum Operation {TEST, COURSE};
 	
+	private ArrayList<String> testNames;
+	private ArrayList<String> courseNames;
+	
 	public PDFProcessor()
 	{
 		uploader = new FileUploader();
+		
+		testNames = new ArrayList<String>();
+		courseNames = new ArrayList<String>();
+		
+		populateListOfTestsFromServer();
 	}
 	
 	public void getMatch (String temp, Operation op)
@@ -39,6 +47,63 @@ public class PDFProcessor
 		else
 		{
 			
+		}
+	}
+	
+	public void populateListOfTestsFromServer()
+	{
+		String link = "http://people.cs.uct.ac.za/~vsoudien/listOfTests.php";
+		
+		try
+		{			        
+            URL url = new URL(link);
+            URLConnection urlConn = url.openConnection();
+            urlConn.setDoOutput(true);
+            
+            BufferedReader reader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+            String result = "";
+            String line = null;
+            
+            // Read Server Response
+            while((line = reader.readLine()) != null)
+            {
+               result += line;
+               break;
+            }
+            
+            String [] resultLines = result.split("<br>");
+            
+            for (String rLine : resultLines)
+            {
+            	rLine = rLine.trim();
+            	
+            	if(!rLine.equals(""))
+            	{
+            		String [] testAndCourse = rLine.split("\\+");
+            		
+            		String tempTestName = testAndCourse[0].replaceAll(" ", "_");
+            		String tempCourseName = testAndCourse[1].replaceAll(" ", "_");
+            		
+            		// Ensure that adding to the arrayList does not cause duplicates
+            		if (testNames.contains(tempTestName) == false)
+            		{
+            			testNames.add(tempTestName);
+            			System.out.println (testAndCourse[0].replaceAll(" ", "_"));
+            		}
+            		
+            		if (courseNames.contains(tempCourseName) == false)
+            		{
+            			courseNames.add(tempCourseName);
+            			System.out.println (testAndCourse[1].replaceAll(" ", "_"));
+            		}
+            	}
+            }
+		}
+		catch (Exception e)
+		{
+			System.out.println ("An error occured while trying to retrieve the list of tests from the database: ");
+			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 	
@@ -181,17 +246,19 @@ public class PDFProcessor
 		
 		//imageFiles[0] = new File ("scanned_class_test_2/201408201304.pdf");
 		
-		File dir = new File("scanned_class_test_2");
-		File imageFiles [] = dir.listFiles();
-		int count = 1;
+//		File dir = new File("scanned_class_test_2");
+//		File imageFiles [] = dir.listFiles();
+//		int count = 1;
+//		
+//		for (File f : imageFiles)
+//		{
+//			System.out.print ("Uploading file " + count);
+//			proc.processDocument(f);
+//			System.out.println ();
+//			count++;
+//		}
 		
-		for (File f : imageFiles)
-		{
-			System.out.print ("Uploading file " + count);
-			proc.processDocument(f);
-			System.out.println ();
-			count++;
-		}
+		
 		/*File imageFile = new File("scanned_class_test_2/201408201312.pdf");
 		proc.processDocument(imageFile);
 		
