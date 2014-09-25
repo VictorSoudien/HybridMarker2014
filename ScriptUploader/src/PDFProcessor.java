@@ -28,6 +28,18 @@ public class PDFProcessor
 	private ArrayList<String> testNames;
 	private ArrayList<String> courseNames;
 	
+	// Back log of files
+	private ArrayList<File> fileBacklog;
+	
+	// Saves the last successful OCR performed on a scanned script
+	private boolean inSuccessfulUploadWindow;
+	private String currentTestName;
+	private String currentUploadDirectory;
+	
+	// Used to control the use of the successful upload window
+	private TimerTask windowReset;
+	private Timer windowTimer;
+	
 	public PDFProcessor()
 	{
 		uploader = new FileUploader();
@@ -35,18 +47,27 @@ public class PDFProcessor
 		testNames = new ArrayList<String>();
 		courseNames = new ArrayList<String>();
 		
+		fileBacklog = new ArrayList<File>();
+		
+		inSuccessfulUploadWindow = false;
+		currentTestName = "";
+		currentUploadDirectory = "";
+		
 		populateListOfTestsFromServer();
+		
+		windowReset = new ResetUploadWindow();
+		windowTimer = new Timer(true);
 	}
 	
-	public void getMatch (String temp, Operation op)
+	public boolean isInList (String temp, Operation op)
 	{
 		if (op.equals(Operation.TEST))
 		{
-			
+			return (testNames.contains(temp));
 		}
 		else
 		{
-			
+			return (courseNames.contains(temp));
 		}
 	}
 	
@@ -88,13 +109,11 @@ public class PDFProcessor
             		if (testNames.contains(tempTestName) == false)
             		{
             			testNames.add(tempTestName);
-            			System.out.println (testAndCourse[0].replaceAll(" ", "_"));
             		}
             		
             		if (courseNames.contains(tempCourseName) == false)
             		{
             			courseNames.add(tempCourseName);
-            			System.out.println (testAndCourse[1].replaceAll(" ", "_"));
             		}
             	}
             }
@@ -133,18 +152,53 @@ public class PDFProcessor
 				if (line.contains("CSC"))
 				{
 					String [] temp = line.split(" ");
+					String courseName = temp[temp.length - 1];
 					// I know the course code is the last element since this is specified in the template
-					uploadDirectory += temp[temp.length - 1] + "/";
+					uploadDirectory += courseName + "/";
 					
 					// Get the name of the test
 					line = textLines[i+2];
 					line = line.replaceAll(" ", "_");
 					uploadDirectory += line + "/";
 					
-					uploadDirectory = "CSC1010H/Class_Test_2/";
-					line = "Class_Test_2";
+					if (isInList(line, Operation.TEST) && isInList(courseName, Operation.COURSE))
+					{
+						//windowTimer.cancel(); // Cancel a timer that is currently executing
+						
+						prepareFileForUpload(fileToProcess, uploadDirectory, line);
+						
+						// Upload the files in the back log
+						for (File f : fileBacklog)
+						{
+							prepareFileForUpload(f, uploadDirectory, line);
+							System.out.println ("Backlog file uploaded");
+						}
+						
+						// Clear the backlog
+						fileBacklog.clear();
+						
+						currentTestName = line;
+						currentUploadDirectory = uploadDirectory;
+						
+						inSuccessfulUploadWindow = true;
+						//windowTimer = new Timer(true);
+						//windowTimer.schedule(windowReset, 300 * 1000); // time in milliseconds (seconds * 1000)
+					}
+					/*else if (inSuccessfulUploadWindow == true)
+					{
+						prepareFileForUpload(fileToProcess, currentUploadDirectory, currentTestName);
+					}*/
+					else
+					{
+						fileBacklog.add(fileToProcess);
+						System.out.print (line + "------" + uploadDirectory + "------");
+						System.out.println ("File stored in backlog");
+					}
 					
-					prepareFileForUpload(fileToProcess, uploadDirectory, line);
+					//uploadDirectory = "CSC1010H/Class_Test_2/";
+					//line = "Class_Test_2";
+					
+					//prepareFileForUpload(fileToProcess, uploadDirectory, line);
 					
 					// Test if directory is correct
 					/*if (!uploadDirectory.equalsIgnoreCase("CSC1010H/Class_Test_2/"))
@@ -218,7 +272,7 @@ public class PDFProcessor
 					System.exit(0);
 				}
 				
-				uploader.uploadFileToServer(directoryToSaveTo, temp);
+				//uploader.uploadFileToServer(directoryToSaveTo, temp);
 				
 				// Delete the file on the local file system
 				temp.delete();
@@ -234,7 +288,21 @@ public class PDFProcessor
 		
 		//directoryToSaveTo += fileName;
 		//uploader.uploadFileToServer(directoryToSaveTo, fileToUpload);
+		
+		// Delete the temp file that was created
+		//fileToUpload.delete();
+		
 		System.out.println ("File Uploaded PDF");
+	}
+	
+	// Reset the upload window if the uploader is inactive for the time specified
+	private class ResetUploadWindow extends TimerTask
+	{
+		@Override
+		public void run() 
+		{
+			inSuccessfulUploadWindow = false;
+		}
 	}
 	
 	public static void main(String[] args) 
@@ -246,18 +314,17 @@ public class PDFProcessor
 		
 		//imageFiles[0] = new File ("scanned_class_test_2/201408201304.pdf");
 		
-//		File dir = new File("scanned_class_test_2");
-//		File imageFiles [] = dir.listFiles();
-//		int count = 1;
-//		
-//		for (File f : imageFiles)
-//		{
-//			System.out.print ("Uploading file " + count);
-//			proc.processDocument(f);
-//			System.out.println ();
-//			count++;
-//		}
+		File dir = new File("scanned_class_test_2");
+		File imageFiles [] = dir.listFiles();
+		int count = 1;
 		
+		for (File f : imageFiles)
+		{
+			System.out.println ("Uploading file " + count);
+			proc.processDocument(f);
+			System.out.println ();
+			count++;
+		}
 		
 		/*File imageFile = new File("scanned_class_test_2/201408201312.pdf");
 		proc.processDocument(imageFile);
