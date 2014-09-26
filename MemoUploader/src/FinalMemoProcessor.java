@@ -223,6 +223,8 @@ public class FinalMemoProcessor
 
 		// Holds the current unassigned lines. Lines are assigned as being either question or answer sections.
 		String tempSection = "";
+		
+		String subTotalMarks = "{";
 
 		for (int i = 0; i < lines.length; i++)
 		{
@@ -247,6 +249,12 @@ public class FinalMemoProcessor
 				// Anything before this can be assumed to be additional information e.g. page numbers
 				tempSection = "";
 
+				if (!subTotalMarks.equals("{"))
+				{
+					outputHeader += subTotalMarks + "}\n";
+					subTotalMarks = "{";
+				}
+				
 				// Make sure there are only single spaces in the text
 				outputHeader += currentLine.replaceAll("[ ]+", " ");
 				continue;
@@ -283,6 +291,17 @@ public class FinalMemoProcessor
 				tempSection += currentLine;
 				subQuestions.add(tempSection);
 				tempSection = "";
+				
+				String tempMarks = currentLine.substring(currentLine.lastIndexOf("[") + 1, currentLine.lastIndexOf("]"));
+				
+				if (subTotalMarks.equals("{"))
+				{
+					subTotalMarks += tempMarks;
+				}
+				else
+				{
+					subTotalMarks += "," + tempMarks;
+				}
 
 				continue;
 			}
@@ -290,6 +309,13 @@ public class FinalMemoProcessor
 			{
 				tempSection += currentLine;
 			}
+		}
+		
+		// Add the subQuestion marks for the last question to the header
+		if (!subTotalMarks.equals("{"))
+		{
+			outputHeader += subTotalMarks + "}\n";
+			subTotalMarks = "{";
 		}
 
 		if (writeOut == true)
@@ -380,8 +406,12 @@ public class FinalMemoProcessor
 
 		for (String q : questions)
 		{
-			String marks = q.substring(q.indexOf("[") + 1).split(" ")[0];
-			total += Integer.parseInt(marks);
+			// Only process main question headings
+			if (q.startsWith("Q") || q.startsWith("q"))
+			{
+				String marks = q.substring(q.indexOf("[") + 1).split(" ")[0];
+				total += Integer.parseInt(marks);
+			}
 		}
 
 		return total;
