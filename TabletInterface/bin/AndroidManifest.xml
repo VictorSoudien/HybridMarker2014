@@ -32,7 +32,8 @@
         <activity
             android:name="com.VictorZahraa.hybridmarker.MainMarkingScreenActivity"
             android:label="@string/title_activity_main_marking_screen"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape"
+            android:hardwareAccelerated="false" >
         </activity>
         <activity
             android:name="com.VictorZahraa.hybridmarker.TestScriptBrowserActivity"
