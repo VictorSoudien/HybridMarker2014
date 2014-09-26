@@ -123,7 +123,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		answerTextView = (TextView) findViewById(R.id.answerText);
 		answerTextView.setText(valueStore.getNextAnswer());
 		
-		pageMarkTextView = (TextView) findViewById(R.id.markText);
+		//pageMarkTextView = (TextView) findViewById(R.id.markText);
 		
 		initTabs();
 		initiliseSCanvas();
@@ -334,7 +334,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		currentPage = page;
 		prevScore = valueStore.getPageScore(currentPage); // Get the previous mark for this page
 		
-		pageMarkTextView.setText("" + valueStore.getPageScore(currentPage));
+		//pageMarkTextView.setText("" + valueStore.getPageScore(currentPage));
 		
 		if (valueStore.getStoredView(page) != null)
 		{
@@ -487,7 +487,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		@Override
 		protected void onPostExecute(Long params)
 		{
-			pageMarkTextView.setText("" +(prevScore + currentPageScore));
+			//pageMarkTextView.setText("" +(prevScore + currentPageScore));
 			
 			if (!resultString.equals(""))
 			{
