@@ -184,13 +184,14 @@ public class TestScriptBrowserActivity extends Activity {
 				tempTestName = tempTestName.replace("*", "\\*");
 				
 				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
-				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/reformattedEndMarkers.txt";
+				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/endMarkers.txt";
+				String ansPerPageDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/endMarkers_answersPerPage.txt";
 				
 				// Store the current directory and test name
 				valueStore.setCurrentDirectory("Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/");
 				valueStore.setTestName(tempTestName);
 				
-				new ServerConnect().execute("Download Files", fileDirectory, memoDirectory);
+				new ServerConnect().execute("Download Files", fileDirectory, memoDirectory, ansPerPageDirectory);
 				
 				return false;
 			}
@@ -364,7 +365,7 @@ public class TestScriptBrowserActivity extends Activity {
 				{
 					operationBeingPerformed = "Download Files";
 					connectToServer();
-					downloadFiles(params[1], params[2]);
+					downloadFiles(params[1], params[2], params[3]);
 				}	
 			}
 			
@@ -466,7 +467,7 @@ public class TestScriptBrowserActivity extends Activity {
 		}
 		
 		// Download the images needed for each test from the server
-		private void downloadFiles(String directory, String memoDir)
+		private void downloadFiles(String directory, String memoDir, String ansPerPageDir)
 		{	
 	        // Get the path to external storage
 	        String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
@@ -504,9 +505,17 @@ public class TestScriptBrowserActivity extends Activity {
 				String saveDir = pathToSDCard + "/" + "memo.txt";
 				
 				sftpChannel.get(memoDir, saveDir);
-				valueStore.setMemoText("memo.txt");
+				//valueStore.setMemoText("memo.txt");
 				publishProgress("Memo Downloaded");
 				
+				// Download the answersPerPageFile for this test
+				saveDir = pathToSDCard + "/" + "answersPerPage.txt";
+				
+				sftpChannel.get(ansPerPageDir, saveDir);
+				//valueStore.setMemoText("ansPerPageDir.txt");
+				publishProgress("AnswersPerPage Downloaded");
+				
+				valueStore.processMemoText("memo.txt", "answersPerPage.txt");
 				valueStore.setNumPages(numPages);
 				//displayToast("Downloaded files from " + directory);
 			}
