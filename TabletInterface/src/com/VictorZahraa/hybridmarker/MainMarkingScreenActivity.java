@@ -56,24 +56,24 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	private ScrollViewHelper scriptScrollView;
 	private ImageView scriptDisplay;
 	private ListView memoAnswersListView;
-	
+
 	private ActionBar actionBar;
-	
+
 	// Used to display short messages to the user
 	private Toast toast;
-	
+
 	private Context context;
 	private RelativeLayout sCanvasContainer;
 	private SCanvasView sCanvasView;
-	
+
 	// Required for gesture recognition
 	private SPenGestureLibrary gestureLib;
-	
+
 	private String pathToSDCard; // The path to the device's local storage
 	private int currentPage;
 	private double prevScore;
 	private double currentPageScore;
-	
+
 	// Allows for values to be stored and accessed across activities
 	private ValueStoringHelperClass valueStore;
 
@@ -83,69 +83,66 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_marking_screen);
 		this.setTitle(R.string.app_name);
-				
+
 		valueStore = new ValueStoringHelperClass();
 		currentPageScore = 0;
-		
+
 		// Get the path to external storage
-        pathToSDCard = Environment.getExternalStorageDirectory().getPath();
-		
+		pathToSDCard = Environment.getExternalStorageDirectory().getPath();
+
 		scriptScrollView = (ScrollViewHelper) findViewById(R.id.scriptDisplayScrollView);
 		scriptScrollView.setOnScrollViewListener(new OnScrollViewListner() {
-			
+
 			@Override
 			public void onScrollChanged(ScrollViewHelper scrollView, int l, int t,
 					int prevL, int prevT) {
 				sCanvasContainer.setScrollY(scriptScrollView.getScrollY());
 			}
 		});
-		
+
 		scriptDisplay = (ImageView) findViewById(R.id.scriptDisplay);
-		
+
 		// Scale the image so that it fills the display area
 		scriptDisplay.setScaleX(1.05f);
 		scriptDisplay.setScaleY(1.05f);
 
 		//questionTextView = (TextView) findViewById(R.id.questionText);
 		//questionTextView.setText(valueStore.getNextQuestion());
-		
+
 		answerTextView = (TextView) findViewById(R.id.answerText);
 		answerTextView.setText(valueStore.getNextAnswer());
-		
-		ArrayList<String> data = new ArrayList<String>();
-		data.add(valueStore.getNextAnswer());
-		data.add(valueStore.getNextAnswer());
-		data.add(valueStore.getNextAnswer());
-		
+
+		ArrayList<String> data = valueStore.getMemoForPage(0);
+
 		memoAnswersListView = (ListView) findViewById(R.id.memoAnswersListView);
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this, 
-            	android.R.layout.simple_list_item_1,
-                data);
+				this, 
+				android.R.layout.simple_list_item_1,
+				data);
 
-        memoAnswersListView.setAdapter(arrayAdapter);
-		
+		memoAnswersListView.setAdapter(arrayAdapter);
+
 		//pageMarkTextView = (TextView) findViewById(R.id.markText);
-		
+
 		initTabs();
 		initiliseSCanvas();
 		loadGestureLibrary();
-		
+
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
 	}
-	
+
 	// Initialises tab layout
 	private void initTabs()
 	{
 		actionBar = this.getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		
+
 		//int numPages = Integer.parseInt(getResources().getString(R.string.number_of_pages));
 		int numPages = valueStore.getNumPage();
-		
+
 		// Leave out the first page (cover page) -- could be changed
 		for (int i = 1; i < numPages; i++)
 		{
@@ -153,49 +150,49 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			actionBar.addTab(actionBar.newTab().setText("Page " + i).setTabListener(this));
 		}
 	}
-	
+
 	// Initialise both the sCanvasContainer and sCanvasView
 	public void initiliseSCanvas()
 	{
 		// Set up the SCanvas on which marks will be made
 		context = this;
-        sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);   
-        
-        sCanvasContainer.removeAllViews();
-        
-        sCanvasView = new SCanvasView(context);
-        
-        // Set the properties of the SPen Stroke
-        sCanvasView.setSCanvasInitializeListener(new SCanvasInitializeListener() {
-			
+		sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);   
+
+		sCanvasContainer.removeAllViews();
+
+		sCanvasView = new SCanvasView(context);
+
+		// Set the properties of the SPen Stroke
+		sCanvasView.setSCanvasInitializeListener(new SCanvasInitializeListener() {
+
 			@Override
 			public void onInitialized() 
 			{
-			   SettingStrokeInfo strokeInfo = new SettingStrokeInfo();
-			   strokeInfo.setStrokeColor(Color.RED);
-			   strokeInfo.setStrokeWidth(1.0f);
-			   sCanvasView.setZoomEnable(false);
-			   sCanvasView.setSettingStrokeInfo(strokeInfo);
+				SettingStrokeInfo strokeInfo = new SettingStrokeInfo();
+				strokeInfo.setStrokeColor(Color.RED);
+				strokeInfo.setStrokeWidth(1.0f);
+				sCanvasView.setZoomEnable(false);
+				sCanvasView.setSettingStrokeInfo(strokeInfo);
 			}
 		});
-        
-        sCanvasView.setSCanvasLongPressListener(new SCanvasLongPressListener() {
-			
+
+		sCanvasView.setSCanvasLongPressListener(new SCanvasLongPressListener() {
+
 			@Override
 			public void onLongPressed(float arg0, float arg1) 
 			{
 				displayToast ("Long Press Args");
 			}
-			
+
 			@Override
 			public void onLongPressed() 
 			{
 				displayToast ("Long Press");
 			}
 		});
-        
-        sCanvasView.setHistoryUpdateListener(new HistoryUpdateListener() 
-        {	
+
+		sCanvasView.setHistoryUpdateListener(new HistoryUpdateListener() 
+		{	
 			@Override
 			public void onHistoryChanged(boolean arg0, boolean arg1) 
 			{	
@@ -203,65 +200,65 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			}
 		});
 
-        sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
-        sCanvasContainer.addView(sCanvasView);
+		sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
+		sCanvasContainer.addView(sCanvasView);
 	}
 
 	// Load the custom gesture library
 	public void loadGestureLibrary()
 	{
 		gestureLib = new SPenGestureLibrary(MainMarkingScreenActivity.this);
-        gestureLib.openSPenGestureEngine();
-        
-        // Load the gesture library from the SD Card
-        if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
-    	{
-    		displayToast("Custom Gesture Library Loaded");
-    	}
-        else // if the file is not found, then load it onto the SD Card
-        {	
-        	try
-        	{
-	        	InputStream inStream = getResources().openRawResource(R.raw.marking_gesture_data);
-	        	FileOutputStream outStream = new FileOutputStream(pathToSDCard + "/marking_gesture_data.dat");
-	        	int read = 0;
-	        	
-	        	byte [] buffer = new byte[1024];
-	        	
-	        	while ((read = inStream.read(buffer)) > 0)
-	        	{
-	        		outStream.write(buffer, 0, read);
-	        	}
-	        	
-	        	inStream.close();
-	        	outStream.close();
-        	}
-        	catch (Exception e)
-        	{
-        		displayToast("ERROR:" + e.getMessage());
-        	}
-        	
-        	if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
-        	{
-        		displayToast("Custom Gesture Library Loaded");
-        	}
-        }
+		gestureLib.openSPenGestureEngine();
+
+		// Load the gesture library from the SD Card
+		if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
+		{
+			displayToast("Custom Gesture Library Loaded");
+		}
+		else // if the file is not found, then load it onto the SD Card
+		{	
+			try
+			{
+				InputStream inStream = getResources().openRawResource(R.raw.marking_gesture_data);
+				FileOutputStream outStream = new FileOutputStream(pathToSDCard + "/marking_gesture_data.dat");
+				int read = 0;
+
+				byte [] buffer = new byte[1024];
+
+				while ((read = inStream.read(buffer)) > 0)
+				{
+					outStream.write(buffer, 0, read);
+				}
+
+				inStream.close();
+				outStream.close();
+			}
+			catch (Exception e)
+			{
+				displayToast("ERROR:" + e.getMessage());
+			}
+
+			if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
+			{
+				displayToast("Custom Gesture Library Loaded");
+			}
+		}
 	}
-	
+
 	// Display the next question
 	public void nextQuestionAndAnswer(View view)
 	{
 		//questionTextView.setText(valueStore.getNextQuestion());
 		answerTextView.setText(valueStore.getNextAnswer());
 	}
-	
+
 	// Display the previous question
 	public void prevQuestionAndAnswer(View view)
 	{
 		//questionTextView.setText(valueStore.getPreviousQuestion());
 		answerTextView.setText(valueStore.getPreviousAnswer());
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -275,9 +272,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		
+
 		int id = item.getItemId();
-		
+
 		if (id == R.id.action_settings) 
 		{
 			return true;
@@ -303,20 +300,20 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		{
 			// Display the flagging dialog
 			final EditText input = new EditText(context);
-			
+
 			new AlertDialog.Builder(context)
-		    .setTitle("Flag Script")
-		    .setMessage("Please state the reason for flagging this script:")
-		    .setView(input)
-		    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int whichButton) {
-		            Editable value = input.getText(); 
-		        }
-		    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int whichButton) {
-		            // Do nothing.
-		        }
-		    }).show();
+			.setTitle("Flag Script")
+			.setMessage("Please state the reason for flagging this script:")
+			.setView(input)
+			.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					Editable value = input.getText(); 
+				}
+			}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					// Do nothing.
+				}
+			}).show();
 		}
 		else if (id == R.id.action_upload_script)
 		{
@@ -333,12 +330,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 		String pageNum = tab.getText().toString().split(" ")[1];
 		int page = Integer.parseInt(pageNum);
-		
+
 		currentPage = page;
 		prevScore = valueStore.getPageScore(currentPage); // Get the previous mark for this page
-		
+
 		//pageMarkTextView.setText("" + valueStore.getPageScore(currentPage));
-		
+
 		if (valueStore.getStoredView(page) != null)
 		{
 			/*sCanvasContainer.removeAllViews();
@@ -352,8 +349,24 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		{
 			initiliseSCanvas();
 		}
-			
+
 		scriptDisplay.setImageBitmap(valueStore.getPage(page));
+
+		ArrayList<String> listData = valueStore.getMemoForPage(page - 1);
+
+		if (listData != null)
+		{
+			ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+					this, 
+					android.R.layout.simple_list_item_1,
+					listData);
+
+			memoAnswersListView.setAdapter(arrayAdapter);
+		}
+		else
+		{
+			displayToast("An error occured while trying to recover the memo for this page");
+		}
 	}
 
 	@Override
@@ -361,14 +374,14 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	{
 		valueStore.setPageScore(currentPage, currentPageScore + prevScore);
 		currentPageScore = 0;
-		
+
 		valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData());
 	}
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	// Displays a toast containing the specified message
@@ -382,14 +395,14 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		{
 			toast.setText(message);
 		}
-		
+
 		toast.show();
 	}
-	
+
 	private class GestureRecognition extends AsyncTask<SCanvasView, String, Long>
 	{
 		String resultString = "";
-		
+
 		@Override
 		protected Long doInBackground(SCanvasView... params) 
 		{
@@ -397,49 +410,49 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			{
 				performGestureRecog(params[0]);
 			}
-			
+
 			return null;
 		}
-		
+
 		private void performGestureRecog(SCanvasView view)
 		{
-	    	LinkedList<SObject> sObjects = view.getSObjectList(true);
-	    	
-	    	// Used to keep track of the amount of each gesture
-	    	HashMap<String, Integer> gestureCount = new HashMap<String, Integer>();
-	    	
-	    	if ((sObjects == null) || (sObjects.size() <= 0))
-	    	{
-	    		// No objects found
-	    		currentPageScore = 0;
-	    		return;
-	    	}
-	    	else
-	    	{
-		    	for (SObject objs : sObjects)
-		    	{
-			    	PointF [][] currentPoints = new PointF[1][1];
-			    	currentPoints[0] = ((SObjectStroke) objs).getPoints();
-			    	/*int index = 0;
-			    	
+			LinkedList<SObject> sObjects = view.getSObjectList(true);
+
+			// Used to keep track of the amount of each gesture
+			HashMap<String, Integer> gestureCount = new HashMap<String, Integer>();
+
+			if ((sObjects == null) || (sObjects.size() <= 0))
+			{
+				// No objects found
+				currentPageScore = 0;
+				return;
+			}
+			else
+			{
+				for (SObject objs : sObjects)
+				{
+					PointF [][] currentPoints = new PointF[1][1];
+					currentPoints[0] = ((SObjectStroke) objs).getPoints();
+					/*int index = 0;
+
 			    	for (SObject obj : sObjects)
 			    	{
 			    		currentPoints[index] = ((SObjectStroke) obj).getPoints();
 			    		index++;
 			    	}*/
-			    	
-			    	ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
-			
-			    	if ((gestureInfo == null) || (gestureInfo.size() <= 0))
-			    	{
-			    		// Gesture not recognized
-			    		return;
-			    	}
-					
+
+					ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
+
+					if ((gestureInfo == null) || (gestureInfo.size() <= 0))
+					{
+						// Gesture not recognized
+						return;
+					}
+
 					int maxIndex = -1;
 					int maxValue = -100;
 					int scoreThreshold = 80; // The lower the number the greater the chance of false positives
-					
+
 					for (int i = 0; i < gestureInfo.size(); i++)
 					{
 						if ((gestureInfo.get(i).mScore > maxValue) && (gestureInfo.get(i).mScore >= scoreThreshold))
@@ -448,11 +461,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 							maxIndex = i;
 						}
 					}
-					
+
 					if (maxIndex == -1)
 					{
 						// Gesture not recognized
-						
+
 						//displayToast("Not recognised");
 						//sCanvasView.clearScreen();
 					}
@@ -460,10 +473,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					{
 						//displayToast(gestureInfo.get(maxIndex).mName);
 						//sCanvasView.clearScreen();
-						
+
 						String key = gestureInfo.get(maxIndex).mName.trim();
 						int currentCount = -1;
-						
+
 						if (gestureCount.get(key) != null)
 						{
 							currentCount = gestureCount.get(key);
@@ -474,35 +487,35 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 							gestureCount.put(key, 1);
 						}
 					}
-		    	}
-		    	
-		    	int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
-		    	int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
-		    	
-		    	resultString = "Ticks " + tickCount + "\n" +
-						  "Half Ticks " + halfTickCount + "\n" +
-						  "Crosses " + gestureCount.get("x");
-		    	
-		    	currentPageScore = tickCount + ((0.5) * halfTickCount);
-	    	}
+				}
+
+				int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
+				int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
+
+				resultString = "Ticks " + tickCount + "\n" +
+						"Half Ticks " + halfTickCount + "\n" +
+						"Crosses " + gestureCount.get("x");
+
+				currentPageScore = tickCount + ((0.5) * halfTickCount);
+			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(Long params)
 		{
 			//pageMarkTextView.setText("" +(prevScore + currentPageScore));
-			
+
 			if (!resultString.equals(""))
 			{
 				displayToast(resultString);
 			}
 		}
 	}
-	
+
 	private class BitmapMerger extends AsyncTask<Bitmap, String, Long>
 	{
 		ProgressDialog progressDialog;
-		
+
 		@Override
 		protected Long doInBackground(Bitmap... params) 
 		{
@@ -510,102 +523,102 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			{
 				merge(params[0], params[1]);
 			}*/
-			
+
 			prepareMergedBitmaps();
-			
+
 			return null;
 		}
-		
+
 		/*private void merge(Bitmap baseBitmap, Bitmap overlay)
 		{
 			Bitmap temp = Bitmap.createBitmap(baseBitmap.getWidth(), baseBitmap.getHeight(), baseBitmap.getConfig());
 			Canvas drawCanvas = new Canvas (temp);
-			
+
 			// Used to increase quality of saved overlay
 			Paint painter = new Paint();
 			painter.setFilterBitmap(true);
-			
+
 			int overlayWidth = overlay.getWidth();
 			int overlayHeight = overlay.getHeight();
 			double scalingFactor = 2.3;
-			
+
 			drawCanvas.drawBitmap(baseBitmap, new Matrix(), null);
 			drawCanvas.drawBitmap(overlay, null, new Rect(0, 115, (int) (overlayWidth * scalingFactor), (int) (overlayHeight * scalingFactor)), painter);
 			//drawCanvas.drawBitmap(overlay, new Matrix(), null);
-			
+
 			valueStore.merged = temp;
 		}*/
-		
+
 		private void prepareMergedBitmaps()
 		{
 			// Store the data for the current question
 			valueStore.setPageScore(currentPage, currentPageScore + prevScore);
 			currentPageScore = 0;
-			
+
 			valueStore.addViewToCollection(currentPage, sCanvasView, sCanvasView.getData());
-			
+
 			int pageCount = actionBar.getTabCount();
 			Bitmap [] pageBitmaps = new Bitmap[pageCount];
-			
+
 			// Loops through each page and merge the overlays with the bitmap
 			for (int i = 0; i < pageCount; i++)
 			{
 				sCanvasView.clearScreen();
 				sCanvasView.setData(valueStore.getDrawingData(i + 1));
-				
+
 				pageBitmaps[i] = sCanvasView.getBitmap(true);
 			}
-			
+
 			mergeBitmaps(pageBitmaps);
 		}
-		
+
 		// Merge all pages with their overlays
 		private void mergeBitmaps (Bitmap... overlays)
 		{
 			// Used to increase quality of saved overlay
 			Paint painter = new Paint();
 			painter.setFilterBitmap(true);
-			
+
 			double scalingFactor = 1.6;//2.3;
 			int counter = 1;
-			
+
 			for (Bitmap overlay : overlays)
 			{	
 				//Bitmap baseBitmap = valueStore.getPage(counter);
 				Bitmap temp = Bitmap.createBitmap(valueStore.getPage(counter).getWidth(), valueStore.getPage(counter).getHeight(), valueStore.getPage(counter).getConfig());
 				Canvas drawCanvas = new Canvas (temp);
-				
+
 				drawCanvas.drawColor(Color.WHITE);
-				
+
 				int overlayWidth = overlay.getWidth();
 				int overlayHeight = overlay.getHeight();
-				
+
 				drawCanvas.drawBitmap(valueStore.getPage(counter), new Matrix(), null);
 				drawCanvas.drawBitmap(overlay, null, new Rect(45, 90, (int) (overlayWidth * scalingFactor), (int) (overlayHeight * scalingFactor)), painter);
-				
+
 				valueStore.addMergedBitmap(temp);
-				
+
 				counter++;
 			}
 		}
-		
+
 		@Override
 		protected void onPreExecute()
 		{
 			progressDialog = ProgressDialog.show(MainMarkingScreenActivity.this, "", 
-                    "Preparing Files...", true);
+					"Preparing Files...", true);
 		}
-		
+
 		@Override
 		protected void onPostExecute(Long params)
 		{
 			progressDialog.dismiss();
-			
+
 			Intent scriptUploadScreen = new Intent(MainMarkingScreenActivity.this, ScriptFinalizeAndUploadActivity.class);
-	    	startActivity(scriptUploadScreen);
+			startActivity(scriptUploadScreen);
 		}
 	}
-	
+
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */

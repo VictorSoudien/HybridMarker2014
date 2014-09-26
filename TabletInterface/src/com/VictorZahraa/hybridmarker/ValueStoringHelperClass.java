@@ -40,10 +40,10 @@ public class ValueStoringHelperClass
 	// These data structures are used to store the information regarding the test memo
 	@SuppressWarnings("unused")
 	private static String metadataFileHeader;
-	private static ArrayList<ArrayList<String>> answersPerPage;
 	private static ArrayList<ArrayList<Integer>> answerCoords;
 	private static ArrayList<String> questions;
 	private static ArrayList<String> answers;
+	private static ArrayList<ArrayList<String>> memoPerPage;
 	
 	public ValueStoringHelperClass()
 	{
@@ -238,7 +238,7 @@ public class ValueStoringHelperClass
 	// Process the answerPerPageText
 	private void processAnswersPerPage(String perPageText)
 	{
-		answersPerPage = new ArrayList<ArrayList<String>>();
+		memoPerPage = new ArrayList<ArrayList<String>>();
 		ArrayList<String> temp = new ArrayList<String>();
 		
 		// Get the answers for each page
@@ -261,8 +261,21 @@ public class ValueStoringHelperClass
 			}
 
 			// Add the answers for this page
-			answersPerPage.add(temp);
+			memoPerPage.add(temp);
 			temp = new ArrayList<String>();
+		}
+	}
+	
+	// Return the memo for a given page
+	public ArrayList<String> getMemoForPage(int page)
+	{
+		if (page != (memoPerPage.size()))
+		{
+			return memoPerPage.get(page);
+		}
+		else
+		{
+			return null;
 		}
 	}
 
@@ -305,23 +318,6 @@ public class ValueStoringHelperClass
 		currentAnswer = (currentAnswer != answers.size() - 1) ? (currentAnswer + 1) : currentAnswer;
 		
 		return returnVal;
-	}
-	
-	// Returns the memo answers for the current page
-	public ArrayList<String> getAnswersForPage(int page)
-	{
-		ArrayList<String> returnVal;
-		
-		// Check if the page value provided is within the arrayList
-		try
-		{
-			returnVal = answersPerPage.get(page);
-			return returnVal;
-		}
-		catch (Exception e)
-		{
-			return null;
-		}
 	}
 
 	public String getPreviousQuestion()
