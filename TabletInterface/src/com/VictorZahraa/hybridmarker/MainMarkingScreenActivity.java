@@ -42,6 +42,7 @@ import com.samsung.spensdk.SCanvasView;
 import com.samsung.spensdk.applistener.HistoryUpdateListener;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 import com.samsung.spensdk.applistener.SCanvasLongPressListener;
+
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -83,6 +84,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_marking_screen);
 		this.setTitle(R.string.app_name);
+		
+		context = this;
 
 		valueStore = new ValueStoringHelperClass();
 		currentPageScore = 0;
@@ -116,7 +119,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 		memoAnswersListView = (ListView) findViewById(R.id.memoAnswersListView);
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-				this, 
+				context, 
 				android.R.layout.simple_list_item_1,
 				data);
 
@@ -155,7 +158,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	public void initiliseSCanvas()
 	{
 		// Set up the SCanvas on which marks will be made
-		context = this;
 		sCanvasContainer = (RelativeLayout) findViewById(R.id.markingScreenCanvasContainer);   
 
 		sCanvasContainer.removeAllViews();
@@ -349,7 +351,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		{
 			initiliseSCanvas();
 		}
-
+		
 		scriptDisplay.setImageBitmap(valueStore.getPage(page));
 
 		ArrayList<String> listData = valueStore.getMemoForPage(page - 1);
@@ -357,7 +359,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		if (listData != null)
 		{
 			ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-					this, 
+					context, 
 					android.R.layout.simple_list_item_1,
 					listData);
 
@@ -380,7 +382,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -619,6 +620,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		}
 	}
 
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
