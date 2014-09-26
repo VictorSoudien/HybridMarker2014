@@ -288,9 +288,10 @@ public class ValueStoringHelperClass
 	// Returns the coords of the given answer
 	public int getStartAnswerCoords(int page, int selectedItemIndex)
 	{
+		double scalingFactor = 0.8;
 		int returnVal = -1;
 		
-		returnVal = answerCoords.get(answerCoordsOffset.get(page) + selectedItemIndex).get(0);
+		returnVal = (int) (answerCoords.get(answerCoordsOffset.get(page) + selectedItemIndex).get(0) * scalingFactor);
 		
 		return returnVal;
 	}
