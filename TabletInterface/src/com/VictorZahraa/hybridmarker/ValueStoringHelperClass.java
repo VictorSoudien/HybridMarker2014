@@ -194,6 +194,9 @@ public class ValueStoringHelperClass
 		String [] headerAndBody = memoText.split("\\{HeaderEnd\\}");
 		metadataFileHeader = headerAndBody[0];
 		
+		// Process the header of the metadata file
+		totalMarks = Integer.parseInt(metadataFileHeader.split("\n")[0]);
+		
 		String [] mainQuestions = headerAndBody[1].split("\\{MainQEnd\\}");
 		
 		for (String mainQ : mainQuestions)
