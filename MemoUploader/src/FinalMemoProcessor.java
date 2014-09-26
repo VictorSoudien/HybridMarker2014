@@ -149,7 +149,7 @@ public class FinalMemoProcessor
 		}
 	}
 
-	// Get the text of the memo
+	// Get the text of entire the memo
 	private void getMemoText()
 	{
 		try
