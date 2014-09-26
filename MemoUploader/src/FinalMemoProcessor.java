@@ -231,6 +231,7 @@ public class FinalMemoProcessor
 		String tempSection = "";
 
 		String subTotalMarks = "{";
+		String possibleQuestionNumber = "";
 		
 		// Remove all blank lines from the studentLines
 		ArrayList<String> studentLines = new ArrayList<String>();
@@ -253,10 +254,7 @@ public class FinalMemoProcessor
 			currentLine = lines[i].trim();
 			currentLine += "\n";
 			
-			/*System.out.println ("Comparing...");
-			System.out.println (currentLine);
-			System.out.println (studentLines.get(studentScriptLineTracer));
-			System.out.println ("---------------------------------------");*/
+			// Check whether the end of the question has been found
 			if (currentLine.equals(studentLines.get(studentScriptLineTracer)))
 			{
 				
@@ -264,14 +262,15 @@ public class FinalMemoProcessor
 				
 				if (inAnswerSection == true)
 				{
-					//i = i - 1; // Ensures that this line is looped over again
 					inAnswerSection = false;
-					//answerEndIndex = i;
-
-					//tempSection += currentLine.substring(0, indexOfEndMarker);
-					//tempSection += currentLine;
 					
 					answerCounter++;
+					
+					if (!possibleQuestionNumber.equals(""))
+					{
+						tempSection = possibleQuestionNumber + ") " + tempSection;
+						possibleQuestionNumber = "";
+					}
 
 					answers.add(tempSection);
 					tempSection = "";
@@ -347,11 +346,22 @@ public class FinalMemoProcessor
 					subTotalMarks += "," + tempMarks;
 				}
 
-				continue;
+				//continue;
 			}
 			else 
 			{
 				tempSection += currentLine;
+			}
+			
+			if (currentLine.indexOf(")") != -1)
+			{
+				String temp = currentLine.substring(0, currentLine.indexOf(")"));
+				
+				if (temp.matches("[a-zA-Z0-9]+"))
+				{
+					possibleQuestionNumber = temp;
+					//System.out.println (possibleQuestionNumber);
+				}
 			}
 		}
 		
