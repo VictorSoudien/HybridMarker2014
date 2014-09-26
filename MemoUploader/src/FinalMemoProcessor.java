@@ -23,7 +23,7 @@ public class FinalMemoProcessor
 
 	// The name of the output file
 	private String outputFileName;
-	
+
 	// The name of the text file which contains the answers per page
 	private String answersPerPageOutputFile;
 	private String answersPerPageText; // The data to be written to the file
@@ -46,15 +46,15 @@ public class FinalMemoProcessor
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 
 		dir = dir.trim();
-		
+
 		// Verify the ouput directory
 		isDirValid(dir);
-		
+
 		outputFileName = memoFileName.split("\\.")[0].replaceAll(" ", "_");
 		answersPerPageOutputFile = outputFileName + "_answersPerPage.txt";
-		
+
 		outputFileName += ".txt";
-		
+
 		if (dir.endsWith("/"))
 		{
 			outputFileName = dir + outputFileName;
@@ -158,17 +158,21 @@ public class FinalMemoProcessor
 			PDFTextStripper txtStripper = new PDFTextStripper();
 			txtStripper.setStartPage(2);
 			String docText = txtStripper.getText(memoPDF);
+			
+			PDDocument blankPDF = PDDocument.load(blankScriptFile);
+			txtStripper.setStartPage(2);
+			String studentScriptText = txtStripper.getText(blankPDF);
 
 			for (int i = 2; i <= memoPDF.getNumberOfPages(); i++)
 			{
 				txtStripper.setStartPage(i);
 				txtStripper.setEndPage(i);
 				String tempText = txtStripper.getText(memoPDF);
-				getMemoTextPerPage(tempText, txtStripper.getLineSeparator(), (i == memoPDF.getNumberOfPages()));
+				getMemoTextPerPage(tempText, studentScriptText, txtStripper.getLineSeparator(), (i == memoPDF.getNumberOfPages()));
 			}
-			
+
 			// Process the entire document
-			processMemoText(docText, txtStripper.getLineSeparator(), true);
+			processMemoText(docText, studentScriptText, txtStripper.getLineSeparator(), true);
 		}
 		catch (Exception e)
 		{
@@ -177,39 +181,41 @@ public class FinalMemoProcessor
 			System.exit(0);
 		}
 	}
-	
+
 	// Get memo text for each page
-	private void getMemoTextPerPage(String text, String lineSeparator, boolean lastPage)
+	private void getMemoTextPerPage(String text, String studentScriptText, String lineSeparator, boolean lastPage)
 	{
-		processMemoText(text, lineSeparator, false);
-		
+		processMemoText(text, studentScriptText, lineSeparator, false);
+
 		for (int i = 0; i < answers.size(); i++)
 		{
 			answersPerPageText += answers.get(i);
-			
+
 			if (i != answers.size() - 1)
 			{
 				answersPerPageText += "\n{AnswerSplit}";
 			}
 		}
-		
+
 		if (lastPage == false)
 		{
 			answersPerPageText += "\n{Page}";
 		}
-		
+
 		mainQuestionIndex.clear();
 		mainQuestions.clear();
 		answers.clear();
 		subQuestions.clear();
-		
+
 		outputHeader = "";
 	}
 
 	// Processes the text in order to split it into questions and answers
-	private void processMemoText(String memoText, String lineSeparator, boolean writeOut)
+	private void processMemoText(String memoText, String scriptToStudentsText, String lineSeparator, boolean writeOut)
 	{
 		String [] lines = memoText.split(lineSeparator);
+		String [] studentLinesTemp = scriptToStudentsText.split(lineSeparator);
+		int studentScriptLineTracer = 0;
 
 		String currentLine = "";
 		boolean inAnswerSection = false;
@@ -218,34 +224,70 @@ public class FinalMemoProcessor
 		int answerEndIndex = 0;
 
 		int answerCounter = 0;
-		
+
 		int lastPagePrintIndex = 0;
 
 		// Holds the current unassigned lines. Lines are assigned as being either question or answer sections.
 		String tempSection = "";
-		
+
 		String subTotalMarks = "{";
+		
+		// Remove all blank lines from the studentLines
+		ArrayList<String> studentLines = new ArrayList<String>();
+		
+		for (String s : studentLinesTemp)
+		{
+			if (!s.trim().equals(""))
+			{
+				studentLines.add(s.trim() + "\n");
+			}
+		}
 
 		for (int i = 0; i < lines.length; i++)
-		{
+		{	
 			if (lines[i].equalsIgnoreCase(""))
 			{
 				continue;
 			}
 
-			currentLine = lines[i].trim(); 
+			currentLine = lines[i].trim();
 			currentLine += "\n";
+			
+			/*System.out.println ("Comparing...");
+			System.out.println (currentLine);
+			System.out.println (studentLines.get(studentScriptLineTracer));
+			System.out.println ("---------------------------------------");*/
+			if (currentLine.equals(studentLines.get(studentScriptLineTracer)))
+			{
+				
+				studentScriptLineTracer++;
+				
+				if (inAnswerSection == true)
+				{
+					//i = i - 1; // Ensures that this line is looped over again
+					inAnswerSection = false;
+					//answerEndIndex = i;
+
+					//tempSection += currentLine.substring(0, indexOfEndMarker);
+					//tempSection += currentLine;
+					
+					answerCounter++;
+
+					answers.add(tempSection);
+					tempSection = "";
+				}
+			}
 
 			if (currentLine.contains("]$"))
 			{
-				System.out.println (currentLine);
+				//System.out.println (currentLine);
 			}
 
 			if ((currentLine.indexOf("Question") == 0) || (currentLine.indexOf("question") == 0))
 			{
 				mainQuestionIndex.add(subQuestions.size());
 				mainQuestions.add(currentLine.replaceAll("[ ]+", " "));
-					
+
 				// Anything before this can be assumed to be additional information e.g. page numbers
 				tempSection = "";
 
@@ -254,7 +296,7 @@ public class FinalMemoProcessor
 					outputHeader += subTotalMarks + "}\n";
 					subTotalMarks = "{";
 				}
-				
+
 				// Make sure there are only single spaces in the text
 				outputHeader += currentLine.replaceAll("[ ]+", " ");
 				continue;
@@ -263,8 +305,10 @@ public class FinalMemoProcessor
 			{
 				int indexOfEndMarker = currentLine.indexOf("{end}");
 
+				tempSection += currentLine;
+
 				// Check if this is the last line of the answer
-				if (indexOfEndMarker != -1)
+				/*if (indexOfEndMarker != -1)
 				{
 					inAnswerSection = false;
 					answerEndIndex = i;
@@ -279,7 +323,7 @@ public class FinalMemoProcessor
 				else
 				{
 					tempSection += currentLine;
-				}
+				}*/
 
 				continue;
 			}
@@ -291,9 +335,9 @@ public class FinalMemoProcessor
 				tempSection += currentLine;
 				subQuestions.add(tempSection);
 				tempSection = "";
-				
+
 				String tempMarks = currentLine.substring(currentLine.lastIndexOf("[") + 1, currentLine.lastIndexOf("]"));
-				
+
 				if (subTotalMarks.equals("{"))
 				{
 					subTotalMarks += tempMarks;
@@ -311,6 +355,13 @@ public class FinalMemoProcessor
 			}
 		}
 		
+		// Ensure that the last question has been added
+		if (inAnswerSection == true)
+		{
+			answerCounter++;
+			answers.add(tempSection);
+		}
+
 		// Add the subQuestion marks for the last question to the header
 		if (!subTotalMarks.equals("{"))
 		{
@@ -339,7 +390,7 @@ public class FinalMemoProcessor
 			fileWriter.append(calculateTestTotal() + "\n");
 			fileWriter.append(outputHeader);
 			fileWriter.append("{HeaderEnd}\n");
-			
+
 			answerPerPageWriter = new PrintWriter(new File (answersPerPageOutputFile));
 			answerPerPageWriter.append(answersPerPageText);
 
@@ -396,7 +447,7 @@ public class FinalMemoProcessor
 			}
 		}
 	}
- 
+
 	// Calculate the total of the test
 	private int calculateTestTotal()
 	{
