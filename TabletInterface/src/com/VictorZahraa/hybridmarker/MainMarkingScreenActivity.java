@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -67,6 +68,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	private TextView pageMarkTextView;
 	private ScrollViewHelper scriptScrollView;
 	private ImageView scriptDisplay;
+	private ListView memoAnswersListView;
 	
 	private ActionBar actionBar;
 	
@@ -122,6 +124,19 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		
 		answerTextView = (TextView) findViewById(R.id.answerText);
 		answerTextView.setText(valueStore.getNextAnswer());
+		
+		ArrayList<String> data = new ArrayList<String>();
+		data.add(valueStore.getNextAnswer());
+		data.add(valueStore.getNextAnswer());
+		data.add(valueStore.getNextAnswer());
+		
+		memoAnswersListView = (ListView) findViewById(R.id.memoAnswersListView);
+		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this, 
+            	android.R.layout.simple_list_item_1,
+                data);
+
+        memoAnswersListView.setAdapter(arrayAdapter);
 		
 		//pageMarkTextView = (TextView) findViewById(R.id.markText);
 		
