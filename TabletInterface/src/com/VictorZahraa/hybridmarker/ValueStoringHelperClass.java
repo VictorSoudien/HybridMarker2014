@@ -222,7 +222,7 @@ public class ValueStoringHelperClass
 				String [] qAndA = qaAndCoords[0].split("\\{QASplit\\}");
 				
 				questions.add(qAndA[0].trim());
-				answers.add(qAndA[1].trim());
+				//answers.add(qAndA[1].trim());
 				
 				// Process and store the answer coords
 				String [] tempCoords = qaAndCoords[1].split(";");
@@ -234,6 +234,12 @@ public class ValueStoringHelperClass
 		}
 	}
 
+	///ajdsbfkjabfbdjsvkjdbs
+	public ArrayList<String> getAnswers()
+	{
+		return answersPerPage.get(0);
+	}
+	
 	// Process the answerPerPageText
 	private void processAnswersPerPage(String perPageText)
 	{
@@ -252,23 +258,17 @@ public class ValueStoringHelperClass
 				continue;
 			}
 			
-			String [] answers = page.split("\\{AnswerSplit\\}");
+			String [] answersTemp = page.split("\\{AnswerSplit\\}");
 			temp = new ArrayList<String>();
 
-			for (String ans: answers)
+			for (String ans: answersTemp)
 			{
-				temp.add(ans);
+				temp.add(ans.trim());
 			}
 
 			// Add the answers for this page
-			answersPerPage.add(temp);
+			answersPerPage.add((ArrayList<String>)temp.clone());
 		}
-	}
-	
-	///////////TENFAFINASFN REMOVE
-	public ArrayList<String> getAnswers()
-	{
-		return answers;
 	}
 
 	public String getMemoText () {return memoText;}
@@ -310,6 +310,23 @@ public class ValueStoringHelperClass
 		currentAnswer = (currentAnswer != answers.size() - 1) ? (currentAnswer + 1) : currentAnswer;
 		
 		return returnVal;
+	}
+	
+	// Returns the memo answers for the current page
+	public ArrayList<String> getAnswersForPage(int page)
+	{
+		ArrayList<String> returnVal;
+		
+		// Check if the page value provided is within the arrayList
+		try
+		{
+			returnVal = answersPerPage.get(page);
+			return returnVal;
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
 	}
 
 	public String getPreviousQuestion()
