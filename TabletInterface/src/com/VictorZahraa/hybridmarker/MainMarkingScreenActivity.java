@@ -120,7 +120,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		memoAnswersListView = (ListView) findViewById(R.id.memoAnswersListView);
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
 				context, 
-				android.R.layout.simple_list_item_1,
+				R.layout.memo_answer_item,R.id.memo_text,
 				data);
 
 		memoAnswersListView.setAdapter(arrayAdapter);
@@ -360,7 +360,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		{
 			ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
 					context, 
-					android.R.layout.simple_list_item_1,
+					R.layout.memo_answer_item,R.id.memo_text/*android.R.layout.simple_list_item_1*/,
 					listData);
 
 			memoAnswersListView.setAdapter(arrayAdapter);
