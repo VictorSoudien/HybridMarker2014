@@ -221,13 +221,13 @@ public class ValueStoringHelperClass
 				// Process and store the question and answer
 				String [] qAndA = qaAndCoords[0].split("\\{QASplit\\}");
 				
-				questions.add(qAndA[0]);
-				answers.add(qAndA[1]);
+				questions.add(qAndA[0].trim());
+				answers.add(qAndA[1].trim());
 				
 				// Process and store the answer coords
 				String [] tempCoords = qaAndCoords[1].split(";");
-				temp.add(Integer.parseInt(tempCoords[0]));
-				temp.add(Integer.parseInt(tempCoords[1]));
+				temp.add(Integer.parseInt(tempCoords[0].trim()));
+				temp.add(Integer.parseInt(tempCoords[1].trim()));
 				
 				answerCoords.add(temp);
 			}
@@ -238,14 +238,22 @@ public class ValueStoringHelperClass
 	private void processAnswersPerPage(String perPageText)
 	{
 		answersPerPage = new ArrayList<ArrayList<String>>();
+		ArrayList<String> temp = new ArrayList<String>();
 		
 		// Get the answers for each page
-		String [] pages = perPageText.split("{Page}");
+		String [] pages = perPageText.split("\\{Page\\}");
 
 		for (String page : pages)
 		{
-			String [] answers = page.split("{AnswerSplit}");
-			ArrayList<String> temp = new ArrayList<String>();
+			page = page.trim();
+			
+			if (page.equals(""))
+			{
+				continue;
+			}
+			
+			String [] answers = page.split("\\{AnswerSplit\\}");
+			temp = new ArrayList<String>();
 
 			for (String ans: answers)
 			{
@@ -255,6 +263,12 @@ public class ValueStoringHelperClass
 			// Add the answers for this page
 			answersPerPage.add(temp);
 		}
+	}
+	
+	///////////TENFAFINASFN REMOVE
+	public ArrayList<String> getAnswers()
+	{
+		return answers;
 	}
 
 	public String getMemoText () {return memoText;}
@@ -291,6 +305,7 @@ public class ValueStoringHelperClass
 		}*/
 		
 		String returnVal = answers.get(currentAnswer);
+		//String returnVal = answersPerPage.get(1).get(currentAnswer);
 		
 		currentAnswer = (currentAnswer != answers.size() - 1) ? (currentAnswer + 1) : currentAnswer;
 		

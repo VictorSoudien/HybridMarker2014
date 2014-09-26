@@ -125,10 +125,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		answerTextView = (TextView) findViewById(R.id.answerText);
 		answerTextView.setText(valueStore.getNextAnswer());
 		
-		ArrayList<String> data = new ArrayList<String>();
+		/*ArrayList<String> data = new ArrayList<String>();
 		data.add(valueStore.getNextAnswer());
 		data.add(valueStore.getNextAnswer());
-		data.add(valueStore.getNextAnswer());
+		data.add(valueStore.getNextAnswer());*/
+		
+		ArrayList<String> data = valueStore.getAnswers();
 		
 		memoAnswersListView = (ListView) findViewById(R.id.memoAnswersListView);
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
