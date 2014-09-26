@@ -513,7 +513,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			return null;
 		}
 		
-		private void merge(Bitmap baseBitmap, Bitmap overlay)
+		/*private void merge(Bitmap baseBitmap, Bitmap overlay)
 		{
 			Bitmap temp = Bitmap.createBitmap(baseBitmap.getWidth(), baseBitmap.getHeight(), baseBitmap.getConfig());
 			Canvas drawCanvas = new Canvas (temp);
@@ -531,7 +531,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			//drawCanvas.drawBitmap(overlay, new Matrix(), null);
 			
 			valueStore.merged = temp;
-		}
+		}*/
 		
 		private void prepareMergedBitmaps()
 		{
@@ -563,7 +563,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			Paint painter = new Paint();
 			painter.setFilterBitmap(true);
 			
-			double scalingFactor = 2.3;
+			double scalingFactor = 1.6;//2.3;
 			int counter = 1;
 			
 			for (Bitmap overlay : overlays)
@@ -578,7 +578,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				int overlayHeight = overlay.getHeight();
 				
 				drawCanvas.drawBitmap(valueStore.getPage(counter), new Matrix(), null);
-				drawCanvas.drawBitmap(overlay, null, new Rect(0, 115, (int) (overlayWidth * scalingFactor), (int) (overlayHeight * scalingFactor)), painter);
+				drawCanvas.drawBitmap(overlay, null, new Rect(45, 90, (int) (overlayWidth * scalingFactor), (int) (overlayHeight * scalingFactor)), painter);
 				
 				valueStore.addMergedBitmap(temp);
 				
