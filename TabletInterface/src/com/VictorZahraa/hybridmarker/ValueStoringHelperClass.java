@@ -44,6 +44,7 @@ public class ValueStoringHelperClass
 	private static ArrayList<String> questions;
 	private static ArrayList<String> answers;
 	private static ArrayList<ArrayList<String>> memoPerPage;
+	private static ArrayList<Integer> answerCoordsOffset; 
 	
 	public ValueStoringHelperClass()
 	{
@@ -239,13 +240,16 @@ public class ValueStoringHelperClass
 	private void processAnswersPerPage(String perPageText)
 	{
 		memoPerPage = new ArrayList<ArrayList<String>>();
+		answerCoordsOffset = new ArrayList<Integer>();
 		ArrayList<String> temp = new ArrayList<String>();
+		int counter = 0;
 		
 		// Get the answers for each page
 		String [] pages = perPageText.split("\\{Page\\}");
 
 		for (String page : pages)
 		{
+			answerCoordsOffset.add(counter);
 			page = page.trim();
 			
 			if (page.equals(""))
@@ -254,9 +258,11 @@ public class ValueStoringHelperClass
 			}
 			
 			String [] answersTemp = page.split("\\{AnswerSplit\\}");
+			
 
 			for (String ans: answersTemp)
 			{
+				counter++;
 				temp.add(ans.trim());
 			}
 
@@ -277,6 +283,16 @@ public class ValueStoringHelperClass
 		{
 			return null;
 		}
+	}
+	
+	// Returns the coords of the given answer
+	public int getStartAnswerCoords(int page, int selectedItemIndex)
+	{
+		int returnVal = -1;
+		
+		returnVal = answerCoords.get(answerCoordsOffset.get(page) + selectedItemIndex).get(0);
+		
+		return returnVal;
 	}
 
 	public String getMemoText () {return memoText;}

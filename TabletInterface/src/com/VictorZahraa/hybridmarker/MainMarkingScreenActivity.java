@@ -23,6 +23,8 @@ import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -88,6 +90,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		context = this;
 
 		valueStore = new ValueStoringHelperClass();
+		currentPage = 1;
 		currentPageScore = 0;
 
 		// Get the path to external storage
@@ -124,6 +127,15 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				data);
 
 		memoAnswersListView.setAdapter(arrayAdapter);
+		memoAnswersListView.setOnItemClickListener(new OnItemClickListener() 
+		{
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id)
+			{
+				scriptScrollView.setScrollY(valueStore.getStartAnswerCoords(currentPage - 1, position));
+			}
+		});
 
 		//pageMarkTextView = (TextView) findViewById(R.id.markText);
 

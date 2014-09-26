@@ -46,6 +46,8 @@
                 android:id="@+id/memoAnswersListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:divider="@android:color/holo_blue_bright"
+                android:dividerHeight="1dp"
                 android:background="@android:color/black" >
             </ListView>
 
