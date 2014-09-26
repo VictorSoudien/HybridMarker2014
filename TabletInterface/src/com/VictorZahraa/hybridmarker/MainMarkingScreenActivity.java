@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -23,43 +22,31 @@ import android.os.Environment;
 import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
 import com.samsung.samm.common.SObject;
 import com.samsung.samm.common.SObjectStroke;
-import com.samsung.sdraw.CanvasView.OnHistoryChangeListener;
 import com.samsung.spen.lib.gesture.SPenGestureInfo;
 import com.samsung.spen.lib.gesture.SPenGestureLibrary;
-import com.samsung.spen.lib.input.SPenEvent;
-import com.samsung.spen.lib.input.SPenLibrary;
 import com.samsung.spen.settings.SettingStrokeInfo;
 import com.samsung.spensdk.SCanvasConstants;
 import com.samsung.spensdk.SCanvasView;
 import com.samsung.spensdk.applistener.HistoryUpdateListener;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 import com.samsung.spensdk.applistener.SCanvasLongPressListener;
-import com.samsung.spensdk.applistener.SPenTouchListener;
-
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Properties;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
