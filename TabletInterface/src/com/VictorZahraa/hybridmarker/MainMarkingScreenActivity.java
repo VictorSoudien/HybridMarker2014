@@ -117,8 +117,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		scriptDisplay.setScaleX(1.05f);
 		scriptDisplay.setScaleY(1.05f);
 
-		questionTextView = (TextView) findViewById(R.id.questionText);
-		questionTextView.setText(valueStore.getNextQuestion());
+		//questionTextView = (TextView) findViewById(R.id.questionText);
+		//questionTextView.setText(valueStore.getNextQuestion());
 		
 		answerTextView = (TextView) findViewById(R.id.answerText);
 		answerTextView.setText(valueStore.getNextAnswer());
@@ -248,14 +248,14 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	// Display the next question
 	public void nextQuestionAndAnswer(View view)
 	{
-		questionTextView.setText(valueStore.getNextQuestion());
+		//questionTextView.setText(valueStore.getNextQuestion());
 		answerTextView.setText(valueStore.getNextAnswer());
 	}
 	
 	// Display the previous question
 	public void prevQuestionAndAnswer(View view)
 	{
-		questionTextView.setText(valueStore.getPreviousQuestion());
+		//questionTextView.setText(valueStore.getPreviousQuestion());
 		answerTextView.setText(valueStore.getPreviousAnswer());
 	}
 	
