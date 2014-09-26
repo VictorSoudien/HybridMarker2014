@@ -125,12 +125,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		answerTextView = (TextView) findViewById(R.id.answerText);
 		answerTextView.setText(valueStore.getNextAnswer());
 		
-		/*ArrayList<String> data = new ArrayList<String>();
+		ArrayList<String> data = new ArrayList<String>();
 		data.add(valueStore.getNextAnswer());
 		data.add(valueStore.getNextAnswer());
-		data.add(valueStore.getNextAnswer());*/
-		
-		ArrayList<String> data = valueStore.getAnswers();
+		data.add(valueStore.getNextAnswer());
 		
 		memoAnswersListView = (ListView) findViewById(R.id.memoAnswersListView);
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
@@ -189,6 +187,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			   SettingStrokeInfo strokeInfo = new SettingStrokeInfo();
 			   strokeInfo.setStrokeColor(Color.RED);
 			   strokeInfo.setStrokeWidth(1.0f);
+			   sCanvasView.setZoomEnable(false);
 			   sCanvasView.setSettingStrokeInfo(strokeInfo);
 			}
 		});

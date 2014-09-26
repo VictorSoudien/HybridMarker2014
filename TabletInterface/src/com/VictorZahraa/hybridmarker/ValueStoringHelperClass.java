@@ -38,6 +38,7 @@ public class ValueStoringHelperClass
 	public static String nameOfTestBeingMarked;
 
 	// These data structures are used to store the information regarding the test memo
+	@SuppressWarnings("unused")
 	private static String metadataFileHeader;
 	private static ArrayList<ArrayList<String>> answersPerPage;
 	private static ArrayList<ArrayList<Integer>> answerCoords;
@@ -222,7 +223,7 @@ public class ValueStoringHelperClass
 				String [] qAndA = qaAndCoords[0].split("\\{QASplit\\}");
 				
 				questions.add(qAndA[0].trim());
-				//answers.add(qAndA[1].trim());
+				answers.add(qAndA[1].trim());
 				
 				// Process and store the answer coords
 				String [] tempCoords = qaAndCoords[1].split(";");
@@ -232,12 +233,6 @@ public class ValueStoringHelperClass
 				answerCoords.add(temp);
 			}
 		}
-	}
-
-	///ajdsbfkjabfbdjsvkjdbs
-	public ArrayList<String> getAnswers()
-	{
-		return answersPerPage.get(0);
 	}
 	
 	// Process the answerPerPageText
@@ -259,7 +254,6 @@ public class ValueStoringHelperClass
 			}
 			
 			String [] answersTemp = page.split("\\{AnswerSplit\\}");
-			temp = new ArrayList<String>();
 
 			for (String ans: answersTemp)
 			{
@@ -267,7 +261,8 @@ public class ValueStoringHelperClass
 			}
 
 			// Add the answers for this page
-			answersPerPage.add((ArrayList<String>)temp.clone());
+			answersPerPage.add(temp);
+			temp = new ArrayList<String>();
 		}
 	}
 
