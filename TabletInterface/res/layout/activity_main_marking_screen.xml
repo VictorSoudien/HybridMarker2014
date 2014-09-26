@@ -49,6 +49,7 @@
                 android:layout_weight="1" >
             </ListView>
 
+            <!-- 
             <ScrollView
                 android:id="@+id/answerTextScrollView"
                 android:layout_width="match_parent"
@@ -69,6 +70,7 @@
                         android:textAppearance="?android:attr/textAppearanceLarge" />
                 </LinearLayout>
             </ScrollView>
+			 -->
 
             <!--
             <LinearLayout
