@@ -189,22 +189,37 @@ public class ValueStoringHelperClass
 		currentQuestion = 0;
 		currentAnswer = 0;
 		
-		String [] headerAndBody = memoText.split("{HeaderEnd}");
+		String [] headerAndBody = memoText.split("\\{HeaderEnd\\}");
 		metadataFileHeader = headerAndBody[0];
 		
-		String [] mainQuestions = headerAndBody[1].split("{MainQEnd}");
+		String [] mainQuestions = headerAndBody[1].split("\\{MainQEnd\\}");
 		
 		for (String mainQ : mainQuestions)
 		{
-			String [] subQuestions = mainQ.split("{SubQEnd}");
+			mainQ = mainQ.trim();
+			
+			// Skip blank lines
+			if (mainQ.equals(""))
+			{
+				continue;
+			}
+			
+			String [] subQuestions = mainQ.split("\\{SubQEnd\\}");
 			
 			for (String subQ : subQuestions)
 			{
-				String [] qaAndCoords = subQ.split("{CoordsSplit}");
+				subQ = subQ.trim();
+				
+				if (subQ.equals(""))
+				{
+					continue;
+				}
+			
+				String [] qaAndCoords = subQ.split("\\{CoordsSplit\\}");
 				ArrayList<Integer> temp = new ArrayList<Integer>();
 				
 				// Process and store the question and answer
-				String [] qAndA = qaAndCoords[0].split("{QASplit}");
+				String [] qAndA = qaAndCoords[0].split("\\{QASplit\\}");
 				
 				questions.add(qAndA[0]);
 				answers.add(qAndA[1]);
