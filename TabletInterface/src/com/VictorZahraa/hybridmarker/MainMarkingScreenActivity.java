@@ -446,6 +446,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		private void performGestureRecog(SCanvasView view, GestureMode currentMode)
 		{
 			LinkedList<SObject> sObjects = view.getSObjectList(true);
+			double avgY = 0;
 
 			// Used to keep track of the amount of each gesture
 			HashMap<String, Integer> gestureCount = new HashMap<String, Integer>();
@@ -476,7 +477,17 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					
 					PointF [][] currentPoints = new PointF[1][1];
 					currentPoints[0] = ((SObjectStroke) objs).getPoints();
-
+					
+					// Find the average yPosition of the tick
+					for (int i = 0; i < currentPoints[0].length; i++)
+					{
+						double p = currentPoints[0][i].y;
+						
+						avgY += p;
+					}
+					
+					avgY /= currentPoints[0].length;
+					
 					ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
 
 					if ((gestureInfo == null) || (gestureInfo.size() <= 0))
@@ -522,6 +533,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
 				int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
 
+				resultString = valueStore.allocateMark((currentPage - 1), (int) avgY, (tickCount + halfTickCount));
+				
+				//resultString = "" +(int) avgY;
 				/*resultString = "Ticks " + tickCount + "\n" +
 						"Half Ticks " + halfTickCount + "\n" +
 						"Crosses " + gestureCount.get("x");*/
@@ -540,7 +554,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					}
 				}
 				
-				resultString = "Current Page Mark: " + currentPageScore;
+				//resultString = "Current Page Mark: " + currentPageScore;
 			}
 		}
 

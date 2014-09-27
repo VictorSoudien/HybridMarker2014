@@ -38,13 +38,19 @@ public class ValueStoringHelperClass
 	public static String nameOfTestBeingMarked;
 
 	// These data structures are used to store the information regarding the test memo
-	@SuppressWarnings("unused")
 	private static String metadataFileHeader;
 	private static ArrayList<ArrayList<Integer>> answerCoords;
+	private static ArrayList<ArrayList<ArrayList<Integer>>> answerCoordsPerPage;
 	private static ArrayList<String> questions;
 	private static ArrayList<String> answers;
 	private static ArrayList<ArrayList<String>> memoPerPage;
-	private static ArrayList<Integer> answerCoordsOffset; 
+	private static ArrayList<Integer> answerCoordsOffset;
+	
+	// Used to store the marks
+	private static double [] marksPerMainQuestion;
+	private static String [] subQuestionMarks;
+	private static int numMainQuestions;
+	private static ArrayList<ArrayList<Double>> maxMarks;
 	
 	public ValueStoringHelperClass()
 	{
@@ -195,7 +201,7 @@ public class ValueStoringHelperClass
 		metadataFileHeader = headerAndBody[0];
 		
 		// Process the header of the metadata file
-		totalMarks = Integer.parseInt(metadataFileHeader.split("\n")[0]);
+		processHeader(metadataFileHeader);
 		
 		String [] mainQuestions = headerAndBody[1].split("\\{MainQEnd\\}");
 		
@@ -235,6 +241,40 @@ public class ValueStoringHelperClass
 				temp.add(Integer.parseInt(tempCoords[1].trim()));
 				
 				answerCoords.add(temp);
+			}
+		}
+	}
+	
+	// Process the header of the metadata file
+	private void processHeader(String header)
+	{	
+		maxMarks = new ArrayList<ArrayList<Double>>();
+		
+		String [] headerLines = header.split("\n");
+		totalMarks = Integer.parseInt(headerLines[0]);
+	
+		numMainQuestions = 0;
+		
+		for (String line : headerLines)
+		{
+			if (line.startsWith("Q") || line.startsWith("q"))
+			{
+				numMainQuestions++;
+			}
+			else
+			{
+				line = line.replaceAll("\\{","");
+				line = line.replaceAll("\\}", "");
+				
+				ArrayList<Double> tempMax = new ArrayList<Double>();
+				
+				String [] subMax = line.split(",");
+				for (String max : subMax)
+				{
+					tempMax.add(Double.parseDouble(max));
+				}
+				
+				maxMarks.add(tempMax);
 			}
 		}
 	}
@@ -408,6 +448,67 @@ public class ValueStoringHelperClass
 		for (Bitmap bitmap : mergedBitmaps)
 		{
 			bitmap.recycle();
+		}
+	}
+	
+	// Allocates marks to the appropriate question
+	public String allocateMark (int pageNum, int coord, double mark)
+	{
+		double scaling_factor = 0.77;
+		
+		//String coordsCompared = "";
+		
+		if (marksPerMainQuestion == null)
+		{
+			getAnswerCoordsPerPage();
+			marksPerMainQuestion = new double[numMainQuestions];
+			subQuestionMarks = new String [numMainQuestions];
+		}
+		
+		ArrayList<ArrayList<Integer>> pageCoords = answerCoordsPerPage.get(pageNum);
+		
+		for (int i = 0; i < pageCoords.size(); i++)
+		{
+			int startY = (int) (pageCoords.get(i).get(0) * scaling_factor);
+			int endY = (int) Math.ceil(pageCoords.get(i).get(1) * scaling_factor);
+			
+			if ((startY <= coord) && (endY >= coord))
+			{
+				return "Mark allocated to question " + i;
+			}
+		}
+
+		return "Mark not allocated";
+	}
+	
+	// Gets the answer Coords per page
+	private void getAnswerCoordsPerPage()
+	{
+		answerCoordsPerPage = new ArrayList<ArrayList<ArrayList<Integer>>>();
+		ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
+		int prevY = -1;
+		
+		for (int i = 0; i < answerCoords.size(); i++)
+		{
+			int currentY = answerCoords.get(i).get(0);
+			
+			if (currentY < prevY)
+			{
+				answerCoordsPerPage.add(temp);
+				temp = new ArrayList<ArrayList<Integer>>();
+				temp.add(answerCoords.get(i));
+			}
+			else
+			{
+				temp.add(answerCoords.get(i));
+			}
+			
+			prevY = currentY;
+		}
+		
+		if (temp.size() != 0)
+		{
+			answerCoordsPerPage.add((ArrayList<ArrayList<Integer>>) temp.clone());
 		}
 	}
 }
