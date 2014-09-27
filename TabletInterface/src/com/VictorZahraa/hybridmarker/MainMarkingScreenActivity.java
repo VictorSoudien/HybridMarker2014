@@ -53,6 +53,7 @@ import java.util.LinkedList;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
+	private final int PAGE_OFFSET = 200;
 	private TextView questionTextView;
 	private TextView answerTextView;
 	private TextView pageMarkTextView;
@@ -133,7 +134,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
-				scriptScrollView.setScrollY(valueStore.getStartAnswerCoords(currentPage - 1, position));
+				scriptScrollView.setScrollY(valueStore.getStartAnswerCoords(currentPage - 1, position)  - PAGE_OFFSET);
 			}
 		});
 

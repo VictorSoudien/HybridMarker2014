@@ -184,8 +184,8 @@ public class TestScriptBrowserActivity extends Activity {
 				tempTestName = tempTestName.replace("*", "\\*");
 				
 				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
-				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/endMarkers.txt";
-				String ansPerPageDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/endMarkers_answersPerPage.txt";
+				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/memo.txt";
+				String ansPerPageDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/answersPerPage.txt";
 				
 				// Store the current directory and test name
 				valueStore.setCurrentDirectory("Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/");
