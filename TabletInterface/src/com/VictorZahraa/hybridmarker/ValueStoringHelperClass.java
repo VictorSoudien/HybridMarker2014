@@ -203,10 +203,13 @@ public class ValueStoringHelperClass
 		// Process the header of the metadata file
 		processHeader(metadataFileHeader);
 		
+		int questionCounter = 0;
+		
 		String [] mainQuestions = headerAndBody[1].split("\\{MainQEnd\\}");
 		
 		for (String mainQ : mainQuestions)
 		{
+			questionCounter++;
 			mainQ = mainQ.trim();
 			
 			// Skip blank lines
@@ -239,6 +242,7 @@ public class ValueStoringHelperClass
 				String [] tempCoords = qaAndCoords[1].split(";");
 				temp.add(Integer.parseInt(tempCoords[0].trim()));
 				temp.add(Integer.parseInt(tempCoords[1].trim()));
+				temp.add(questionCounter);
 				
 				answerCoords.add(temp);
 			}
@@ -474,11 +478,22 @@ public class ValueStoringHelperClass
 			
 			if ((startY <= coord) && (endY >= coord))
 			{
-				return "Mark allocated to question " + i;
+				marksPerMainQuestion[pageCoords.get(i).get(2) - 1] += 1;
+				//return marksPerMainQuestion+ "";
+				//return "Mark allocated to question " + i;
 			}
 		}
+		
+		String sum = "";
+		
+		for (double n : marksPerMainQuestion)
+		{
+			sum += n + " ";
+		}
+		
+		return sum;
 
-		return "Mark not allocated";
+		//return "Mark not allocated";
 	}
 	
 	// Gets the answer Coords per page
