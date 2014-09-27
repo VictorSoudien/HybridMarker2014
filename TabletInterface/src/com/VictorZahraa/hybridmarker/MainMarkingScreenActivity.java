@@ -50,6 +50,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.concurrent.Executor;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
@@ -85,6 +86,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	// Allows for values to be stored and accessed across activities
 	private ValueStoringHelperClass valueStore;
+	
+	// Used to ensure that background threads run in a serial fashion
+	Executor executor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -212,6 +216,16 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				displayToast ("Long Press");
 			}
 		});
+		
+		executor = new Executor()
+		{
+			@Override
+			public void execute(Runnable command) 
+			{
+				// TODO Auto-generated method stub
+				new GestureRecognition().execute(sCanvasView, currentGestureMode);
+			}
+		};
 
 		sCanvasView.setHistoryUpdateListener(new HistoryUpdateListener() 
 		{	

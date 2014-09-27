@@ -66,10 +66,8 @@ public class ValueStoringHelperClass
 
 	public int getTotalMark () {return totalMarks;}
 	
-	public double getMarksForQuestion (int questionNumber)
-	{
-		return marksPerMainQuestion[questionNumber - 1];
-	}
+	public double getMarksForQuestion (int questionIndex){return marksPerMainQuestion[questionIndex];}
+	public int getNumberOfMainQuestion () {return numMainQuestions;}
 
 	public double getSumOfPageScores ()
 	{
@@ -480,6 +478,8 @@ public class ValueStoringHelperClass
 		int minDiff = Integer.MAX_VALUE;
 		int indexOfNearest = -1;
 		
+		String sum = "";
+		
 		for (int i = 0; i < pageCoords.size(); i++)
 		{
 			int startY = (int) (pageCoords.get(i).get(0) * scaling_factor);
@@ -488,8 +488,9 @@ public class ValueStoringHelperClass
 			if ((startY <= coord) && (endY >= coord))
 			{
 				marksPerMainQuestion[pageCoords.get(i).get(2) - 1] += mark;
-				
+				sum = pageCoords.get(i).get(2) - 1 + "";
 				hasBeenAllocated = true;
+				break;
 				//return marksPerMainQuestion+ "";
 				//return "Mark allocated to question " + i;
 			}
@@ -506,16 +507,16 @@ public class ValueStoringHelperClass
 		if (hasBeenAllocated == false)
 		{
 			marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] += mark;
+			sum = pageCoords.get(indexOfNearest).get(2) - 1 + "";
+			hasBeenAllocated = true;
 		}
 		
-		String sum = "";
-		
-		for (double n : marksPerMainQuestion)
+		/*for (double n : marksPerMainQuestion)
 		{
 			sum += n + " ";
-		}
+		}*/
 		
-		return sum;
+		return hasBeenAllocated + "";
 
 		//return "Mark not allocated";
 	}

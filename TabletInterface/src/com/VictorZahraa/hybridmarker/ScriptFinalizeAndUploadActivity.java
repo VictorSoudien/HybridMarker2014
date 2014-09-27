@@ -17,10 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
+
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -29,6 +32,7 @@ import com.jcraft.jsch.Session;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class ScriptFinalizeAndUploadActivity extends Activity implements OnClickListener {
@@ -43,6 +47,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 	private EditText studentNumberInput;
 	private ImageView testDisplay;
 	private TextView markTextView;
+	private ListView markSummary;
 	
 	private Context context;
 	
@@ -90,6 +95,22 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 		
 		markTextView = (TextView) findViewById(R.id.scoreTextView);
 		markTextView.setText("Final Mark: " + valueStore.getSumOfPageScores() + " / " + valueStore.getTotalMark() + "\t\tMarks for this page: "  + valueStore.getPageScore(currentPageBeingShown + 1));
+		
+		markSummary = (ListView) findViewById(R.id.questionTotalsListView);
+		
+		ArrayList<String> data = new ArrayList<String>();
+		
+		for (int i = 0; i < valueStore.getNumberOfMainQuestion(); i++)
+		{
+			data.add("Question " + (i+1) + ": " + valueStore.getMarksForQuestion(i)); 
+		}
+
+		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+				context, 
+				android.R.layout.simple_list_item_1,
+				data);
+
+		markSummary.setAdapter(arrayAdapter);
 		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()

@@ -77,6 +77,7 @@ public final class R {
         public static final int passwordInput=0x7f09001d;
         public static final int prevQuestionButton=0x7f09000f;
         public static final int progress_bar_layout=0x7f090023;
+        public static final int questionTotalsListView=0x7f090015;
         public static final int remaining_marking_text_view=0x7f090001;
         public static final int scoreTextView=0x7f090017;
         public static final int scriptDisplay=0x7f090005;
@@ -87,7 +88,6 @@ public final class R {
         public static final int student_number_field=0x7f090013;
         public static final int tempImageView=0x7f090008;
         public static final int tempLayout=0x7f090016;
-        public static final int tempTextView=0x7f090015;
         public static final int testDisplay=0x7f090018;
         public static final int textView1=0x7f090019;
         public static final int upload_button=0x7f090014;
