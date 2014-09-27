@@ -50,10 +50,13 @@ public class FinalMemoProcessor
 		// Verify the ouput directory
 		isDirValid(dir);
 
-		outputFileName = memoFileName.split("\\.")[0].replaceAll(" ", "_");
+		/*outputFileName = memoFileName.split("\\.")[0].replaceAll(" ", "_");
 		answersPerPageOutputFile = outputFileName + "_answersPerPage.txt";
 
-		outputFileName += ".txt";
+		outputFileName += ".txt";*/
+		
+		outputFileName = "memo.txt";
+		answersPerPageOutputFile = "answersPerPage.txt";
 
 		if (dir.endsWith("/"))
 		{
@@ -168,7 +171,8 @@ public class FinalMemoProcessor
 				txtStripper.setStartPage(i);
 				txtStripper.setEndPage(i);
 				String tempText = txtStripper.getText(memoPDF);
-				getMemoTextPerPage(tempText, studentScriptText, txtStripper.getLineSeparator(), (i == memoPDF.getNumberOfPages()));
+				String tempStudentText = txtStripper.getText(blankPDF);
+				getMemoTextPerPage(tempText, tempStudentText, txtStripper.getLineSeparator(), (i == memoPDF.getNumberOfPages()));
 			}
 
 			// Process the entire document
@@ -193,13 +197,13 @@ public class FinalMemoProcessor
 
 			if (i != answers.size() - 1)
 			{
-				answersPerPageText += "\n{AnswerSplit}";
+				answersPerPageText += "\n{AnswerSplit}\n";
 			}
 		}
 
 		if (lastPage == false)
 		{
-			answersPerPageText += "\n{Page}";
+			answersPerPageText += "\n{Page}\n";
 		}
 
 		mainQuestionIndex.clear();
@@ -258,7 +262,10 @@ public class FinalMemoProcessor
 			if (currentLine.equals(studentLines.get(studentScriptLineTracer)))
 			{
 				
-				studentScriptLineTracer++;
+				if (studentScriptLineTracer < studentLines.size() - 1)
+				{
+					studentScriptLineTracer++;
+				}
 				
 				if (inAnswerSection == true)
 				{
@@ -368,6 +375,12 @@ public class FinalMemoProcessor
 		// Ensure that the last question has been added
 		if (inAnswerSection == true)
 		{
+			if (!possibleQuestionNumber.equals(""))
+			{
+				tempSection = possibleQuestionNumber + ") " + tempSection;
+				possibleQuestionNumber = "";
+			}
+			
 			answerCounter++;
 			answers.add(tempSection);
 		}
