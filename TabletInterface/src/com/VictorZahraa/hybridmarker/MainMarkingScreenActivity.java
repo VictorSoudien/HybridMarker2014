@@ -447,13 +447,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				{
 					PointF [][] currentPoints = new PointF[1][1];
 					currentPoints[0] = ((SObjectStroke) objs).getPoints();
-					/*int index = 0;
-
-			    	for (SObject obj : sObjects)
-			    	{
-			    		currentPoints[index] = ((SObjectStroke) obj).getPoints();
-			    		index++;
-			    	}*/
 
 					ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
 
@@ -479,15 +472,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					if (maxIndex == -1)
 					{
 						// Gesture not recognized
-
-						//displayToast("Not recognised");
-						//sCanvasView.clearScreen();
 					}
 					else
 					{
-						//displayToast(gestureInfo.get(maxIndex).mName);
-						//sCanvasView.clearScreen();
-
 						String key = gestureInfo.get(maxIndex).mName.trim();
 						int currentCount = -1;
 
@@ -608,7 +595,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		}
 	}
 
-	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
