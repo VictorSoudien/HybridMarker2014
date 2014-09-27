@@ -470,6 +470,10 @@ public class ValueStoringHelperClass
 		}
 		
 		ArrayList<ArrayList<Integer>> pageCoords = answerCoordsPerPage.get(pageNum);
+		boolean hasBeenAllocated = false;
+		
+		int minDiff = Integer.MAX_VALUE;
+		int indexOfNearest = -1;
 		
 		for (int i = 0; i < pageCoords.size(); i++)
 		{
@@ -479,9 +483,24 @@ public class ValueStoringHelperClass
 			if ((startY <= coord) && (endY >= coord))
 			{
 				marksPerMainQuestion[pageCoords.get(i).get(2) - 1] += 1;
+				
+				hasBeenAllocated = true;
 				//return marksPerMainQuestion+ "";
 				//return "Mark allocated to question " + i;
 			}
+			else
+			{
+				if ((Math.abs(coord - startY) < minDiff) || (Math.abs(coord) - endY) < minDiff)
+				{
+					indexOfNearest = i;
+				}
+			}
+		}
+		
+		// Ensure that every tick is counted
+		if (hasBeenAllocated == false)
+		{
+			marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] += 1;
 		}
 		
 		String sum = "";
