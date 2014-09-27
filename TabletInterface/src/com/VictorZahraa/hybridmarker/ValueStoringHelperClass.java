@@ -65,6 +65,11 @@ public class ValueStoringHelperClass
 	public String getTestName () {return nameOfTestBeingMarked;}
 
 	public int getTotalMark () {return totalMarks;}
+	
+	public double getMarksForQuestion (int questionNumber)
+	{
+		return marksPerMainQuestion[questionNumber - 1];
+	}
 
 	public double getSumOfPageScores ()
 	{
@@ -482,7 +487,7 @@ public class ValueStoringHelperClass
 			
 			if ((startY <= coord) && (endY >= coord))
 			{
-				marksPerMainQuestion[pageCoords.get(i).get(2) - 1] += 1;
+				marksPerMainQuestion[pageCoords.get(i).get(2) - 1] += mark;
 				
 				hasBeenAllocated = true;
 				//return marksPerMainQuestion+ "";
@@ -500,7 +505,7 @@ public class ValueStoringHelperClass
 		// Ensure that every tick is counted
 		if (hasBeenAllocated == false)
 		{
-			marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] += 1;
+			marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] += mark;
 		}
 		
 		String sum = "";

@@ -219,11 +219,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			public void onHistoryChanged(boolean arg0, boolean arg1) 
 			{	
 				new GestureRecognition().execute(sCanvasView, currentGestureMode);
-				
-				if (currentGestureMode == GestureMode.UNDO)
-				{
-					currentGestureMode = GestureMode.NORMAL;
-				}
 			}
 		});
 
@@ -310,7 +305,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		}
 		else if (id == R.id.action_undo)
 		{
-			currentGestureMode = GestureMode.UNDO;
 			sCanvasView.undo();
 		}
 		else if (id == R.id.action_add_comment)
@@ -450,30 +444,57 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 			// Used to keep track of the amount of each gesture
 			HashMap<String, Integer> gestureCount = new HashMap<String, Integer>();
-
+			
+			boolean atLeastOneProcessed = false;
+			boolean undo = false;
+			int counter = 0;
+			
+			boolean doElse = true;
+			
 			if ((sObjects == null) || (sObjects.size() <= 0))
 			{
 				// No objects found
-				currentPageScore = 0;
-				previousSObjects.clear();
-				return;
+				if (previousSObjects.size() == 0)
+				{
+					currentPageScore = 0;
+					previousSObjects.clear();
+					return;
+				}
+				else
+				{
+					undo = true;
+					sObjects.add(previousSObjects.removeLast());
+				}
 			}
-			else
+			if (doElse == true)
 			{
 				for (SObject objs : sObjects)
 				{
+					counter++;
+					
 					if (currentMode == GestureMode.NORMAL)
 					{
 						// Check whether this sObject has already been processed
 						if (previousSObjects.contains(objs))
 						{
-							continue;
+							// The user performed and undo operation
+							if (counter == sObjects.size() && (atLeastOneProcessed == false) && (sObjects.size() < previousSObjects.size()))
+							{
+								objs = previousSObjects.removeLast();
+								undo = true;
+							}
+							else
+							{
+								continue;
+							}
 						}
 						else
 						{
 							previousSObjects.add(objs);
 						}
 					}
+					
+					atLeastOneProcessed = true;
 					
 					PointF [][] currentPoints = new PointF[1][1];
 					currentPoints[0] = ((SObjectStroke) objs).getPoints();
@@ -532,19 +553,21 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 				int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
 				int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
-
-				resultString = valueStore.allocateMark((currentPage - 1), (int) avgY, (tickCount + halfTickCount));
 				
+				double markToBeAllocated = (undo == true) ? -(tickCount + (0.5 * halfTickCount)): (tickCount + (0.5 * halfTickCount));
+				resultString = valueStore.allocateMark((currentPage - 1), (int) avgY, markToBeAllocated);
+				
+				//resultString = undo + "";
 				//resultString = "" +(int) avgY;
 				/*resultString = "Ticks " + tickCount + "\n" +
 						"Half Ticks " + halfTickCount + "\n" +
 						"Crosses " + gestureCount.get("x");*/
 				
-				if (currentMode == GestureMode.NORMAL)
+				//if (currentMode == GestureMode.NORMAL)
 				{	
-					currentPageScore += tickCount + ((0.5) * halfTickCount);
+					currentPageScore += markToBeAllocated;
 				}
-				else if (currentMode == GestureMode.UNDO)
+				/*else if (currentMode == GestureMode.UNDO)
 				{
 					currentPageScore = tickCount + ((0.5) * halfTickCount);
 					
@@ -552,7 +575,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					{
 						previousSObjects.removeLast();
 					}
-				}
+				}*/
 				
 				//resultString = "Current Page Mark: " + currentPageScore;
 			}
