@@ -454,7 +454,7 @@ public class ValueStoringHelperClass
 	// Allocates marks to the appropriate question
 	public String allocateMark (int pageNum, int coord, double mark)
 	{
-		double scaling_factor = 0.77;
+		double scaling_factor = 0.83;//0.77;
 		
 		//String coordsCompared = "";
 		
