@@ -54,6 +54,10 @@ import java.util.LinkedList;
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
 	private final int PAGE_OFFSET = 200;
+	private enum GestureMode{NORMAL, UNDO};
+	
+	private GestureMode currentGestureMode;
+	
 	private TextView questionTextView;
 	private TextView answerTextView;
 	private TextView pageMarkTextView;
@@ -77,6 +81,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	private int currentPage;
 	private double prevScore;
 	private double currentPageScore;
+	private LinkedList<SObject> previousSObjects;
 
 	// Allows for values to be stored and accessed across activities
 	private ValueStoringHelperClass valueStore;
@@ -93,6 +98,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		valueStore = new ValueStoringHelperClass();
 		currentPage = 1;
 		currentPageScore = 0;
+		
+		currentGestureMode = GestureMode.NORMAL;
 
 		// Get the path to external storage
 		pathToSDCard = Environment.getExternalStorageDirectory().getPath();
@@ -211,7 +218,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			@Override
 			public void onHistoryChanged(boolean arg0, boolean arg1) 
 			{	
-				new GestureRecognition().execute(sCanvasView);
+				new GestureRecognition().execute(sCanvasView, currentGestureMode);
+				
+				if (currentGestureMode == GestureMode.UNDO)
+				{
+					currentGestureMode = GestureMode.NORMAL;
+				}
 			}
 		});
 
@@ -222,6 +234,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	// Load the custom gesture library
 	public void loadGestureLibrary()
 	{
+		previousSObjects = new LinkedList<SObject>();
+		
 		gestureLib = new SPenGestureLibrary(MainMarkingScreenActivity.this);
 		gestureLib.openSPenGestureEngine();
 
@@ -296,6 +310,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		}
 		else if (id == R.id.action_undo)
 		{
+			currentGestureMode = GestureMode.UNDO;
 			sCanvasView.undo();
 		}
 		else if (id == R.id.action_add_comment)
@@ -413,22 +428,22 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		toast.show();
 	}
 
-	private class GestureRecognition extends AsyncTask<SCanvasView, String, Long>
+	private class GestureRecognition extends AsyncTask<Object, String, Long>
 	{
 		String resultString = "";
 
 		@Override
-		protected Long doInBackground(SCanvasView... params) 
+		protected Long doInBackground(Object... params)
 		{
-			if (params.length == 1)
+			if (params.length == 2)
 			{
-				performGestureRecog(params[0]);
+				performGestureRecog((SCanvasView)params[0], (GestureMode) params[1]);
 			}
 
 			return null;
 		}
 
-		private void performGestureRecog(SCanvasView view)
+		private void performGestureRecog(SCanvasView view, GestureMode currentMode)
 		{
 			LinkedList<SObject> sObjects = view.getSObjectList(true);
 
@@ -439,12 +454,26 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			{
 				// No objects found
 				currentPageScore = 0;
+				previousSObjects.clear();
 				return;
 			}
 			else
 			{
 				for (SObject objs : sObjects)
 				{
+					if (currentMode == GestureMode.NORMAL)
+					{
+						// Check whether this sObject has already been processed
+						if (previousSObjects.contains(objs))
+						{
+							continue;
+						}
+						else
+						{
+							previousSObjects.add(objs);
+						}
+					}
+					
 					PointF [][] currentPoints = new PointF[1][1];
 					currentPoints[0] = ((SObjectStroke) objs).getPoints();
 
@@ -493,11 +522,25 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
 				int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
 
-				resultString = "Ticks " + tickCount + "\n" +
+				/*resultString = "Ticks " + tickCount + "\n" +
 						"Half Ticks " + halfTickCount + "\n" +
-						"Crosses " + gestureCount.get("x");
-
-				currentPageScore = tickCount + ((0.5) * halfTickCount);
+						"Crosses " + gestureCount.get("x");*/
+				
+				if (currentMode == GestureMode.NORMAL)
+				{	
+					currentPageScore += tickCount + ((0.5) * halfTickCount);
+				}
+				else if (currentMode == GestureMode.UNDO)
+				{
+					currentPageScore = tickCount + ((0.5) * halfTickCount);
+					
+					if (previousSObjects.size() != 0)
+					{
+						previousSObjects.removeLast();
+					}
+				}
+				
+				resultString = "Current Page Mark: " + currentPageScore;
 			}
 		}
 
