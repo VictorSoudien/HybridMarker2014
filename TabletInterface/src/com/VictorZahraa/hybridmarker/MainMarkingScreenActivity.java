@@ -533,35 +533,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		@Override
 		protected Long doInBackground(Bitmap... params) 
 		{
-			/*if (params.length == 2)
-			{
-				merge(params[0], params[1]);
-			}*/
-
 			prepareMergedBitmaps();
 
 			return null;
 		}
-
-		/*private void merge(Bitmap baseBitmap, Bitmap overlay)
-		{
-			Bitmap temp = Bitmap.createBitmap(baseBitmap.getWidth(), baseBitmap.getHeight(), baseBitmap.getConfig());
-			Canvas drawCanvas = new Canvas (temp);
-
-			// Used to increase quality of saved overlay
-			Paint painter = new Paint();
-			painter.setFilterBitmap(true);
-
-			int overlayWidth = overlay.getWidth();
-			int overlayHeight = overlay.getHeight();
-			double scalingFactor = 2.3;
-
-			drawCanvas.drawBitmap(baseBitmap, new Matrix(), null);
-			drawCanvas.drawBitmap(overlay, null, new Rect(0, 115, (int) (overlayWidth * scalingFactor), (int) (overlayHeight * scalingFactor)), painter);
-			//drawCanvas.drawBitmap(overlay, new Matrix(), null);
-
-			valueStore.merged = temp;
-		}*/
 
 		private void prepareMergedBitmaps()
 		{
