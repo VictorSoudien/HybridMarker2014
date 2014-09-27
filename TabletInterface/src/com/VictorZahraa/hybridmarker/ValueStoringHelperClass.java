@@ -45,6 +45,8 @@ public class ValueStoringHelperClass
 	private static ArrayList<String> answers;
 	private static ArrayList<ArrayList<String>> memoPerPage;
 	private static ArrayList<Integer> answerCoordsOffset;
+	private static ArrayList<ArrayList<Integer>> mainQuestionsMinMaxY;
+	private static ArrayList<Integer> mainQuestionRegionsPerPage;
 	
 	// Used to store the marks
 	private static double [] marksPerMainQuestion;
@@ -194,6 +196,8 @@ public class ValueStoringHelperClass
 		answers = new ArrayList<String>();
 		answerCoords = new ArrayList<ArrayList<Integer>>();
 		
+		mainQuestionsMinMaxY = new ArrayList<ArrayList<Integer>>();
+		
 		currentQuestion = 0;
 		currentAnswer = 0;
 		
@@ -204,6 +208,10 @@ public class ValueStoringHelperClass
 		processHeader(metadataFileHeader);
 		
 		String [] mainQuestions = headerAndBody[1].split("\\{MainQEnd\\}");
+		
+		int pageCounter = 0;
+		int currentMin = Integer.MAX_VALUE;
+		int currentMax = Integer.MIN_VALUE;
 		
 		for (String mainQ : mainQuestions)
 		{
@@ -240,8 +248,29 @@ public class ValueStoringHelperClass
 				temp.add(Integer.parseInt(tempCoords[0].trim()));
 				temp.add(Integer.parseInt(tempCoords[1].trim()));
 				
+				int yStart = Integer.parseInt(tempCoords[0].trim());
+				int yEnd = Integer.parseInt(tempCoords[1].trim());
+				
+				if (yStart < currentMin)
+				{
+					currentMin = yStart;
+				}
+				if (yEnd > currentMax)
+				{
+					currentMax = yEnd;
+				}
+				
 				answerCoords.add(temp);
 			}
+			
+			// Add the answer region per page information
+			ArrayList<Integer> t = new ArrayList<Integer>();
+			t.add(currentMin);
+			t.add(currentMax);
+			
+			mainQuestionsMinMaxY.add(t);
+			
+			pageCounter++;
 		}
 	}
 	
@@ -485,8 +514,13 @@ public class ValueStoringHelperClass
 	private void getAnswerCoordsPerPage()
 	{
 		answerCoordsPerPage = new ArrayList<ArrayList<ArrayList<Integer>>>();
+		mainQuestionRegionsPerPage = new ArrayList<Integer>();
 		ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
 		int prevY = -1;
+		
+		int currentQuestion = 0;
+		int questionMinY = mainQuestionsMinMaxY.get(currentQuestion).get(0);
+		int questionMaxY = mainQuestionsMinMaxY.get(currentQuestion).get(1);
 		
 		for (int i = 0; i < answerCoords.size(); i++)
 		{
