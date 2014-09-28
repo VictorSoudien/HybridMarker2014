@@ -163,11 +163,13 @@ public class ValueStoringHelperClass
 		if (imageBitmap != null)
 		{
 			pageBitmaps.add(imageBitmap);
+			page.delete();
 			return true;
 		}
 		else
 		{
 			// Display an error message
+			page.delete();
 			return false;
 		}
 	}

@@ -480,7 +480,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				{
 					if (previousSObjects.size() == 0)
 					{
-
 						previousSObjects.clear();
 						return;
 					}
