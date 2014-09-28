@@ -370,6 +370,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	{
 		// Reset the scroll view when a new tab is selected
 		scriptScrollView.setScrollY(0);
+		
+		if (previousSObjects != null)
+		{
+			previousSObjects.clear();
+		}
 
 		String pageNum = tab.getText().toString().split(" ")[1];
 		int page = Integer.parseInt(pageNum);
@@ -476,7 +481,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			{
 				// No objects found
 				currentPageScore = 0;
-				if (previousSObjects == null)
+				
+				if (previousSObjects != null)
 				{
 					if (previousSObjects.size() == 0)
 					{
