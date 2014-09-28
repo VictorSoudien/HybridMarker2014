@@ -335,6 +335,7 @@ public class TestScriptBrowserActivity extends Activity {
 		String operationBeingPerformed;
 		
 		private ProgressDialog progressDialog;
+		private boolean downloadSuccess = false;
 		
 		@Override
 		protected Long doInBackground(String... params) 
@@ -344,28 +345,36 @@ public class TestScriptBrowserActivity extends Activity {
 				if (params[0].equalsIgnoreCase("Update Nav Drawer"))
 				{
 					operationBeingPerformed = "Update Nav Drawer";
-					connectToServer();
-					populateNavDrawer();
+					
+					if (connectToServer() == true)
+					{
+						populateNavDrawer();
+					}
 				}
 				if (params[0].equalsIgnoreCase("Update Lists"))
 				{
 					operationBeingPerformed = "Update Lists";
 					
-					connectToServer();
-					populateLists(params[1]);
+					if (connectToServer() == true)
+					{
+						populateLists(params[1]);
+					}
 				}
 				else if (params[0].equalsIgnoreCase("Request File List"))
 				{
 					operationBeingPerformed = "Request File List";
-					
+			
 					connectToServer();
 					//displayToast(executeCommandOnServer(params[1]));
 				}
 				else if (params[0].equalsIgnoreCase("Download Files"))
 				{
 					operationBeingPerformed = "Download Files";
-					connectToServer();
-					downloadFiles(params[1], params[2], params[3]);
+					
+					if (connectToServer() == true)
+					{
+						downloadFiles(params[1], params[2], params[3]);
+					}
 				}	
 			}
 			
@@ -373,7 +382,7 @@ public class TestScriptBrowserActivity extends Activity {
 		}
 		
 		// Connect to the server in order to download the memo content
-		public void connectToServer()
+		public boolean connectToServer()
 		{
 			try
 			{
@@ -386,10 +395,15 @@ public class TestScriptBrowserActivity extends Activity {
 				sshSession.setConfig(connProps);
 				
 				sshSession.connect();
+				
+				return true;
 			}
 			catch (Exception e)
 			{
-				displayToast("Error while connecting to nightmare\n" + e.getMessage());
+				//displayToast("Error while connecting to nightmare\n" + e.getMessage());
+				publishProgress("An error has occured: Please check your network connection");
+				
+				return false;
 			}
 		}
 		
@@ -420,7 +434,8 @@ public class TestScriptBrowserActivity extends Activity {
 			}
 			catch (Exception e)
 			{
-				displayToast("ERROR: Could not execute command ( "  + command + " ) on server\n" + e.getMessage());
+				//displayToast("ERROR: Could not execute command ( "  + command + " ) on server\n" + e.getMessage());
+				publishProgress("An error has occured: Please check your network connection");
 			}
 			
 			return result;
@@ -515,20 +530,24 @@ public class TestScriptBrowserActivity extends Activity {
 				saveDir = pathToSDCard + "/" + "answersPerPage.txt";
 				
 				sftpChannel.get(ansPerPageDir, saveDir);
-				publishProgress("AnswersPerPage Downloaded");
 				
 				valueStore.processMemoText("memo.txt", "answersPerPage.txt");
-				valueStore.setNumPages(numPages);;
+				valueStore.setNumPages(numPages);
+				downloadSuccess = true;
 			}
 			catch (Exception e)
 			{
-				displayToast("Error: Could not download file \n" + e);
+				//displayToast("Error: Could not download file \n" + e);
+				publishProgress("An error has occured: Please check your network connection");
 			}
 		}
 		
 		protected void onProgressUpdate(String... message) 
 		{
-	         //displayToast(message[0]);
+			AlertDialog errorDialog = new AlertDialog.Builder(context)
+		    .setTitle(message[0])
+		    .setPositiveButton("Continue", null)
+		    .show();
 	    }
 		
 		@Override
@@ -576,7 +595,7 @@ public class TestScriptBrowserActivity extends Activity {
 			
 			viewBeingRefreshed = false;
 			
-			if (operationBeingPerformed.equals("Download Files"))
+			if (operationBeingPerformed.equals("Download Files") && (downloadSuccess == true))
 			{
 				Intent pdfViewScreen = new Intent(TestScriptBrowserActivity.this, MainMarkingScreenActivity.class);
 	        	startActivity(pdfViewScreen);
