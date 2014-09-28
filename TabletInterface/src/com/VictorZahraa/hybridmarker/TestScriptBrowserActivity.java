@@ -4,14 +4,9 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.app.AlertDialog.Builder;
-import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,40 +14,23 @@ import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.DrawerLayout.DrawerListener;
-import android.text.Editable;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.os.Build;
-
-import com.VictorZahraa.hybridmarker.LoginHelper.PositiveLoginButtonClicked;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +39,6 @@ import java.util.Properties;
 public class TestScriptBrowserActivity extends Activity {
 
 	private Context context;
-	private Toast toast;
 	private ActionBar actionBar;
 	private TextView instructionText;
 	
@@ -106,8 +83,6 @@ public class TestScriptBrowserActivity extends Activity {
 		valueStore = new ValueStoringHelperClass();
 		
 		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
-		
-		toast = Toast.makeText(context, "initialise", Toast.LENGTH_SHORT); // Initialise the toast but don't display this message
 		
 		//new LoginToServer().execute("username", "password");
 		
@@ -524,7 +499,7 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		protected void onProgressUpdate(String... message) 
 		{
-			AlertDialog errorDialog = new AlertDialog.Builder(context)
+			new AlertDialog.Builder(context)
 		    .setTitle(message[0])
 		    .setPositiveButton("Continue", null)
 		    .show();
