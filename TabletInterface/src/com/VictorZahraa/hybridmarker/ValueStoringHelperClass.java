@@ -213,13 +213,14 @@ public class ValueStoringHelperClass
 	{
 		File memo = new File (pathToSDCard + "/" + memoFilename);
 		File perPageFile = new File (pathToSDCard + "/" + questionsPerPageFilename);
+		BufferedReader buffReader = null;
 
 		StringBuilder textBuilder = new StringBuilder();
 
 		try
 		{
 			// Read in the memo
-			BufferedReader buffReader = new BufferedReader(new FileReader(memo));
+			buffReader = new BufferedReader(new FileReader(memo));
 			String currentLine;
 
 			while ((currentLine = buffReader.readLine()) != null)
@@ -249,6 +250,12 @@ public class ValueStoringHelperClass
 		catch (Exception e)
 		{
 			// HANDLE ERROR
+		}
+		finally
+		{
+			// Delete the text files after use
+			memo.delete();
+			perPageFile.delete();
 		}
 	}
 
