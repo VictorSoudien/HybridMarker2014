@@ -116,20 +116,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
-		
-		
-		
-		new AlertDialog.Builder(context)
-		.setTitle("DB String")
-		.setMessage(valueStore.getResultsInDBFormat())
-		.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) { 
-			}
-		}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				// Do nothing.
-			}
-		}).show();
 	}
 
 	@Override
