@@ -105,11 +105,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			data.add("" + valueStore.getMarksForQuestion(i)); 
 		}
 
-		/*ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-				context, 
-				android.R.layout.simple_list_item_1,
-				data);*/
-
 		markSummary.setAdapter(new CustomListAdapter(context, 0, data));
 
 		/*if (savedInstanceState == null) {
@@ -315,10 +310,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) 
 				{
-					// Return the user to the script browser screen
-					/*Intent scriptUploadScreen = new Intent(ScriptFinalizeAndUploadActivity.this, TestScriptBrowserActivity.class);
-			    	startActivity(scriptUploadScreen);*/
-
 					valueStore.recycleBitmaps();
 
 					// Restart the application
@@ -391,17 +382,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 			questionName.setText("Question " + (position + 1));
 			markArea.setText(data.get(position));
-
-			/*TextView textView = (TextView) rowView.findViewById(R.id.label);
-			ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-			textView.setText(values[position]);
-			// change the icon for Windows and iPhone
-			String s = values[position];
-			if (s.startsWith("iPhone")) {
-				imageView.setImageResource(R.drawable.no);
-			} else {
-				imageView.setImageResource(R.drawable.ok);
-			}*/
 
 			return rowView;
 		}
