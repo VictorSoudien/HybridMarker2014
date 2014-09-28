@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Editable;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
@@ -24,8 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.view.View.OnClickListener;
-
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -159,7 +156,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			.setView(input)
 			.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					Editable value = input.getText();
 					valueStore.setFlagText(input.getText().toString());
 				}
 			}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -212,13 +208,16 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			// Get the path to external storage
 			pathToSDCard = Environment.getExternalStorageDirectory().getPath();
 
-			connectToServer();
-			uploadFiles(params[0]);
+			if (connectToServer() == true)
+			{
+				uploadFiles(params[0]);
+			}
+			
 			return null;
 		}
 
 		// Connect to the server in order to download the memo content
-		public void connectToServer()
+		public boolean connectToServer()
 		{
 			try
 			{
@@ -231,10 +230,13 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				sshSession.setConfig(connProps);
 
 				sshSession.connect();
+				
+				return true;
 			}
 			catch (Exception e)
 			{
-				//displayToast("Error while connecting to nightmare\n" + e.getMessage());
+				publishProgress("An error has occured: Please check your network connection");
+				return false;
 			}
 		}
 
@@ -282,25 +284,12 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				}
 
 				sftpChannel.disconnect();
-
-				//deleteDownloadedFiles();
 			}
 			catch (Exception e)
 			{
-				// Handle the error
-				publishProgress("ERROR\n" + e.getMessage());
+				publishProgress("An error has occured: Please check your network connection");
 			}
 		}
-
-		// Deletes the files that were downloaded
-		/*private void deleteDownloadedFiles()
-		{
-			for (int i = 0; i < valueStore.getNumPage(); i++)
-			{
-				File temp = new File (pathToSDCard + "/page" + (i+1) + ".png");
-				temp.delete();
-			}
-		}*/
 
 		@Override
 		protected void onPreExecute()
