@@ -356,7 +356,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	{
 		// Reset the scroll view when a new tab is selected
 		scriptScrollView.setScrollY(0);
-		
+
 		if (previousSObjects != null)
 		{
 			previousSObjects.clear();
@@ -467,7 +467,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			{
 				// No objects found
 				currentPageScore = 0;
-				
+
 				if (previousSObjects != null)
 				{
 					if (previousSObjects.size() == 0)
@@ -580,30 +580,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				double markToBeAllocated = (undo == true) ? -(tickCount + (0.5 * halfTickCount)): (tickCount + (0.5 * halfTickCount));
 				valueStore.allocateMark((currentPage - 1), (int) medianY, markToBeAllocated);
 
-				//resultString = undo + "";
-				//resultString = "" +(int) avgY;
-				/*resultString = "Ticks " + tickCount + "\n" +
-						"Half Ticks " + halfTickCount + "\n" +
-						"Crosses " + gestureCount.get("x");*/
+				currentPageScore += markToBeAllocated;
 
-				//if (currentMode == GestureMode.NORMAL)
-				{	
-					currentPageScore += markToBeAllocated;
-					
-					// Ensure that the score never goes below 0
-					currentPageScore = (currentPageScore < 0) ? 0 : currentPageScore;
-				}
-				/*else if (currentMode == GestureMode.UNDO)
-				{
-					currentPageScore = tickCount + ((0.5) * halfTickCount);
-
-					if (previousSObjects.size() != 0)
-					{
-						previousSObjects.removeLast();
-					}
-				}*/
-
-				//resultString = "Current Page Mark: " + currentPageScore;
+				// Ensure that the score never goes below 0
+				currentPageScore = (currentPageScore < 0) ? 0 : currentPageScore;
 			}
 		}
 
