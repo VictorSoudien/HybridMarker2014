@@ -240,7 +240,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Load the gesture library from the SD Card
 		if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
 		{
-			displayToast("Custom Gesture Library Loaded");
+			// Gesture data loaded successfully
 		}
 		else // if the file is not found, then load it onto the SD Card
 		{	
