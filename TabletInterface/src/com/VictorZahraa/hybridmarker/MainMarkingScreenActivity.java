@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
 import com.samsung.samm.common.SObject;
 import com.samsung.samm.common.SObjectStroke;
+import com.samsung.samm.common.SObjectText;
 import com.samsung.spen.lib.gesture.SPenGestureInfo;
 import com.samsung.spen.lib.gesture.SPenGestureLibrary;
 import com.samsung.spen.settings.SettingStrokeInfo;
@@ -56,9 +57,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 {
 	private final int PAGE_OFFSET = 200;
 	private enum GestureMode{NORMAL, UNDO};
-	
+
 	private GestureMode currentGestureMode;
-	
+
 	private TextView questionTextView;
 	private TextView answerTextView;
 	private TextView pageMarkTextView;
@@ -86,7 +87,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	// Allows for values to be stored and accessed across activities
 	private ValueStoringHelperClass valueStore;
-	
+
 	// A flag used to check if the bitmaps are being merged
 	private boolean bitmapsBeingMerged;
 
@@ -96,13 +97,13 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_marking_screen);
 		this.setTitle(R.string.app_name);
-		
+
 		context = this;
 
 		valueStore = new ValueStoringHelperClass();
 		currentPage = 1;
 		currentPageScore = 0;
-		
+
 		currentGestureMode = GestureMode.NORMAL;
 		bitmapsBeingMerged = false;
 
@@ -239,7 +240,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	public void loadGestureLibrary()
 	{
 		previousSObjects = new LinkedList<SObject>();
-		
+
 		gestureLib = new SPenGestureLibrary(MainMarkingScreenActivity.this);
 		gestureLib.openSPenGestureEngine();
 
@@ -384,7 +385,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		{
 			initiliseSCanvas();
 		}
-		
+
 		scriptDisplay.setImageBitmap(valueStore.getPage(page));
 
 		ArrayList<String> listData = valueStore.getMemoForPage(page - 1);
@@ -451,19 +452,19 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		private void performGestureRecog(SCanvasView view, GestureMode currentMode)
 		{
 			LinkedList<SObject> sObjects = view.getSObjectList(true);
-			
+
 			ArrayList<Double> yList = new ArrayList<Double>();
 			double medianY = 0;
 
 			// Used to keep track of the amount of each gesture
 			HashMap<String, Integer> gestureCount = new HashMap<String, Integer>();
-			
+
 			boolean atLeastOneProcessed = false;
 			boolean undo = false;
 			int counter = 0;
-			
+
 			boolean doElse = true;
-			
+
 			if ((sObjects == null) || (sObjects.size() <= 0))
 			{
 				// No objects found
@@ -482,10 +483,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			if (doElse == true)
 			{
 				for (SObject objs : sObjects)
-				{
+				{	
 					counter++;
 					yList = new ArrayList<Double>();
-					
+
 					if (currentMode == GestureMode.NORMAL)
 					{
 						// Check whether this sObject has already been processed
@@ -508,11 +509,17 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 						}
 					}
 					
+					// Do not attempt to recognize comments
+					if (objs.getClass().isInstance(new SObjectText()))
+					{
+						continue;
+					}
+
 					atLeastOneProcessed = true;
-					
+
 					PointF [][] currentPoints = new PointF[1][1];
 					currentPoints[0] = ((SObjectStroke) objs).getPoints();
-					
+
 					// Find the average yPosition of the tick
 					for (int i = 0; i < currentPoints[0].length; i++)
 					{
@@ -522,7 +529,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					}
 					Collections.sort(yList);
 					medianY = yList.get(yList.size() / 2);
-					
+
 					ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
 
 					if ((gestureInfo == null) || (gestureInfo.size() <= 0))
@@ -567,16 +574,16 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 				int tickCount = (gestureCount.get("tick") == null) ? 0 : gestureCount.get("tick");
 				int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
-				
+
 				double markToBeAllocated = (undo == true) ? -(tickCount + (0.5 * halfTickCount)): (tickCount + (0.5 * halfTickCount));
 				valueStore.allocateMark((currentPage - 1), (int) medianY, markToBeAllocated);
-				
+
 				//resultString = undo + "";
 				//resultString = "" +(int) avgY;
 				/*resultString = "Ticks " + tickCount + "\n" +
 						"Half Ticks " + halfTickCount + "\n" +
 						"Crosses " + gestureCount.get("x");*/
-				
+
 				//if (currentMode == GestureMode.NORMAL)
 				{	
 					currentPageScore += markToBeAllocated;
@@ -584,13 +591,13 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				/*else if (currentMode == GestureMode.UNDO)
 				{
 					currentPageScore = tickCount + ((0.5) * halfTickCount);
-					
+
 					if (previousSObjects.size() != 0)
 					{
 						previousSObjects.removeLast();
 					}
 				}*/
-				
+
 				//resultString = "Current Page Mark: " + currentPageScore;
 			}
 		}
