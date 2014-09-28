@@ -79,9 +79,10 @@ public class ValueStoringHelperClass
 		return marksPerMainQuestion[questionIndex];
 	}
 	
+	// Returns the marks for the subquestions with the specified main question
 	public String getMarksForSubQuestion(int questionIndex)
 	{
-		String returnVal = "{";
+		String returnVal = "";
 		
 		while (marksPerMainQuestionBeingModified == true)
 		{
@@ -90,13 +91,29 @@ public class ValueStoringHelperClass
 		
 		for (int i = 0; i < subQuestionMarks[questionIndex].length; i++)
 		{
-			returnVal += subQuestionMarks[questionIndex][i] + ",";
+			returnVal += "*" + subQuestionMarks[questionIndex][i];
 		}
 		
-		//returnVal.replace(",$", "");
-		returnVal += "}";
-		
 		return returnVal;
+	}
+	
+	// Return a string representing the test marks as it is to be uploaded to the database
+	public String getResultsInDBFormat()
+	{
+		String resultString = "";
+		
+		while (marksPerMainQuestionBeingModified == true)
+		{
+			// wait
+		}
+		
+		for (int i = 0; i < numMainQuestions; i++)
+		{
+			resultString += "+" + marksPerMainQuestion[i];
+			resultString += getMarksForSubQuestion(i);
+		}
+		
+		return resultString;
 	}
 	
 	public int getNumberOfMainQuestion () {return numMainQuestions;}

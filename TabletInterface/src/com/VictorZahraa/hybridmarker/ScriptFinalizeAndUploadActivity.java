@@ -102,7 +102,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 		
 		for (int i = 0; i < valueStore.getNumberOfMainQuestion(); i++)
 		{
-			data.add("Question " + (i+1) + ": " + valueStore.getMarksForQuestion(i) + "---" + valueStore.getMarksForSubQuestion(i)); 
+			data.add("Question " + (i+1) + ": " + valueStore.getMarksForQuestion(i)); 
 		}
 
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
@@ -116,6 +116,20 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
+		
+		
+		
+		new AlertDialog.Builder(context)
+		.setTitle("DB String")
+		.setMessage(valueStore.getResultsInDBFormat())
+		.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) { 
+			}
+		}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				// Do nothing.
+			}
+		}).show();
 	}
 
 	@Override
