@@ -252,9 +252,18 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				// Rename the directory to the student number
 				sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
 
-				File temp;// = new File (pathToSDCard + "/tempCoverPage.png");
+				File temp;
 				FileOutputStream fileOut;
-				String basePageName = "MarkedPage";
+				String basePageName = "";
+				
+				if (ValueStoringHelperClass.isRemark == true)
+				{
+					basePageName = "ReMarkedPage";
+				}
+				else
+				{
+					basePageName = "MarkedPage";
+				}
 
 				// Subtract 1 because I don't reupload the cover page
 				for (int i = 0; i < valueStore.getNumPage() - 1; i++)
@@ -265,7 +274,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 					Bitmap currentPage = valueStore.getMergedBitmap(i);
 					currentPage.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
 
-
 					String tempUploadDir = baseDirectory + basePageName + (i+2) + ".png";
 					sftpChannel.put(new FileInputStream(temp), tempUploadDir);
 
@@ -275,7 +283,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 				sftpChannel.disconnect();
 
-				deleteDownloadedFiles();
+				//deleteDownloadedFiles();
 			}
 			catch (Exception e)
 			{
@@ -285,14 +293,14 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		}
 
 		// Deletes the files that were downloaded
-		private void deleteDownloadedFiles()
+		/*private void deleteDownloadedFiles()
 		{
 			for (int i = 0; i < valueStore.getNumPage(); i++)
 			{
 				File temp = new File (pathToSDCard + "/page" + (i+1) + ".png");
 				temp.delete();
 			}
-		}
+		}*/
 
 		@Override
 		protected void onPreExecute()

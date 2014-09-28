@@ -483,13 +483,20 @@ public class TestScriptBrowserActivity extends Activity {
 				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
 				int numPages = 0;
 				
+				ValueStoringHelperClass.isRemark = false;
+				
 				valueStore.initPageCollection();
 				
 				for (String file : files)
 				{
 					file = file.trim();
 					
-					if (file.contains(".png"))
+					if (file.contains("Marked"))
+					{
+						ValueStoringHelperClass.isRemark = true;
+					}
+					
+					if (file.startsWith("page") && file.contains(".png"))
 					{
 						String saveDir = pathToSDCard + "/" + file;
 						String fileDir = directory + file;

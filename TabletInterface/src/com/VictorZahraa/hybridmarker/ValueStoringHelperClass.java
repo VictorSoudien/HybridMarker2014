@@ -13,6 +13,9 @@ import java.util.ArrayList;
 
 public class ValueStoringHelperClass 
 {
+	// Used to determine whether or not this is a test that is being remarked
+	public static boolean isRemark = false;
+	
 	private static int numPages;
 	private static double [] scorePerPage;
 	private static int totalMarks;
