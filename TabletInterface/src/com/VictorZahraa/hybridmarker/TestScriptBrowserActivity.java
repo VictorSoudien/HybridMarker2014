@@ -310,23 +310,7 @@ public class TestScriptBrowserActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	// Displays a toast containing the specified message
-	private void displayToast(String message)
-	{
-		if (toast == null)
-		{
-			toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-		}
-		else
-		{
-			toast.setText(message);
-		}
-		
-		toast.show();
-	}
-	
-	
-	
+	// Connect to the server and execute various tasks
 	private class ServerConnect extends AsyncTask<String, String, Long>
 	{
 		JSch jsch;
@@ -365,7 +349,6 @@ public class TestScriptBrowserActivity extends Activity {
 					operationBeingPerformed = "Request File List";
 			
 					connectToServer();
-					//displayToast(executeCommandOnServer(params[1]));
 				}
 				else if (params[0].equalsIgnoreCase("Download Files"))
 				{
@@ -400,7 +383,6 @@ public class TestScriptBrowserActivity extends Activity {
 			}
 			catch (Exception e)
 			{
-				//displayToast("Error while connecting to nightmare\n" + e.getMessage());
 				publishProgress("An error has occured: Please check your network connection");
 				
 				return false;
@@ -434,7 +416,6 @@ public class TestScriptBrowserActivity extends Activity {
 			}
 			catch (Exception e)
 			{
-				//displayToast("ERROR: Could not execute command ( "  + command + " ) on server\n" + e.getMessage());
 				publishProgress("An error has occured: Please check your network connection");
 			}
 			
@@ -537,7 +518,6 @@ public class TestScriptBrowserActivity extends Activity {
 			}
 			catch (Exception e)
 			{
-				//displayToast("Error: Could not download file \n" + e);
 				publishProgress("An error has occured: Please check your network connection");
 			}
 		}
