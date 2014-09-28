@@ -40,6 +40,7 @@ import com.samsung.samm.common.SObjectText;
 import com.samsung.spen.lib.gesture.SPenGestureInfo;
 import com.samsung.spen.lib.gesture.SPenGestureLibrary;
 import com.samsung.spen.settings.SettingStrokeInfo;
+import com.samsung.spen.settings.SettingTextInfo;
 import com.samsung.spensdk.SCanvasConstants;
 import com.samsung.spensdk.SCanvasView;
 import com.samsung.spensdk.applistener.HistoryUpdateListener;
@@ -199,8 +200,14 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				SettingStrokeInfo strokeInfo = new SettingStrokeInfo();
 				strokeInfo.setStrokeColor(Color.RED);
 				strokeInfo.setStrokeWidth(1.0f);
-				sCanvasView.setZoomEnable(false);
 				sCanvasView.setSettingStrokeInfo(strokeInfo);
+				
+				SettingTextInfo textInfo = new SettingTextInfo();
+				textInfo.setTextColor(Color.RED);
+				textInfo.setTextSize(1.0f);
+				sCanvasView.setSettingTextInfo(textInfo);
+				
+				sCanvasView.setZoomEnable(false);
 			}
 		});
 
