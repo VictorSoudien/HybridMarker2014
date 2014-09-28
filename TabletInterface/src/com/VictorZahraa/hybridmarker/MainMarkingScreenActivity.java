@@ -48,6 +48,7 @@ import com.samsung.spensdk.applistener.SCanvasLongPressListener;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -448,7 +449,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		private void performGestureRecog(SCanvasView view, GestureMode currentMode)
 		{
 			LinkedList<SObject> sObjects = view.getSObjectList(true);
-			double avgY = 0;
+			
+			ArrayList<Double> yList = new ArrayList<Double>();
+			double medianY = 0;
 
 			// Used to keep track of the amount of each gesture
 			HashMap<String, Integer> gestureCount = new HashMap<String, Integer>();
@@ -479,7 +482,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				for (SObject objs : sObjects)
 				{
 					counter++;
-					avgY = 0;
+					yList = new ArrayList<Double>();
 					
 					if (currentMode == GestureMode.NORMAL)
 					{
@@ -512,11 +515,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					for (int i = 0; i < currentPoints[0].length; i++)
 					{
 						double p = currentPoints[0][i].y;
-						
-						avgY += p;
+
+						yList.add(p);
 					}
-					
-					avgY /= currentPoints[0].length;
+					Collections.sort(yList);
+					medianY = yList.get(yList.size() / 2);
 					
 					ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
 
@@ -564,7 +567,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
 				
 				double markToBeAllocated = (undo == true) ? -(tickCount + (0.5 * halfTickCount)): (tickCount + (0.5 * halfTickCount));
-				resultString = valueStore.allocateMark((currentPage - 1), (int) avgY, markToBeAllocated);
+				resultString = valueStore.allocateMark((currentPage - 1), (int) medianY, markToBeAllocated);
 				
 				//resultString = undo + "";
 				//resultString = "" +(int) avgY;
