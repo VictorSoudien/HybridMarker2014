@@ -3,6 +3,7 @@ package com.VictorZahraa.hybridmarker;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -77,6 +78,9 @@ public class TestScriptBrowserActivity extends Activity {
 	private ArrayAdapter<String> navDrawArrayAdapter;
 	private ActionBarDrawerToggle drawerToggle;
 	
+	// Used as a flag when files are being downloaded
+	private boolean downloadingFiles;
+	
 	// Stores which item in the drawer is currently selected
 	private String selectedItemInDrawer;
 	
@@ -95,6 +99,8 @@ public class TestScriptBrowserActivity extends Activity {
 		actionBar = this.getActionBar();
 		selectedItemInDrawer = "";
 		viewBeingRefreshed = false;
+		downloadingFiles = false;
+		
 		instructionText = (TextView) findViewById(R.id.instructionText);
 		
 		valueStore = new ValueStoringHelperClass();
@@ -191,6 +197,7 @@ public class TestScriptBrowserActivity extends Activity {
 				valueStore.setCurrentDirectory("Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/");
 				valueStore.setTestName(tempTestName);
 				
+				downloadingFiles = true;
 				new ServerConnect().execute("Download Files", fileDirectory, memoDirectory, ansPerPageDirectory);
 				
 				return false;
@@ -327,6 +334,8 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		String operationBeingPerformed;
 		
+		private ProgressDialog progressDialog;
+		
 		@Override
 		protected Long doInBackground(String... params) 
 		{
@@ -350,7 +359,7 @@ public class TestScriptBrowserActivity extends Activity {
 					operationBeingPerformed = "Request File List";
 					
 					connectToServer();
-					displayToast(executeCommandOnServer(params[1]));
+					//displayToast(executeCommandOnServer(params[1]));
 				}
 				else if (params[0].equalsIgnoreCase("Download Files"))
 				{
@@ -466,7 +475,6 @@ public class TestScriptBrowserActivity extends Activity {
 			try
 			{
 				String filenames = executeCommandOnServer("cd " + directory + " && ls");
-				//displayToast(directory);
 				String [] files = filenames.split("\n");
 				
 				Channel commChannel = sshSession.openChannel("sftp");
@@ -494,8 +502,7 @@ public class TestScriptBrowserActivity extends Activity {
 						
 						sftpChannel.get(fileDir, saveDir);
 						numPages++;
-						boolean saved = valueStore.addPage(numPages);
-						publishProgress(file + " ... File Downloaded   " + saved);
+						valueStore.addPage(numPages);
 					}
 				}
 				
@@ -503,19 +510,15 @@ public class TestScriptBrowserActivity extends Activity {
 				String saveDir = pathToSDCard + "/" + "memo.txt";
 				
 				sftpChannel.get(memoDir, saveDir);
-				//valueStore.setMemoText("memo.txt");
-				publishProgress("Memo Downloaded");
 				
 				// Download the answersPerPageFile for this test
 				saveDir = pathToSDCard + "/" + "answersPerPage.txt";
 				
 				sftpChannel.get(ansPerPageDir, saveDir);
-				//valueStore.setMemoText("ansPerPageDir.txt");
 				publishProgress("AnswersPerPage Downloaded");
 				
 				valueStore.processMemoText("memo.txt", "answersPerPage.txt");
-				valueStore.setNumPages(numPages);
-				//displayToast("Downloaded files from " + directory);
+				valueStore.setNumPages(numPages);;
 			}
 			catch (Exception e)
 			{
@@ -525,16 +528,24 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		protected void onProgressUpdate(String... message) 
 		{
-	         displayToast(message[0]);
+	         //displayToast(message[0]);
 	    }
 		
 		@Override
 		protected void onPreExecute()
 		{
-			// Display visual feedback for loading
-			listUpdateProgressBar.setVisibility(View.VISIBLE);
-			exListView.setBackgroundColor(Color.GRAY);
-			exListView.setEnabled(false);
+			if (downloadingFiles == true)
+			{
+				progressDialog = ProgressDialog.show(TestScriptBrowserActivity.this, "", 
+						"Downloading Script", true);
+			}
+			else
+			{
+				// Display visual feedback for loading
+				listUpdateProgressBar.setVisibility(View.VISIBLE);
+				exListView.setBackgroundColor(Color.GRAY);
+				exListView.setEnabled(false);
+			}
 			
 			viewBeingRefreshed = true;
 		}
@@ -545,9 +556,17 @@ public class TestScriptBrowserActivity extends Activity {
 			exListAdapter = new CustomExpandableListAdapter(context, listHeaders, listItems);
 			exListView.setAdapter(exListAdapter);
 			
-			listUpdateProgressBar.setVisibility(View.INVISIBLE);
-			exListView.setBackgroundColor(Color.WHITE);
-			exListView.setEnabled(true);
+			if (downloadingFiles == true)
+			{
+				downloadingFiles = false;
+				progressDialog.dismiss();
+			}
+			else
+			{
+				listUpdateProgressBar.setVisibility(View.INVISIBLE);
+				exListView.setBackgroundColor(Color.WHITE);
+				exListView.setEnabled(true);
+			}
 			
 			if (operationBeingPerformed.equalsIgnoreCase("Update Nav Drawer"))
 			{
