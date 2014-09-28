@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class ScriptFinalizeAndUploadActivity extends Activity implements OnClickListener {
+public class ScriptFinalizeAndUploadActivity extends Activity {
 
 	private static final int SWIPE_MIN_DISTANCE = 120;
 	private static final int SWIPE_MAX_OFF_PATH = 250;
@@ -327,12 +327,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 		}
 	}
 
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-	}
-
 	// From http://stackoverflow.com/questions/937313/android-basic-gesture-detection
 	class MyGestureDetector extends SimpleOnGestureListener {
 		@Override
@@ -385,15 +379,15 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			
+
 			View rowView = inflater.inflate(R.layout.mark_summary_item, null);
-			
+
 			TextView questionName = (TextView) rowView.findViewById(R.id.questionName);
 			TextView markArea = (TextView) rowView.findViewById(R.id.markArea);
-			
+
 			questionName.setText("Question " + (position + 1));
 			markArea.setText(data.get(position));
-			
+
 			/*TextView textView = (TextView) rowView.findViewById(R.id.label);
 			ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
 			textView.setText(values[position]);

@@ -201,12 +201,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				strokeInfo.setStrokeColor(Color.RED);
 				strokeInfo.setStrokeWidth(1.0f);
 				sCanvasView.setSettingStrokeInfo(strokeInfo);
-				
+
 				SettingTextInfo textInfo = new SettingTextInfo();
 				textInfo.setTextColor(Color.RED);
 				textInfo.setTextSize(1.0f);
 				sCanvasView.setSettingTextInfo(textInfo);
-				
+
 				sCanvasView.setZoomEnable(false);
 			}
 		});
@@ -475,16 +475,20 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			if ((sObjects == null) || (sObjects.size() <= 0))
 			{
 				// No objects found
-				if (previousSObjects.size() == 0)
+				currentPageScore = 0;
+				if (previousSObjects == null)
 				{
-					currentPageScore = 0;
-					previousSObjects.clear();
-					return;
-				}
-				else
-				{
-					undo = true;
-					sObjects.add(previousSObjects.removeLast());
+					if (previousSObjects.size() == 0)
+					{
+
+						previousSObjects.clear();
+						return;
+					}
+					else
+					{
+						undo = true;
+						sObjects.add(previousSObjects.removeLast());
+					}
 				}
 			}
 			if (doElse == true)
@@ -515,7 +519,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 							previousSObjects.add(objs);
 						}
 					}
-					
+
 					// Do not attempt to recognize comments
 					if (objs.getClass().isInstance(new SObjectText()))
 					{
