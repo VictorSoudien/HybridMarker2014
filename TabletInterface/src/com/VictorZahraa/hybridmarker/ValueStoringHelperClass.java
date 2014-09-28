@@ -48,8 +48,9 @@ public class ValueStoringHelperClass
 
 	// Used to store the marks
 	private static double [] marksPerMainQuestion;
-	private static String [] subQuestionMarks;
+	private static double [][] subQuestionMarks;
 	private static int numMainQuestions;
+	private static ArrayList<Integer> numSubQuestions;
 	private static ArrayList<ArrayList<Double>> maxMarks;
 	private static boolean marksPerMainQuestionBeingModified;
 
@@ -67,6 +68,7 @@ public class ValueStoringHelperClass
 
 	public int getTotalMark () {return totalMarks;}
 
+	// Returns the total marks for a questions
 	public double getMarksForQuestion (int questionIndex)
 	{
 		while (marksPerMainQuestionBeingModified == true)
@@ -75,6 +77,26 @@ public class ValueStoringHelperClass
 		}
 		
 		return marksPerMainQuestion[questionIndex];
+	}
+	
+	public String getMarksForSubQuestion(int questionIndex)
+	{
+		String returnVal = "{";
+		
+		while (marksPerMainQuestionBeingModified == true)
+		{
+			// wait
+		}
+		
+		for (int i = 0; i < subQuestionMarks[questionIndex].length; i++)
+		{
+			returnVal += subQuestionMarks[questionIndex][i] + ",";
+		}
+		
+		//returnVal.replace(",$", "");
+		returnVal += "}";
+		
+		return returnVal;
 	}
 	
 	public int getNumberOfMainQuestion () {return numMainQuestions;}
@@ -207,6 +229,9 @@ public class ValueStoringHelperClass
 		answers = new ArrayList<String>();
 		answerCoords = new ArrayList<ArrayList<Integer>>();
 		marksPerMainQuestionBeingModified = false;
+		int tempSubQuestionCount = 0;
+		
+		numSubQuestions = new ArrayList<Integer>();
 
 		currentQuestion = 0;
 		currentAnswer = 0;
@@ -237,7 +262,8 @@ public class ValueStoringHelperClass
 			for (String subQ : subQuestions)
 			{
 				subQ = subQ.trim();
-
+				tempSubQuestionCount++;
+				
 				if (subQ.equals(""))
 				{
 					continue;
@@ -257,9 +283,13 @@ public class ValueStoringHelperClass
 				temp.add(Integer.parseInt(tempCoords[0].trim()));
 				temp.add(Integer.parseInt(tempCoords[1].trim()));
 				temp.add(questionCounter);
+				temp.add(tempSubQuestionCount);
 
 				answerCoords.add(temp);
 			}
+			
+			numSubQuestions.add(tempSubQuestionCount);
+			tempSubQuestionCount = 0;
 		}
 	}
 
@@ -482,7 +512,12 @@ public class ValueStoringHelperClass
 			{
 				getAnswerCoordsPerPage();
 				marksPerMainQuestion = new double[numMainQuestions];
-				subQuestionMarks = new String [numMainQuestions];
+				subQuestionMarks = new double [numMainQuestions][];
+				
+				for (int i = 0; i < numMainQuestions; i++)
+				{
+					subQuestionMarks[i] = new double[numSubQuestions.get(i)];
+				}
 			}
 
 			ArrayList<ArrayList<Integer>> pageCoords = answerCoordsPerPage.get(pageNum);
@@ -499,6 +534,7 @@ public class ValueStoringHelperClass
 				if ((startY <= coord) && (endY >= coord))
 				{
 					marksPerMainQuestion[pageCoords.get(i).get(2) - 1] = marksPerMainQuestion[pageCoords.get(i).get(2) - 1] +  mark;
+					subQuestionMarks[pageCoords.get(i).get(2) - 1][pageCoords.get(i).get(3) - 1] = subQuestionMarks[pageCoords.get(i).get(2) - 1][pageCoords.get(i).get(3) - 1] +  mark;
 					hasBeenAllocated = true;
 					break;
 				}
@@ -521,6 +557,7 @@ public class ValueStoringHelperClass
 			if (hasBeenAllocated == false)
 			{
 				marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] = marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] + mark;
+				subQuestionMarks[pageCoords.get(indexOfNearest).get(2) - 1][pageCoords.get(indexOfNearest).get(3) - 1] = subQuestionMarks[pageCoords.get(indexOfNearest).get(2) - 1][pageCoords.get(indexOfNearest).get(3) - 1] +  mark;
 				hasBeenAllocated = true;
 			}
 

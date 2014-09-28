@@ -102,7 +102,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity implements OnClick
 		
 		for (int i = 0; i < valueStore.getNumberOfMainQuestion(); i++)
 		{
-			data.add("Question " + (i+1) + ": " + valueStore.getMarksForQuestion(i)); 
+			data.add("Question " + (i+1) + ": " + valueStore.getMarksForQuestion(i) + "---" + valueStore.getMarksForSubQuestion(i)); 
 		}
 
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
