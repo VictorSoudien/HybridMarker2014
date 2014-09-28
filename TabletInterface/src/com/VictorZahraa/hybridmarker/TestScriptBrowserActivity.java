@@ -109,7 +109,7 @@ public class TestScriptBrowserActivity extends Activity {
 		{
 			initExpandableListView();
 			initNavDrawer();
-		
+
 			new ServerConnect().execute("Update Nav Drawer");
 		}
 		
@@ -201,7 +201,7 @@ public class TestScriptBrowserActivity extends Activity {
 	// Sets up the navigation drawer
 	private void initNavDrawer()
 	{
-		drawerItems = new String [] {"Item 1", "Destiny", "Infamous", "Killzone", "Assassin's Creed", "Batman"};
+		drawerItems = new String [] {};
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerListView = (ListView) findViewById(R.id.left_drawer);
 		
@@ -235,16 +235,14 @@ public class TestScriptBrowserActivity extends Activity {
 			/** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                //getActionBar().setTitle("Closed");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
                 
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                //getActionBar().setTitle("Open");
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+        		super.onDrawerOpened(drawerView);
+        		invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 		};
 		
