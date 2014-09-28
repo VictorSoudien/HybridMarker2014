@@ -53,6 +53,9 @@ public class ValueStoringHelperClass
 	private static ArrayList<Integer> numSubQuestions;
 	private static ArrayList<ArrayList<Double>> maxMarks;
 	private static boolean marksPerMainQuestionBeingModified;
+	
+	// Stores the text the user entered as part of the complaint about a script
+	private static String scriptFlagText;
 
 	public ValueStoringHelperClass()
 	{
@@ -67,6 +70,9 @@ public class ValueStoringHelperClass
 	public String getTestName () {return nameOfTestBeingMarked;}
 
 	public int getTotalMark () {return totalMarks;}
+	
+	public void setFlagText (String txt) {scriptFlagText = txt;}
+	public String getFlagText () {return scriptFlagText;}
 
 	// Returns the total marks for a questions
 	public double getMarksForQuestion (int questionIndex)
@@ -169,6 +175,7 @@ public class ValueStoringHelperClass
 	{
 		File textFile = new File (pathToSDCard + "/" + filename);
 		StringBuilder textBuilder = new StringBuilder();
+		scriptFlagText = "";
 
 		try
 		{

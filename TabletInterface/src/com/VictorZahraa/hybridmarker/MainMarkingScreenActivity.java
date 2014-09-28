@@ -333,6 +333,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		{
 			// Display the flagging dialog
 			final EditText input = new EditText(context);
+			input.setText(valueStore.getFlagText());
 
 			new AlertDialog.Builder(context)
 			.setTitle("Flag Script")
@@ -340,7 +341,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			.setView(input)
 			.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					Editable value = input.getText(); 
+					//Editable value = input.getText();
+					valueStore.setFlagText(input.getText().toString());
 				}
 			}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
