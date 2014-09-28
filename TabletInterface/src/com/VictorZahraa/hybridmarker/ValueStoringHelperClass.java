@@ -488,7 +488,14 @@ public class ValueStoringHelperClass
 
 	public void setPageScore (int pageIndex, double score)
 	{
-		scorePerPage[pageIndex] = score;
+		if (score < 0)
+		{
+			scorePerPage[pageIndex] = 0;
+		}
+		else
+		{
+			scorePerPage[pageIndex] = score;
+		}
 	}
 
 	public double getPageScore (int pageIndex) {return scorePerPage[pageIndex];}
