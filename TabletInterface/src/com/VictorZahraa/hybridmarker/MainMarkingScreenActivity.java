@@ -150,7 +150,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			}
 		});
 
-		//pageMarkTextView = (TextView) findViewById(R.id.markText);
+		pageMarkTextView = (TextView) findViewById(R.id.markText);
 
 		initTabs();
 		initiliseSCanvas();
@@ -367,7 +367,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		currentPage = page;
 		prevScore = valueStore.getPageScore(currentPage); // Get the previous mark for this page
 
-		//pageMarkTextView.setText("" + valueStore.getPageScore(currentPage));
+		pageMarkTextView.setText("" + valueStore.getPageScore(currentPage));
 
 		if (valueStore.getStoredView(page) != null)
 		{
@@ -567,7 +567,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
 				
 				double markToBeAllocated = (undo == true) ? -(tickCount + (0.5 * halfTickCount)): (tickCount + (0.5 * halfTickCount));
-				resultString = valueStore.allocateMark((currentPage - 1), (int) medianY, markToBeAllocated);
+				valueStore.allocateMark((currentPage - 1), (int) medianY, markToBeAllocated);
 				
 				//resultString = undo + "";
 				//resultString = "" +(int) avgY;
@@ -596,7 +596,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		@Override
 		protected void onPostExecute(Long params)
 		{
-			//pageMarkTextView.setText("" +(prevScore + currentPageScore));
+			pageMarkTextView.setText("" +(prevScore + currentPageScore));
 
 			if (!resultString.equals(""))
 			{
