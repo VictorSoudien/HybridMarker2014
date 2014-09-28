@@ -308,6 +308,15 @@ public class ValueStoringHelperClass
 			numSubQuestions.add(tempSubQuestionCount);
 			tempSubQuestionCount = 0;
 		}
+		
+		getAnswerCoordsPerPage();
+		marksPerMainQuestion = new double[numMainQuestions];
+		subQuestionMarks = new double [numMainQuestions][];
+		
+		for (int i = 0; i < numMainQuestions; i++)
+		{
+			subQuestionMarks[i] = new double[numSubQuestions.get(i)];
+		}
 	}
 
 	// Process the header of the metadata file
