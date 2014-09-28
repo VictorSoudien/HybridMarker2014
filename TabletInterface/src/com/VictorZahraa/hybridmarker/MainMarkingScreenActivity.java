@@ -46,6 +46,7 @@ import com.samsung.spensdk.SCanvasView;
 import com.samsung.spensdk.applistener.HistoryUpdateListener;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 import com.samsung.spensdk.applistener.SCanvasLongPressListener;
+import com.samsung.spensdk.applistener.SObjectSelectListener;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -211,27 +212,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			}
 		});
 
-		sCanvasView.setSCanvasLongPressListener(new SCanvasLongPressListener() {
-
-			@Override
-			public void onLongPressed(float arg0, float arg1) 
-			{
-				displayToast ("Long Press Args");
-			}
-
-			@Override
-			public void onLongPressed() 
-			{
-				displayToast ("Long Press");
-			}
-		});
-
 		sCanvasView.setHistoryUpdateListener(new HistoryUpdateListener() 
 		{	
 			@Override
 			public void onHistoryChanged(boolean arg0, boolean arg1) 
 			{	
-				if (bitmapsBeingMerged == false)
+				if (bitmapsBeingMerged == false && ((sCanvasView.getSelectedSObjectList() == null) || (sCanvasView.getSelectedSObjectList().size() == 0)))
 				{
 					new GestureRecognition().execute(sCanvasView, currentGestureMode);
 				}
@@ -519,7 +505,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 								continue;
 							}
 						}
-						else
+						else if (undo == false)
 						{
 							previousSObjects.add(objs);
 						}
@@ -603,6 +589,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				//if (currentMode == GestureMode.NORMAL)
 				{	
 					currentPageScore += markToBeAllocated;
+					
+					// Ensure that the score never goes below 0
+					currentPageScore = (currentPageScore < 0) ? 0 : currentPageScore;
 				}
 				/*else if (currentMode == GestureMode.UNDO)
 				{
@@ -621,7 +610,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		@Override
 		protected void onPostExecute(Long params)
 		{
-			pageMarkTextView.setText("" +(prevScore + currentPageScore));
+			pageMarkTextView.setText(/*"" +(prevScore + currentPageScore)*/"" + currentPageScore);
 
 			if (!resultString.equals(""))
 			{
