@@ -19,7 +19,6 @@ import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,9 +44,6 @@ import com.samsung.spensdk.SCanvasConstants;
 import com.samsung.spensdk.SCanvasView;
 import com.samsung.spensdk.applistener.HistoryUpdateListener;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
-import com.samsung.spensdk.applistener.SCanvasLongPressListener;
-import com.samsung.spensdk.applistener.SObjectSelectListener;
-
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -62,8 +58,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	private GestureMode currentGestureMode;
 
-	private TextView questionTextView;
-	private TextView answerTextView;
 	private TextView pageMarkTextView;
 	private ScrollViewHelper scriptScrollView;
 	private ImageView scriptDisplay;
@@ -127,12 +121,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Scale the image so that it fills the display area
 		scriptDisplay.setScaleX(1.05f);
 		scriptDisplay.setScaleY(1.05f);
-
-		//questionTextView = (TextView) findViewById(R.id.questionText);
-		//questionTextView.setText(valueStore.getNextQuestion());
-
-		//answerTextView = (TextView) findViewById(R.id.answerText);
-		//answerTextView.setText(valueStore.getNextAnswer());
 
 		ArrayList<String> data = valueStore.getMemoForPage(0);
 
@@ -267,23 +255,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 			if(gestureLib.loadUserSPenGestureData(pathToSDCard + "/marking_gesture_data.dat"))
 			{
-				displayToast("Custom Gesture Library Loaded");
+				//displayToast("Custom Gesture Library Loaded");
 			}
 		}
-	}
-
-	// Display the next question
-	public void nextQuestionAndAnswer(View view)
-	{
-		//questionTextView.setText(valueStore.getNextQuestion());
-		//answerTextView.setText(valueStore.getNextAnswer());
-	}
-
-	// Display the previous question
-	public void prevQuestionAndAnswer(View view)
-	{
-		//questionTextView.setText(valueStore.getPreviousQuestion());
-		//answerTextView.setText(valueStore.getPreviousAnswer());
 	}
 
 	@Override
@@ -335,7 +309,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			.setView(input)
 			.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					//Editable value = input.getText();
 					valueStore.setFlagText(input.getText().toString());
 				}
 			}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -372,10 +345,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 		if (valueStore.getStoredView(page) != null)
 		{
-			/*sCanvasContainer.removeAllViews();
-			sCanvasView = valueStore.getStoredView(page);
-			sCanvasContainer.addView(sCanvasView);
-			sCanvasView.refreshDrawableState();*/
 			sCanvasView.clearScreen();
 			sCanvasView.setData(valueStore.getDrawingData(page));
 		}
@@ -399,7 +368,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		}
 		else
 		{
-			displayToast("An error occured while trying to recover the memo for this page");
+			new AlertDialog.Builder(context)
+		    .setTitle("Unable to retrieve memo for this page. Please report this issue to your network admin.")
+		    .setPositiveButton("Continue", null)
+		    .show();
 		}
 	}
 
@@ -434,8 +406,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	private class GestureRecognition extends AsyncTask<Object, String, Long>
 	{
-		String resultString = "";
-
 		@Override
 		protected Long doInBackground(Object... params)
 		{
@@ -590,12 +560,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		@Override
 		protected void onPostExecute(Long params)
 		{
-			pageMarkTextView.setText(/*"" +(prevScore + currentPageScore)*/"" + currentPageScore);
-
-			if (!resultString.equals(""))
-			{
-				displayToast(resultString);
-			}
+			pageMarkTextView.setText("" + currentPageScore);
 		}
 	}
 
