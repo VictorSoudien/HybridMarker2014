@@ -37,7 +37,7 @@ import java.util.Properties;
 
 public class ScriptFinalizeAndUploadActivity extends Activity {
 
-	private static final int SWIPE_MIN_DISTANCE = 120;
+	private static final int SWIPE_MIN_DISTANCE = 50;
 	private static final int SWIPE_MAX_OFF_PATH = 250;
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 	private GestureDetector gestureDetector;
