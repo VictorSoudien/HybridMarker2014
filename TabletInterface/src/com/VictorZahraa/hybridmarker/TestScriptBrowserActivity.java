@@ -284,18 +284,11 @@ public class TestScriptBrowserActivity extends Activity {
 		
 		if (drawerToggle.onOptionsItemSelected(item))
 		{
-
 			return true;
 		}
-		
 		if (id == R.id.action_settings) 
 		{
 			return true;
-		}
-		else if (id == R.id.action_mark_pdf)
-		{
-			Intent pdfViewScreen = new Intent(TestScriptBrowserActivity.this, MainMarkingScreenActivity.class);
-        	startActivity(pdfViewScreen);
 		}
 		else if ((id == R.id.action_refresh)  && (viewBeingRefreshed == false))
 		{

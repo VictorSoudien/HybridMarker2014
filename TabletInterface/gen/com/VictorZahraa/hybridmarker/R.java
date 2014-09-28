@@ -44,8 +44,7 @@ public final class R {
     public static final class id {
         public static final int action_add_comment=0x7f09002c;
         public static final int action_flag_script=0x7f09002e;
-        public static final int action_mark_pdf=0x7f090033;
-        public static final int action_refresh=0x7f090034;
+        public static final int action_refresh=0x7f090033;
         public static final int action_settings=0x7f09002a;
         public static final int action_undo=0x7f09002b;
         public static final int action_upload_script=0x7f09002d;
