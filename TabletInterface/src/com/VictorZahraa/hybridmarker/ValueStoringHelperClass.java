@@ -540,12 +540,22 @@ public class ValueStoringHelperClass
 		return mergedBitmaps.get(index);
 	}
 
+	// Free up memory used by all bitmaps
 	public void recycleBitmaps()
 	{
 		for (Bitmap b : pageBitmaps)
 		{
 			b.recycle();
 		}
+		for (Bitmap bitmap : mergedBitmaps)
+		{
+			bitmap.recycle();
+		}
+	}
+	
+	// Only frees up memory used by merged bitmaps
+	public void recycleMergedBitmaps()
+	{
 		for (Bitmap bitmap : mergedBitmaps)
 		{
 			bitmap.recycle();

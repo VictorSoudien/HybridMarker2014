@@ -120,6 +120,13 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
 	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		// Handle the pressing of the 'physical' back button
+		// Do nothing
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
