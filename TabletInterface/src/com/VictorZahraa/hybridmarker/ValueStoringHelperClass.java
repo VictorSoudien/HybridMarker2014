@@ -476,9 +476,7 @@ public class ValueStoringHelperClass
 		synchronized (this)
 		{
 			marksPerMainQuestionBeingModified = true;
-			double scaling_factor = 0.83;//0.77;
-
-			//String coordsCompared = "";
+			double scaling_factor = 0.83;
 
 			if (marksPerMainQuestion == null)
 			{
@@ -493,8 +491,6 @@ public class ValueStoringHelperClass
 			int minDiff = Integer.MAX_VALUE;
 			int indexOfNearest = -1;
 
-			String sum = "";
-
 			for (int i = 0; i < pageCoords.size(); i++)
 			{
 				int startY = (int) (pageCoords.get(i).get(0) * scaling_factor);
@@ -503,11 +499,8 @@ public class ValueStoringHelperClass
 				if ((startY <= coord) && (endY >= coord))
 				{
 					marksPerMainQuestion[pageCoords.get(i).get(2) - 1] = marksPerMainQuestion[pageCoords.get(i).get(2) - 1] +  mark;
-					//sum = pageCoords.get(i).get(2) - 1 + "";
 					hasBeenAllocated = true;
 					break;
-					//return marksPerMainQuestion+ "";
-					//return "Mark allocated to question " + i;
 				}
 				else
 				{
@@ -528,19 +521,11 @@ public class ValueStoringHelperClass
 			if (hasBeenAllocated == false)
 			{
 				marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] = marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] + mark;
-				//sum = pageCoords.get(indexOfNearest).get(2) - 1 + "";
 				hasBeenAllocated = true;
 			}
 
-			for (double n : marksPerMainQuestion)
-			{
-				sum += n + " ";
-			}
-
 			marksPerMainQuestionBeingModified = false;
-			return sum;
-			
-			//return "Mark not allocated";
+			return "ALLOCATED";
 		}
 	}
 
