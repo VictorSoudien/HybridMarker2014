@@ -51,6 +51,7 @@ public class ValueStoringHelperClass
 	private static String [] subQuestionMarks;
 	private static int numMainQuestions;
 	private static ArrayList<ArrayList<Double>> maxMarks;
+	private static boolean marksPerMainQuestionBeingModified;
 
 	public ValueStoringHelperClass()
 	{
@@ -66,7 +67,16 @@ public class ValueStoringHelperClass
 
 	public int getTotalMark () {return totalMarks;}
 
-	public double getMarksForQuestion (int questionIndex){return marksPerMainQuestion[questionIndex];}
+	public double getMarksForQuestion (int questionIndex)
+	{
+		while (marksPerMainQuestionBeingModified == true)
+		{
+			// wait
+		}
+		
+		return marksPerMainQuestion[questionIndex];
+	}
+	
 	public int getNumberOfMainQuestion () {return numMainQuestions;}
 
 	public double getSumOfPageScores ()
@@ -196,6 +206,7 @@ public class ValueStoringHelperClass
 		questions = new ArrayList<String>();
 		answers = new ArrayList<String>();
 		answerCoords = new ArrayList<ArrayList<Integer>>();
+		marksPerMainQuestionBeingModified = false;
 
 		currentQuestion = 0;
 		currentAnswer = 0;
@@ -461,8 +472,10 @@ public class ValueStoringHelperClass
 	// Allocates marks to the appropriate question
 	public String allocateMark (int pageNum, int coord, double mark)
 	{
+		// Ensures that only one thread executes this code at a time
 		synchronized (this)
 		{
+			marksPerMainQuestionBeingModified = true;
 			double scaling_factor = 0.83;//0.77;
 
 			//String coordsCompared = "";
@@ -489,8 +502,8 @@ public class ValueStoringHelperClass
 
 				if ((startY <= coord) && (endY >= coord))
 				{
-					marksPerMainQuestion[pageCoords.get(i).get(2) - 1] += mark;
-					sum = pageCoords.get(i).get(2) - 1 + "";
+					marksPerMainQuestion[pageCoords.get(i).get(2) - 1] = marksPerMainQuestion[pageCoords.get(i).get(2) - 1] +  mark;
+					//sum = pageCoords.get(i).get(2) - 1 + "";
 					hasBeenAllocated = true;
 					break;
 					//return marksPerMainQuestion+ "";
@@ -508,18 +521,19 @@ public class ValueStoringHelperClass
 			// Ensure that every tick is counted
 			if (hasBeenAllocated == false)
 			{
-				marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] += mark;
-				sum = pageCoords.get(indexOfNearest).get(2) - 1 + "";
+				marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] = marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] + mark;
+				//sum = pageCoords.get(indexOfNearest).get(2) - 1 + "";
 				hasBeenAllocated = true;
 			}
 
-			/*for (double n : marksPerMainQuestion)
-		{
-			sum += n + " ";
-		}*/
+			for (double n : marksPerMainQuestion)
+			{
+				sum += n + " ";
+			}
 
-			return hasBeenAllocated + "";
-
+			marksPerMainQuestionBeingModified = false;
+			return sum;
+			
 			//return "Mark not allocated";
 		}
 	}
@@ -537,7 +551,7 @@ public class ValueStoringHelperClass
 
 			if (currentY < prevY)
 			{
-				answerCoordsPerPage.add(temp);
+				answerCoordsPerPage.add((ArrayList<ArrayList<Integer>>) temp.clone());
 				temp = new ArrayList<ArrayList<Integer>>();
 				temp.add(answerCoords.get(i));
 			}

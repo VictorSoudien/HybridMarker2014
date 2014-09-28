@@ -85,6 +85,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	// Allows for values to be stored and accessed across activities
 	private ValueStoringHelperClass valueStore;
+	
+	// A flag used to check if the bitmaps are being merged
+	private boolean bitmapsBeingMerged;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -100,6 +103,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		currentPageScore = 0;
 		
 		currentGestureMode = GestureMode.NORMAL;
+		bitmapsBeingMerged = false;
 
 		// Get the path to external storage
 		pathToSDCard = Environment.getExternalStorageDirectory().getPath();
@@ -218,7 +222,11 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			@Override
 			public void onHistoryChanged(boolean arg0, boolean arg1) 
 			{	
-				new GestureRecognition().execute(sCanvasView, currentGestureMode);
+				if (bitmapsBeingMerged == false)
+				{
+					new GestureRecognition().execute(sCanvasView, currentGestureMode);
+				}
+				//else do nothing
 			}
 		});
 
@@ -471,6 +479,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				for (SObject objs : sObjects)
 				{
 					counter++;
+					avgY = 0;
 					
 					if (currentMode == GestureMode.NORMAL)
 					{
@@ -661,6 +670,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		@Override
 		protected void onPreExecute()
 		{
+			bitmapsBeingMerged = true;
 			progressDialog = ProgressDialog.show(MainMarkingScreenActivity.this, "", 
 					"Preparing Files...", true);
 		}
@@ -668,6 +678,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		@Override
 		protected void onPostExecute(Long params)
 		{
+			bitmapsBeingMerged = false;
 			progressDialog.dismiss();
 
 			Intent scriptUploadScreen = new Intent(MainMarkingScreenActivity.this, ScriptFinalizeAndUploadActivity.class);
