@@ -568,6 +568,17 @@ public class ValueStoringHelperClass
 				{
 					marksPerMainQuestion[pageCoords.get(i).get(2) - 1] = marksPerMainQuestion[pageCoords.get(i).get(2) - 1] +  mark;
 					subQuestionMarks[pageCoords.get(i).get(2) - 1][pageCoords.get(i).get(3) - 1] = subQuestionMarks[pageCoords.get(i).get(2) - 1][pageCoords.get(i).get(3) - 1] +  mark;
+					
+					// Prevent scores from going below 0
+					if (marksPerMainQuestion[pageCoords.get(i).get(2) - 1] < 0)
+					{
+						marksPerMainQuestion[pageCoords.get(i).get(2) - 1] = 0;
+					}
+					if (subQuestionMarks[pageCoords.get(i).get(2) - 1][pageCoords.get(i).get(3) - 1] < 0)
+					{
+						subQuestionMarks[pageCoords.get(i).get(2) - 1][pageCoords.get(i).get(3) - 1] = 0;
+					}
+							
 					hasBeenAllocated = true;
 					break;
 				}
@@ -591,6 +602,17 @@ public class ValueStoringHelperClass
 			{
 				marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] = marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] + mark;
 				subQuestionMarks[pageCoords.get(indexOfNearest).get(2) - 1][pageCoords.get(indexOfNearest).get(3) - 1] = subQuestionMarks[pageCoords.get(indexOfNearest).get(2) - 1][pageCoords.get(indexOfNearest).get(3) - 1] +  mark;
+				
+				// Prevent scores from going below 0
+				if (marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] < 0)
+				{
+					marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] = 0;
+				}
+				if (subQuestionMarks[pageCoords.get(indexOfNearest).get(2) - 1][pageCoords.get(indexOfNearest).get(3) - 1] < 0)
+				{
+					subQuestionMarks[pageCoords.get(indexOfNearest).get(2) - 1][pageCoords.get(indexOfNearest).get(3) - 1] = 0;
+				}
+				
 				hasBeenAllocated = true;
 			}
 
