@@ -56,6 +56,7 @@ public class ValueStoringHelperClass
 	
 	// Stores the text the user entered as part of the complaint about a script
 	private static String scriptFlagText;
+	private static boolean scriptFlagged;
 
 	public ValueStoringHelperClass()
 	{
@@ -71,8 +72,10 @@ public class ValueStoringHelperClass
 
 	public int getTotalMark () {return totalMarks;}
 	
-	public void setFlagText (String txt) {scriptFlagText = txt;}
+	public void setFlagText (String txt) {scriptFlagText = txt; scriptFlagged = !(scriptFlagText.equals(""));}
 	public String getFlagText () {return scriptFlagText;}
+	
+	public boolean isScriptFlagged () {return scriptFlagged;}
 
 	// Returns the total marks for a questions
 	public double getMarksForQuestion (int questionIndex)
@@ -176,6 +179,7 @@ public class ValueStoringHelperClass
 		File textFile = new File (pathToSDCard + "/" + filename);
 		StringBuilder textBuilder = new StringBuilder();
 		scriptFlagText = "";
+		scriptFlagged = false;
 
 		try
 		{
