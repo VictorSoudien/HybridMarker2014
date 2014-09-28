@@ -511,8 +511,14 @@ public class ValueStoringHelperClass
 				}
 				else
 				{
-					if ((Math.abs(coord - startY) < minDiff) || (Math.abs(coord) - endY) < minDiff)
+					if (Math.abs(coord - startY) < minDiff)
 					{
+						minDiff = Math.abs(coord - startY);
+						indexOfNearest = i;
+					}
+					else if (Math.abs(coord - endY) < minDiff)
+					{
+						minDiff = Math.abs(coord - endY);
 						indexOfNearest = i;
 					}
 				}
