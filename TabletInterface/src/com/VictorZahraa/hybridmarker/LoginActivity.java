@@ -13,11 +13,17 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class LoginActivity extends Activity {
 
@@ -35,7 +41,7 @@ public class LoginActivity extends Activity {
 		deadlineCal = (CalendarView) findViewById(R.id.deadline_calendar);
 		deadlineCal.setFirstDayOfWeek(Calendar.MONDAY);
 
-		AsyncTask<String, Integer, String> s = new PHPCommunication().execute("username", "password");
+		AsyncTask<String, Integer, String> s = new PHPCommunication().execute("ADMINS001", "hello");
 		
 		try {
 			String result = s.get();
@@ -90,29 +96,23 @@ public class LoginActivity extends Activity {
 		
 		public String loginToServer(String username, String password)
 		{
-			String link = "http://people.cs.uct.ac.za/~vsoudien/login.php";
+			String link = "http://people.cs.uct.ac.za/~vsoudien/Test/loginCheck.php?q=";
 			
 			try
-			{
-				String data  = URLEncoder.encode("operation", "UTF-8") + "=" + URLEncoder.encode("select", "UTF-8");
-				data += "&" + URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
-	            data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
+			{	
+				link += username + "+" + password;
 				
-				//String data  = URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode("Victor", "UTF-8");
-	            
-	            URL url = new URL(link);
-	            URLConnection urlConn = url.openConnection();
-	            urlConn.setDoOutput(true);
-	            
-	            OutputStreamWriter outWriter = new OutputStreamWriter(urlConn.getOutputStream()); 
-	            outWriter.write(data); 
-	            outWriter.flush();
-	            
-	            BufferedReader reader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-                String result = "";
+				HttpClient client = new DefaultHttpClient();
+				HttpGet request = new HttpGet();
+				request.setURI(new URI(link));
+				
+				HttpResponse response = client.execute(request);
+				BufferedReader in = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
+				
+				String result = "";
                 String line = null;
                 // Read Server Response
-                while((line = reader.readLine()) != null)
+                while((line = in.readLine()) != null)
                 {
                    result += line;
                    break;
