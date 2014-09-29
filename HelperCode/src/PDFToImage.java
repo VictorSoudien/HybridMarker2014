@@ -60,7 +60,7 @@ public class PDFToImage
 	
 	public static void main (String [] args)
 	{
-		PDFToImage toImage = new PDFToImage("reducedClear.pdf");
+		PDFToImage toImage = new PDFToImage("clear.pdf");
 		toImage.convertToImages();
 	}
 }
