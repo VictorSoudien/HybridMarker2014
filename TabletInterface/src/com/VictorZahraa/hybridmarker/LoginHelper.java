@@ -62,7 +62,7 @@ public class LoginHelper
 				try
 				{
 					String response = new PHPCommunication().execute("Login", username, password).get();
-					response  = "1"; // REMOVE AFTER TESTING
+					
 					if (response.equals("1"))
 					{
 						ValueStoringHelperClass.loggedIn = true;
@@ -110,7 +110,7 @@ public class LoginHelper
 
 			public String loginToServer(String username, String password)
 			{
-				String link = R.string.base_URL + "/loginCheck.php?q=";
+				String link = callingActivity.getText(R.string.base_URL) + "/loginCheck.php?q=";
 
 				try
 				{	
@@ -137,7 +137,7 @@ public class LoginHelper
 				catch (Exception e)
 				{
 					// Handle exception
-					return "Please check your internet connection";
+					return e.getMessage();//"Please check your internet connection";
 				}
 			}
 		}
