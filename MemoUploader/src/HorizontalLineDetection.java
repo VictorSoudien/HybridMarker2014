@@ -114,6 +114,32 @@ public class HorizontalLineDetection
 
 			prevY = yPositions.get(iter);
 		}
+		
+		///////////////////////////// WRITE TO A FILE
+		/*BufferedImage imageToProcess = null;
+		
+		try
+		{
+			File input = new File(filename);
+			imageToProcess = ImageIO.read(input);
+		}
+		catch (Exception e)
+		{
+			System.out.println ("Unable to open file: " + filename);
+		}*/
+	try
+	{
+		byte[] data1 = new byte[inputImage.rows()*inputImage.cols()*(int)(inputImage.elemSize())];
+		inputImage.get(0, 0, data1);
+		BufferedImage image1=new BufferedImage(inputImage.cols(),inputImage.rows()
+	      ,imageToProcess.getType());
+	      image1.getRaster().setDataElements(0,0,inputImage.cols(),inputImage.rows(),data1);
+	
+	      File ouptut = new File("grayscale.jpg");
+	      ImageIO.write(image1, "jpg", ouptut);
+	}catch (Exception e) {
+	       System.out.println("Error: " + e.getMessage());
+	     }
 
 		return regions;
 	}
