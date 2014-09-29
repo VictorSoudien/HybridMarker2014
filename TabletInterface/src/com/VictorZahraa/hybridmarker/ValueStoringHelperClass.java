@@ -658,6 +658,7 @@ public class ValueStoringHelperClass
 	}
 
 	// Gets the answer Coords per page
+	@SuppressWarnings("unchecked")
 	private void getAnswerCoordsPerPage()
 	{
 		answerCoordsPerPage = new ArrayList<ArrayList<ArrayList<Integer>>>();
