@@ -16,6 +16,9 @@ public class ValueStoringHelperClass
 	// Used to determine whether or not this is a test that is being remarked
 	public static boolean isRemark = false;
 	
+	public static boolean loggedIn = false;
+	public static String USERNAME;
+	
 	private static int numPages;
 	private static double [] scorePerPage;
 	private static int totalMarks;

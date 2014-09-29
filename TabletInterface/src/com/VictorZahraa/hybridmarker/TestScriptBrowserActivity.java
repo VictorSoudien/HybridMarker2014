@@ -3,6 +3,7 @@ package com.VictorZahraa.hybridmarker;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,11 +15,13 @@ import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -31,11 +34,19 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class TestScriptBrowserActivity extends Activity {
 
@@ -79,6 +90,12 @@ public class TestScriptBrowserActivity extends Activity {
 		viewBeingRefreshed = false;
 		downloadingFiles = false;
 		
+		if (valueStore.loggedIn == false)
+		{
+			// Ask the user to login
+			userLogin();
+		}
+		
 		instructionText = (TextView) findViewById(R.id.instructionText);
 		
 		valueStore = new ValueStoringHelperClass();
@@ -116,10 +133,10 @@ public class TestScriptBrowserActivity extends Activity {
 		startActivity(intent);
 	}
 	
-	// Displays the login dialog
-	/*private boolean login()
+	// Presents the user with the login dialog and handles other login activities
+	private void userLogin()
 	{
-		final boolean returnValue = true;
+		//final boolean returnValue = true;
 		
 		LayoutInflater inflater = this.getLayoutInflater();
 		
@@ -142,8 +159,8 @@ public class TestScriptBrowserActivity extends Activity {
 		Button negativeButton = loginDialog.getButton(Dialog.BUTTON_NEGATIVE);
 		negativeButton.setOnClickListener(new LoginHelper.NegativeButtonClicked(this));
 		
-		return returnValue;
-	}*/
+		//return returnValue;
+	}
 	
 	// Sets up the expandable list view used to display tests for each course
 	private void initExpandableListView()
