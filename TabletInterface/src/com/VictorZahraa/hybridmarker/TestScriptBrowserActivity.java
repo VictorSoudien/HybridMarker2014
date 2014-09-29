@@ -471,7 +471,11 @@ public class TestScriptBrowserActivity extends Activity {
 				// Populate the sublist for this category
 				for (String script : scripts)
 				{
-					temp.add(script);
+					// Do not show the metadata files to the user
+					if (script.endsWith(".txt") == false)
+					{
+						temp.add(script);
+					}
 				}
 
 				listItems.put(testName, temp);
@@ -509,7 +513,8 @@ public class TestScriptBrowserActivity extends Activity {
 				{
 					file = file.trim();
 
-					if (file.contains("Marked"))
+					// Ignore previously marked image files
+					if (file.contains("Marked") || file.contains("saved"))
 					{
 						ValueStoringHelperClass.isRemark = true;
 					}

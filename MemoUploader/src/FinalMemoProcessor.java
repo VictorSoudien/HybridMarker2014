@@ -169,6 +169,8 @@ public class FinalMemoProcessor
 				String tempStudentText = txtStripper.getText(blankPDF);
 				getMemoTextPerPage(tempText, tempStudentText, txtStripper.getLineSeparator(), (i == memoPDF.getNumberOfPages()));
 			}
+			
+			//System.out.println (studentScriptText);
 
 			// Process the entire document
 			processMemoText(docText, studentScriptText, txtStripper.getLineSeparator(), true);
@@ -286,21 +288,25 @@ public class FinalMemoProcessor
 
 			if ((currentLine.indexOf("Question") == 0) || (currentLine.indexOf("question") == 0))
 			{
-				mainQuestionIndex.add(subQuestions.size());
-				mainQuestions.add(currentLine.replaceAll("[ ]+", " "));
-
-				// Anything before this can be assumed to be additional information e.g. page numbers
-				tempSection = "";
-
-				if (!subTotalMarks.equals("{"))
+				// Ensure that this is a main question heading
+				if (currentLine.indexOf("[") != -1)
 				{
-					outputHeader += subTotalMarks + "}\n";
-					subTotalMarks = "{";
+					mainQuestionIndex.add(subQuestions.size());
+					mainQuestions.add(currentLine.replaceAll("[ ]+", " "));
+	
+					// Anything before this can be assumed to be additional information e.g. page numbers
+					tempSection = "";
+	
+					if (!subTotalMarks.equals("{"))
+					{
+						outputHeader += subTotalMarks + "}\n";
+						subTotalMarks = "{";
+					}
+	
+					// Make sure there are only single spaces in the text
+					outputHeader += currentLine.replaceAll("[ ]+", " ");
+					continue;
 				}
-
-				// Make sure there are only single spaces in the text
-				outputHeader += currentLine.replaceAll("[ ]+", " ");
-				continue;
 			}
 			else if (inAnswerSection == true)
 			{
