@@ -1,9 +1,12 @@
 package com.VictorZahraa.hybridmarker;
 
+import java.util.ArrayList;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ProfilePopUpHelper 
@@ -23,14 +26,23 @@ public class ProfilePopUpHelper
 	private void showPopUp()
 	{			
 		final View loginView = inflater.inflate(R.layout.profile_popup_layout, null);
-		final ListView messageDisplay = (ListView) loginView.findViewById(R.id.loginMessageDisplay);
-		//messageDisplay.setVisibility(View.INVISIBLE);
+		final ListView optionsList = (ListView) loginView.findViewById(R.id.optionsList);
 		
-		AlertDialog loginDialog = new AlertDialog.Builder(callerContext)
+		ArrayList<String> options = new ArrayList<String>();
+		options.add("Train Gesture Recognition");
+		options.add("Logout");
+		
+		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+				callerContext, 
+				android.R.layout.simple_list_item_1,
+				options);
+
+		optionsList.setAdapter(arrayAdapter);
+		
+		AlertDialog optionsDialog = new AlertDialog.Builder(callerContext)
 		.setTitle("User Options - " + ValueStoringHelperClass.USERNAME)
 		.setView(loginView)
-		.setPositiveButton("Log In", null)
-		.setNegativeButton("Exit", null)
+		.setPositiveButton("Back", null)
 		.show();
 	}
 }
