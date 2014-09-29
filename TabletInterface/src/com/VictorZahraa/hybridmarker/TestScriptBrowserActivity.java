@@ -326,6 +326,10 @@ public class TestScriptBrowserActivity extends Activity {
 				new ServerConnect().execute("Update Lists", selectedItemInDrawer);
 			}
 		}
+		else if (id == R.id.user_display)
+		{
+			new ProfilePopUpHelper(context, this.getLayoutInflater());
+		}
 		return super.onOptionsItemSelected(item);
 	}
 

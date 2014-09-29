@@ -43,49 +43,50 @@ public final class R {
         public static final int warlock=0x7f020012;
     }
     public static final class id {
-        public static final int action_add_comment=0x7f09002c;
-        public static final int action_flag_script=0x7f09002e;
-        public static final int action_refresh=0x7f090033;
-        public static final int action_settings=0x7f09002a;
-        public static final int action_undo=0x7f09002b;
-        public static final int action_upload_script=0x7f09002d;
+        public static final int action_add_comment=0x7f09002d;
+        public static final int action_flag_script=0x7f09002f;
+        public static final int action_refresh=0x7f090034;
+        public static final int action_settings=0x7f09002b;
+        public static final int action_undo=0x7f09002c;
+        public static final int action_upload_script=0x7f09002e;
         public static final int answerText=0x7f09000f;
         public static final int answerTextScrollView=0x7f09000e;
         public static final int button_recog_gesture=0x7f09000b;
         public static final int canvasAnchorPoint=0x7f090007;
         public static final int canvas_container=0x7f09000a;
         public static final int container=0x7f090000;
-        public static final int content_frame=0x7f090024;
+        public static final int content_frame=0x7f090025;
         public static final int deadline_calendar=0x7f090002;
-        public static final int drawer_layout=0x7f090023;
+        public static final int drawer_layout=0x7f090024;
         public static final int imageView1=0x7f09000d;
-        public static final int instructionText=0x7f090027;
+        public static final int instructionText=0x7f090028;
         public static final int instruction_enter_student_number_text_view=0x7f090013;
-        public static final int left_drawer=0x7f090029;
+        public static final int left_drawer=0x7f09002a;
         public static final int listHeader=0x7f09001b;
         public static final int listItem=0x7f09001c;
-        public static final int list_update_progress_bar=0x7f090028;
+        public static final int list_update_progress_bar=0x7f090029;
         public static final int loginMessageDisplay=0x7f09001f;
         public static final int markArea=0x7f090021;
         public static final int markText=0x7f090003;
         public static final int markingScreenCanvasContainer=0x7f090008;
         public static final int memoAnswersListView=0x7f090004;
         public static final int memo_text=0x7f090022;
-        public static final int menu_option_Eraser=0x7f090030;
-        public static final int menu_option_Pen=0x7f09002f;
-        public static final int menu_option_recog_gesture=0x7f090031;
-        public static final int menu_option_view_pdf=0x7f090032;
+        public static final int menu_option_Eraser=0x7f090031;
+        public static final int menu_option_Pen=0x7f090030;
+        public static final int menu_option_recog_gesture=0x7f090032;
+        public static final int menu_option_view_pdf=0x7f090033;
         public static final int nextQuestionButton=0x7f090011;
+        public static final int optionsList=0x7f090023;
         public static final int passwordInput=0x7f09001e;
         public static final int prevQuestionButton=0x7f090010;
-        public static final int progress_bar_layout=0x7f090026;
+        public static final int progress_bar_layout=0x7f090027;
         public static final int questionName=0x7f090020;
         public static final int questionTotalsListView=0x7f090016;
         public static final int remaining_marking_text_view=0x7f090001;
         public static final int scoreTextView=0x7f090018;
         public static final int scriptDisplay=0x7f090006;
         public static final int scriptDisplayScrollView=0x7f090005;
-        public static final int scriptListView=0x7f090025;
+        public static final int scriptListView=0x7f090026;
         public static final int script_student_number_display=0x7f090012;
         public static final int scrollView1=0x7f09000c;
         public static final int student_number_field=0x7f090014;
@@ -94,7 +95,7 @@ public final class R {
         public static final int testDisplay=0x7f090019;
         public static final int textView1=0x7f09001a;
         public static final int upload_button=0x7f090015;
-        public static final int user_display=0x7f090034;
+        public static final int user_display=0x7f090035;
         public static final int usernameInput=0x7f09001d;
     }
     public static final class layout {
@@ -117,7 +118,8 @@ public final class R {
         public static final int login_layout=0x7f030010;
         public static final int mark_summary_item=0x7f030011;
         public static final int memo_answer_item=0x7f030012;
-        public static final int test_browser_drawer_layout=0x7f030013;
+        public static final int profile_popup_layout=0x7f030013;
+        public static final int test_browser_drawer_layout=0x7f030014;
     }
     public static final class menu {
         public static final int login=0x7f080000;
