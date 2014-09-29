@@ -62,7 +62,7 @@ public class LoginHelper
 				try
 				{
 					String response = new PHPCommunication().execute("Login", username, password).get();
-					
+					response  = "1"; // REMOVE AFTER TESTING
 					if (response.equals("1"))
 					{
 						ValueStoringHelperClass.loggedIn = true;

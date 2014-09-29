@@ -17,6 +17,7 @@ import android.os.Message;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +56,8 @@ public class TestScriptBrowserActivity extends Activity {
 	private Context context;
 	private ActionBar actionBar;
 	private TextView instructionText;
+	
+	private MenuItem userDisplay;
 
 	private ProgressBar listUpdateProgressBar;
 
@@ -102,6 +105,9 @@ public class TestScriptBrowserActivity extends Activity {
 		        case 0:
 		        	instructionText.setVisibility(View.VISIBLE);
 		        	listUpdateProgressBar.setVisibility(View.INVISIBLE);
+		        	
+		        	invalidateOptionsMenu();
+		        	
 		    		new ServerConnect().execute("Update Nav Drawer");
 		    		
 		            break;
@@ -283,6 +289,13 @@ public class TestScriptBrowserActivity extends Activity {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.test_script_browser, menu);
+		
+		if (ValueStoringHelperClass.loggedIn == true)
+		{
+			MenuItem userDisplay = menu.findItem(R.id.user_display);
+			userDisplay.setTitle(ValueStoringHelperClass.USERNAME);
+		}
+		
 		return true;
 	}
 
