@@ -101,11 +101,11 @@ Specific details: for loops, while loops, keywords, use #1
 
 {AnswerSplit}
 b) 
-傍o acknowledge the work of others
-傍o share resources
-傍o place authors in a field of knowledge
-傍o show where we got our information from so that it can be verified
-傍o support our claims with evidence
+- acknowledge the work of others
+- share resources
+- place authors in a field of knowledge
+- show where we got our information from so that it can be verified
+- support our claims with evidence
 
 (any one)
 
