@@ -1,0 +1,118 @@
+a) 
+finally
+
+
+{AnswerSplit}
+b) 
+IndexError
+
+
+{AnswerSplit}
+c) 
+except IndexError as ie
+
+
+
+{AnswerSplit}
+a) 
+Merge
+
+
+
+{AnswerSplit}
+
+Selection
+
+
+
+{AnswerSplit}
+b) 
+
+{Page}
+c) 
+{AnswerSplit}
+a) 
+
+
+
+
+
+
+{AnswerSplit}
+b) 
+Table
+
+Graph
+
+
+{AnswerSplit}
+c) 
+1 January 1970
+
+
+
+{Page}
+a) 
+
+
+class Triangle: #1
+
+def __init__(self,a,b,c): #1
+self.side_a = a
+self.side_b = b    #1 for all assignments
+self.side_c = c
+
+def __str__(self):  #1
+return str(self.side_a) + "," + str(self.side_b) + "," + str(self.side_c) #1
+
+def perimeter(self): #1
+return self.side_a + self.side_b + self.side_c #1
+
+
+
+
+{AnswerSplit}
+b) 
+
+
+tri = Triangle(3,4,5) #1
+print(tri.perimeter()) #1
+print(tri) #1
+
+
+
+
+{Page}
+a) 
+
+
+Broad topic: Loops #1
+
+Specific details: for loops, while loops, keywords, use #1
+
+
+
+
+
+
+
+
+
+
+{AnswerSplit}
+b) 
+傍o acknowledge the work of others
+傍o share resources
+傍o place authors in a field of knowledge
+傍o show where we got our information from so that it can be verified
+傍o support our claims with evidence
+
+(any one)
+
+
+
+
+{AnswerSplit}
+c) 
+False
+
