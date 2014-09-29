@@ -53,77 +53,72 @@ public class TestScriptBrowserActivity extends Activity {
 	private Context context;
 	private ActionBar actionBar;
 	private TextView instructionText;
-	
+
 	private ProgressBar listUpdateProgressBar;
-	
+
 	private ExpandableListView exListView;
 	private CustomExpandableListAdapter exListAdapter;
 	private List<String> listHeaders;
 	private HashMap<String, List<String>> listItems;
-	
+
 	private String [] drawerItems;
 	private DrawerLayout drawerLayout;
 	private ListView drawerListView;
 	private ArrayAdapter<String> navDrawArrayAdapter;
 	private ActionBarDrawerToggle drawerToggle;
-	
+
 	// Used as a flag when files are being downloaded
 	private boolean downloadingFiles;
-	
+
 	// Stores which item in the drawer is currently selected
 	private String selectedItemInDrawer;
-	
+
 	// Used top determine whether a refresh is currently being performed
 	private boolean viewBeingRefreshed;
-	
+
 	// Allows for values to be stored and accessed across activities
 	private ValueStoringHelperClass valueStore;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.test_browser_drawer_layout);
-		
+
 		context = this;
 		actionBar = this.getActionBar();
 		selectedItemInDrawer = "";
 		viewBeingRefreshed = false;
 		downloadingFiles = false;
-		
+
 		if (valueStore.loggedIn == false)
 		{
 			// Ask the user to login
 			userLogin();
 		}
-		
-		instructionText = (TextView) findViewById(R.id.instructionText);
-		
-		valueStore = new ValueStoringHelperClass();
-		
-		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
-		
-		//new LoginToServer().execute("username", "password");
-		
-		//if (login() == true)
-		{
-			initExpandableListView();
-			initNavDrawer();
 
-			new ServerConnect().execute("Update Nav Drawer");
-		}
-		
+		instructionText = (TextView) findViewById(R.id.instructionText);
+
+		valueStore = new ValueStoringHelperClass();
+
+		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
+
+		initExpandableListView();
+		initNavDrawer();
+
+		new ServerConnect().execute("Update Nav Drawer");
+
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
 	}
-	
+
 	@Override
 	public void onBackPressed()
 	{
 		// Handle the pressing of the 'physical' back button
 	}
-	
+
 	// Close the application
 	public void endApplication()
 	{
@@ -132,84 +127,84 @@ public class TestScriptBrowserActivity extends Activity {
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}
-	
+
 	// Presents the user with the login dialog and handles other login activities
 	private void userLogin()
 	{
 		//final boolean returnValue = true;
-		
+
 		LayoutInflater inflater = this.getLayoutInflater();
-		
+
 		final View loginView = inflater.inflate(R.layout.login_layout, null);
 		final TextView messageDisplay = (TextView) loginView.findViewById(R.id.loginMessageDisplay);
 		messageDisplay.setVisibility(View.INVISIBLE);
 
 		AlertDialog loginDialog = new AlertDialog.Builder(context)
-	    .setTitle("Login")
-	    .setView(loginView)
-	    .setPositiveButton("Log In", null)
-	    .setNegativeButton("Exit", null)
-	    .show();
-		
+		.setTitle("Login")
+		.setView(loginView)
+		.setPositiveButton("Log In", null)
+		.setNegativeButton("Exit", null)
+		.show();
+
 		// Add a listener to the positive button
 		Button positiveButton = loginDialog.getButton(Dialog.BUTTON_POSITIVE);
 		positiveButton.setOnClickListener(new LoginHelper.PositiveLoginButtonClicked(loginDialog, loginView, this));
-		
+
 		// Add a listener to the negative button
 		Button negativeButton = loginDialog.getButton(Dialog.BUTTON_NEGATIVE);
 		negativeButton.setOnClickListener(new LoginHelper.NegativeButtonClicked(this));
-		
+
 		//return returnValue;
 	}
-	
+
 	// Sets up the expandable list view used to display tests for each course
 	private void initExpandableListView()
 	{
 		exListView = (ExpandableListView) findViewById(R.id.scriptListView);
-		
+
 		listHeaders = new ArrayList<String>();
 		listItems = new HashMap<String, List<String>>();
-		
+
 		// Initialise with empty lists so that it can be modified by the AsyncTask
 		exListAdapter = new CustomExpandableListAdapter(context, listHeaders, listItems);
-		
+
 		exListView.setOnChildClickListener(new OnChildClickListener() {
-			
+
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
-				
+
 				String tempTestName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
 				tempTestName = tempTestName.replace("*", "\\*");
-				
+
 				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
 				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/memo.txt";
 				String ansPerPageDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/answersPerPage.txt";
-				
+
 				// Store the current directory and test name
 				valueStore.setCurrentDirectory("Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/");
 				valueStore.setTestName(tempTestName);
-				
+
 				downloadingFiles = true;
 				new ServerConnect().execute("Download Files", fileDirectory, memoDirectory, ansPerPageDirectory);
-				
+
 				return false;
 			}
 		});
 	}
-	
+
 	// Sets up the navigation drawer
 	private void initNavDrawer()
 	{
 		drawerItems = new String [] {};
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerListView = (ListView) findViewById(R.id.left_drawer);
-		
+
 		navDrawArrayAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerItems);
-		
+
 		// Set the adapter for the list view
 		drawerListView.setAdapter(navDrawArrayAdapter);
-		
+
 		drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -218,52 +213,52 @@ public class TestScriptBrowserActivity extends Activity {
 			{
 				// Remove the instruction text
 				instructionText.setVisibility(View.INVISIBLE);
-				
+
 				drawerListView.setItemChecked(position, true);
 				drawerLayout.closeDrawer(drawerListView);
 				getActionBar().setTitle(drawerItems[position]);
-				
+
 				selectedItemInDrawer = drawerItems[position];
-				
+
 				new ServerConnect().execute("Update Lists", drawerItems[position]);
 			}
 		});
-		
+
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, 
 				R.drawable.ic_drawer, R.string.nav_drawer_open, R.string.app_name)
 		{
 			/** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                
-            }
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-        		super.onDrawerOpened(drawerView);
-        		invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
+			}
+
+			/** Called when a drawer has settled in a completely open state. */
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+			}
 		};
-		
+
 		drawerLayout.setDrawerListener(drawerToggle);
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 	}
-	
-	@Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawerToggle.syncState();
-    }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
-    }
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		drawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		drawerToggle.onConfigurationChanged(newConfig);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -279,7 +274,7 @@ public class TestScriptBrowserActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		
+
 		if (drawerToggle.onOptionsItemSelected(item))
 		{
 			return true;
@@ -302,18 +297,18 @@ public class TestScriptBrowserActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	// Connect to the server and execute various tasks
 	private class ServerConnect extends AsyncTask<String, String, Long>
 	{
 		JSch jsch;
 		Session sshSession;
-		
+
 		String operationBeingPerformed;
-		
+
 		private ProgressDialog progressDialog;
 		private boolean downloadSuccess = false;
-		
+
 		@Override
 		protected Long doInBackground(String... params) 
 		{
@@ -322,7 +317,7 @@ public class TestScriptBrowserActivity extends Activity {
 				if (params[0].equalsIgnoreCase("Update Nav Drawer"))
 				{
 					operationBeingPerformed = "Update Nav Drawer";
-					
+
 					if (connectToServer() == true)
 					{
 						populateNavDrawer();
@@ -331,7 +326,7 @@ public class TestScriptBrowserActivity extends Activity {
 				if (params[0].equalsIgnoreCase("Update Lists"))
 				{
 					operationBeingPerformed = "Update Lists";
-					
+
 					if (connectToServer() == true)
 					{
 						populateLists(params[1]);
@@ -340,23 +335,23 @@ public class TestScriptBrowserActivity extends Activity {
 				else if (params[0].equalsIgnoreCase("Request File List"))
 				{
 					operationBeingPerformed = "Request File List";
-			
+
 					connectToServer();
 				}
 				else if (params[0].equalsIgnoreCase("Download Files"))
 				{
 					operationBeingPerformed = "Download Files";
-					
+
 					if (connectToServer() == true)
 					{
 						downloadFiles(params[1], params[2], params[3]);
 					}
 				}	
 			}
-			
+
 			return null;
 		}
-		
+
 		// Connect to the server in order to download the memo content
 		public boolean connectToServer()
 		{
@@ -365,45 +360,45 @@ public class TestScriptBrowserActivity extends Activity {
 				jsch = new JSch();
 				sshSession = jsch.getSession("zmathews", "nightmare.cs.uct.ac.za");
 				sshSession.setPassword("800hazhtM");
-				
+
 				Properties connProps = new Properties();
 				connProps.put("StrictHostKeyChecking", "no");
 				sshSession.setConfig(connProps);
-				
+
 				sshSession.connect();
-				
+
 				return true;
 			}
 			catch (Exception e)
 			{
 				publishProgress("An error has occured: Please check your network connection");
-				
+
 				return false;
 			}
 		}
-		
+
 		// Execute the given command on the server
 		private String executeCommandOnServer(String command)
 		{
 			String result = "";
-			
+
 			try
 			{
 				// Create a communication channel with the server and execute the command
 				Channel commChannel = sshSession.openChannel("exec");
 				((ChannelExec)commChannel).setCommand(command);
 				commChannel.setInputStream(null);
-				
+
 				InputStream inStream = commChannel.getInputStream();
 				commChannel.connect();
-				
+
 				int readValue;
-				
+
 				while ((readValue = inStream.read()) != -1)
 				{
 					result += Character.toString((char) readValue);
 				}
-				
+
 				// Close the communication channel
 				commChannel.disconnect();
 			}
@@ -411,100 +406,100 @@ public class TestScriptBrowserActivity extends Activity {
 			{
 				publishProgress("An error has occured: Please check your network connection");
 			}
-			
+
 			return result;
 		}
-		
+
 		// Populate the expandable list layout
 		private void populateLists(String courseCode)
 		{	
 			String listOfTests = executeCommandOnServer("cd Honours_Project/" + courseCode + "/ && ls");
 			String [] tests = listOfTests.split("\n");
-			
+
 			listHeaders.clear();
-			
+
 			// Populate group list
 			for (String testName : tests)
 			{
 				listHeaders.add(testName);
-				
+
 				if (listItems.get(testName) != null)
 				{
 					listItems.get(testName).clear();
 				}
-				
+
 				List<String> temp = new ArrayList<String>();
-				
+
 				String listOfScripts = executeCommandOnServer("cd Honours_Project/" + courseCode + "/" + testName + " && ls");
 				String [] scripts = listOfScripts.split("\n");
-				
+
 				// Populate the sublist for this category
 				for (String script : scripts)
 				{
 					temp.add(script);
 				}
-				
+
 				listItems.put(testName, temp);
 			}
 		}
-		
+
 		// Update the options available in the navigation drawer
 		private void populateNavDrawer()
 		{
 			String listOfCourses = executeCommandOnServer("cd Honours_Project && ls");
 			drawerItems = listOfCourses.split("\n");
 		}
-		
+
 		// Download the images needed for each test from the server
 		private void downloadFiles(String directory, String memoDir, String ansPerPageDir)
 		{	
-	        // Get the path to external storage
-	        String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
-			
+			// Get the path to external storage
+			String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
+
 			try
 			{
 				String filenames = executeCommandOnServer("cd " + directory + " && ls");
 				String [] files = filenames.split("\n");
-				
+
 				Channel commChannel = sshSession.openChannel("sftp");
 				commChannel.connect();
 				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
 				int numPages = 0;
-				
+
 				ValueStoringHelperClass.isRemark = false;
-				
+
 				valueStore.initPageCollection();
-				
+
 				for (String file : files)
 				{
 					file = file.trim();
-					
+
 					if (file.contains("Marked"))
 					{
 						ValueStoringHelperClass.isRemark = true;
 					}
-					
+
 					if (file.startsWith("page") && file.contains(".png"))
 					{
 						String saveDir = pathToSDCard + "/" + file;
 						String fileDir = directory + file;
-						
+
 						sftpChannel.get(fileDir, saveDir);
 						numPages++;
 						valueStore.addPage(numPages);
 					}
 				}
-				
+
 				// Download the memo for this test
 				String saveDir = pathToSDCard + "/" + "memo.txt";
-				
+
 				sftpChannel.get(memoDir, saveDir);
-				
+
 				// Download the answersPerPageFile for this test
 				saveDir = pathToSDCard + "/" + "answersPerPage.txt";
-				
+
 				sftpChannel.get(ansPerPageDir, saveDir);
-				
+
 				valueStore.processMemoText("memo.txt", "answersPerPage.txt");
 				valueStore.setNumPages(numPages);
 				downloadSuccess = true;
@@ -514,15 +509,15 @@ public class TestScriptBrowserActivity extends Activity {
 				publishProgress("An error has occured: Please check your network connection");
 			}
 		}
-		
+
 		protected void onProgressUpdate(String... message) 
 		{
 			new AlertDialog.Builder(context)
-		    .setTitle(message[0])
-		    .setPositiveButton("Continue", null)
-		    .show();
-	    }
-		
+			.setTitle(message[0])
+			.setPositiveButton("Continue", null)
+			.show();
+		}
+
 		@Override
 		protected void onPreExecute()
 		{
@@ -538,16 +533,16 @@ public class TestScriptBrowserActivity extends Activity {
 				exListView.setBackgroundColor(Color.GRAY);
 				exListView.setEnabled(false);
 			}
-			
+
 			viewBeingRefreshed = true;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Long params)
 		{
 			exListAdapter = new CustomExpandableListAdapter(context, listHeaders, listItems);
 			exListView.setAdapter(exListAdapter);
-			
+
 			if (downloadingFiles == true)
 			{
 				downloadingFiles = false;
@@ -559,23 +554,23 @@ public class TestScriptBrowserActivity extends Activity {
 				exListView.setBackgroundColor(Color.WHITE);
 				exListView.setEnabled(true);
 			}
-			
+
 			if (operationBeingPerformed.equalsIgnoreCase("Update Nav Drawer"))
 			{
 				navDrawArrayAdapter =  new ArrayAdapter<String>(context, R.layout.drawer_list_item, drawerItems);
 				drawerListView.setAdapter(navDrawArrayAdapter);
 			}
-			
+
 			viewBeingRefreshed = false;
-			
+
 			if (operationBeingPerformed.equals("Download Files") && (downloadSuccess == true))
 			{
 				Intent pdfViewScreen = new Intent(TestScriptBrowserActivity.this, MainMarkingScreenActivity.class);
-	        	startActivity(pdfViewScreen);
+				startActivity(pdfViewScreen);
 			}
 		}
 	}
-	
+
 	/*
 	/**
 	 * A placeholder fragment containing a simple view.
