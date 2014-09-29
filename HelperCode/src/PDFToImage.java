@@ -44,12 +44,12 @@ public class PDFToImage
 			PDDocument pdfDoc = PDDocument.load(loadedFile);
 			List<PDPage> pages = pdfDoc.getDocumentCatalog().getAllPages();
 			
-			for (int i = 1; i < pages.size(); i++)
+			for (int i = 0; i < pages.size(); i++)
 			{
 				BufferedImage tempImage = pages.get(i).convertToImage(BufferedImage.TYPE_INT_RGB, 200);
-				File outputFile = new File ("" + i + ".png");
+				File outputFile = new File ("page" + (i + 1) + ".png");
 				ImageIO.write(tempImage, "png", outputFile);
-				System.out.println ("Saved Page " + i);
+				System.out.println ("Saved Page " + (i + 1));
 			}
 		}
 		catch (Exception e)
@@ -60,7 +60,7 @@ public class PDFToImage
 	
 	public static void main (String [] args)
 	{
-		PDFToImage toImage = new PDFToImage("ClassTest2SpacingAdjusted.pdf");
+		PDFToImage toImage = new PDFToImage("reducedClear.pdf");
 		toImage.convertToImages();
 	}
 }

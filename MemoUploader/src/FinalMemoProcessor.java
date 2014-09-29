@@ -47,13 +47,8 @@ public class FinalMemoProcessor
 
 		dir = dir.trim();
 
-		// Verify the ouput directory
+		// Verify the output directory
 		isDirValid(dir);
-
-		/*outputFileName = memoFileName.split("\\.")[0].replaceAll(" ", "_");
-		answersPerPageOutputFile = outputFileName + "_answersPerPage.txt";
-
-		outputFileName += ".txt";*/
 		
 		outputFileName = "memo.txt";
 		answersPerPageOutputFile = "answersPerPage.txt";
@@ -313,24 +308,6 @@ public class FinalMemoProcessor
 
 				tempSection += currentLine;
 
-				// Check if this is the last line of the answer
-				/*if (indexOfEndMarker != -1)
-				{
-					inAnswerSection = false;
-					answerEndIndex = i;
-
-					tempSection += currentLine.substring(0, indexOfEndMarker);
-
-					answerCounter++;
-
-					answers.add(tempSection);
-					tempSection = "";
-				}
-				else
-				{
-					tempSection += currentLine;
-				}*/
-
 				continue;
 			}
 			else if (currentLine.split("]$").length != 1)
@@ -352,8 +329,6 @@ public class FinalMemoProcessor
 				{
 					subTotalMarks += "," + tempMarks;
 				}
-
-				//continue;
 			}
 			else 
 			{
@@ -367,7 +342,6 @@ public class FinalMemoProcessor
 				if (temp.matches("[a-zA-Z0-9]+"))
 				{
 					possibleQuestionNumber = temp;
-					//System.out.println (possibleQuestionNumber);
 				}
 			}
 		}
@@ -483,8 +457,11 @@ public class FinalMemoProcessor
 			// Only process main question headings
 			if (q.startsWith("Q") || q.startsWith("q"))
 			{
-				String marks = q.substring(q.indexOf("[") + 1).split(" ")[0];
-				total += Integer.parseInt(marks);
+				if (q.indexOf("[") != -1)
+				{
+					String marks = q.substring(q.indexOf("[") + 1).split(" ")[0];
+					total += Integer.parseInt(marks);
+				}
 			}
 		}
 
