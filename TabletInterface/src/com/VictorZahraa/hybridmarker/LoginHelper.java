@@ -25,33 +25,33 @@ public class LoginHelper
 		private final EditText usernameField;
 		private final EditText passwordField;
 		private final TextView messageDisplay;
-		
+
 		private Handler loginHandler;
-		
+
 		@SuppressWarnings("unused")
 		private TestScriptBrowserActivity callingActivity;
-		
+
 		public PositiveLoginButtonClicked(Dialog dia, View lView, TestScriptBrowserActivity caller, Handler handler)
 		{
 			dialog = dia;
 			loginView = lView;
 			callingActivity = caller;
-			
+
 			loginHandler = handler;
-			
+
 			usernameField = (EditText) loginView.findViewById(R.id.usernameInput);
 			passwordField = (EditText) loginView.findViewById(R.id.passwordInput);
 			messageDisplay = (TextView) loginView.findViewById(R.id.loginMessageDisplay);
 		}
-		
+
 		@Override
 		public void onClick(View v) 
 		{
 			String username = usernameField.getText().toString();
 			String password = passwordField.getText().toString();
-			
+
 			messageDisplay.setVisibility(View.INVISIBLE);
-			
+
 			if ((username.length() == 0) || (password.length() == 0))
 			{
 				messageDisplay.setText("Please enter a username and password");
@@ -67,9 +67,9 @@ public class LoginHelper
 					{
 						ValueStoringHelperClass.loggedIn = true;
 						ValueStoringHelperClass.USERNAME = username;
-						
+
 						loginHandler.sendEmptyMessage(0);
-						
+
 						dialog.dismiss();
 					}
 					else
@@ -82,7 +82,7 @@ public class LoginHelper
 						{
 							messageDisplay.setText(response);
 						}
-						
+
 						messageDisplay.setVisibility(View.VISIBLE);
 					}
 				}
@@ -93,7 +93,7 @@ public class LoginHelper
 				}
 			}
 		}
-		
+
 		// Used to get information from the DB
 		private class PHPCommunication extends AsyncTask<String, Integer, String>
 		{
@@ -104,35 +104,35 @@ public class LoginHelper
 				{
 					return loginToServer(params[1], params[2]);
 				}
-				
+
 				return "ERROR";
 			}
-			
+
 			public String loginToServer(String username, String password)
 			{
 				String link = R.string.base_URL + "/loginCheck.php?q=";
-				
+
 				try
 				{	
 					link += username + "+" + password;
-					
+
 					HttpClient client = new DefaultHttpClient();
 					HttpGet request = new HttpGet();
 					request.setURI(new URI(link));
-					
+
 					HttpResponse response = client.execute(request);
 					BufferedReader in = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
-					
+
 					String result = "";
-	                String line = null;
-	                // Read Server Response
-	                while((line = in.readLine()) != null)
-	                {
-	                   result += line;
-	                   break;
-	                }
-	                
-	                return result;
+					String line = null;
+					// Read Server Response
+					while((line = in.readLine()) != null)
+					{
+						result += line;
+						break;
+					}
+
+					return result;
 				}
 				catch (Exception e)
 				{
@@ -142,17 +142,61 @@ public class LoginHelper
 			}
 		}
 	}
-	
+
+	public static class PositiveLogoutButtonClicked implements View.OnClickListener
+	{
+
+		@Override
+		public void onClick(View v) 
+		{
+			new PHPCommunication().execute();
+		}
+		
+		// Used to get information from the DB
+		private class PHPCommunication extends AsyncTask<String, Integer, String>
+		{
+			@Override
+			protected String doInBackground(String... params) 
+			{
+				return logoutOfServer();
+			}
+
+			public String logoutOfServer()
+			{
+				String link = R.string.base_URL + "/Logout.php?q=";
+
+				try
+				{	
+					link += ValueStoringHelperClass.USERNAME;
+
+					HttpClient client = new DefaultHttpClient();
+					HttpGet request = new HttpGet();
+					request.setURI(new URI(link));
+
+					// Execute the php file
+					HttpResponse response = client.execute(request);
+					
+					return "Success";
+				}
+				catch (Exception e)
+				{
+					// Handle exception
+					return "An error has occured while logging out. Please close this message and try again";
+				}
+			}
+		}
+	}
+
 	// Handle the pressing of the cancel button
 	public static class NegativeButtonClicked implements View.OnClickListener
 	{
 		TestScriptBrowserActivity controller;
-		
+
 		public NegativeButtonClicked(TestScriptBrowserActivity activity)
 		{
 			controller = activity;
 		}
-		
+
 		@Override
 		public void onClick(View v) 
 		{
