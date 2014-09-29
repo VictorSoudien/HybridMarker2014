@@ -418,7 +418,7 @@ public class ValueStoringHelperClass
 	// Return the memo for a given page
 	public ArrayList<String> getMemoForPage(int page)
 	{
-		if (page != (memoPerPage.size()))
+		if (page < (memoPerPage.size()))
 		{
 			return memoPerPage.get(page);
 		}
