@@ -12,6 +12,8 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -78,6 +80,9 @@ public class TestScriptBrowserActivity extends Activity {
 
 	// Allows for values to be stored and accessed across activities
 	private ValueStoringHelperClass valueStore;
+	
+	// Used to wait for login to complete before initiliase other view elements
+	private Handler loginHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,23 +95,40 @@ public class TestScriptBrowserActivity extends Activity {
 		viewBeingRefreshed = false;
 		downloadingFiles = false;
 
-		if (valueStore.loggedIn == false)
+		loginHandler = new Handler(){
+			@Override
+		    public void handleMessage(Message msg) {
+		        switch (msg.what) {
+		        case 0:
+		        	instructionText.setVisibility(View.VISIBLE);
+		        	listUpdateProgressBar.setVisibility(View.INVISIBLE);
+		    		new ServerConnect().execute("Update Nav Drawer");
+		    		
+		            break;
+		        default:
+		            break;
+		        }
+		    }
+		};
+		
+		if (ValueStoringHelperClass.loggedIn == false)
 		{
-			// Ask the user to login
-			userLogin();
+			userLogin(loginHandler);
 		}
-
-		instructionText = (TextView) findViewById(R.id.instructionText);
-
+		else
+		{
+			loginHandler.sendEmptyMessage(0);
+		}
+		
+	  	instructionText = (TextView) findViewById(R.id.instructionText);
+	  	instructionText.setVisibility(View.INVISIBLE);
 		valueStore = new ValueStoringHelperClass();
-
 		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
+		listUpdateProgressBar.setVisibility(View.INVISIBLE);
 
 		initExpandableListView();
 		initNavDrawer();
-
-		new ServerConnect().execute("Update Nav Drawer");
-
+		
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
@@ -129,10 +151,8 @@ public class TestScriptBrowserActivity extends Activity {
 	}
 
 	// Presents the user with the login dialog and handles other login activities
-	private void userLogin()
+	private void userLogin(Handler handler)
 	{
-		//final boolean returnValue = true;
-
 		LayoutInflater inflater = this.getLayoutInflater();
 
 		final View loginView = inflater.inflate(R.layout.login_layout, null);
@@ -148,13 +168,11 @@ public class TestScriptBrowserActivity extends Activity {
 
 		// Add a listener to the positive button
 		Button positiveButton = loginDialog.getButton(Dialog.BUTTON_POSITIVE);
-		positiveButton.setOnClickListener(new LoginHelper.PositiveLoginButtonClicked(loginDialog, loginView, this));
+		positiveButton.setOnClickListener(new LoginHelper.PositiveLoginButtonClicked(loginDialog, loginView, this, loginHandler));
 
 		// Add a listener to the negative button
 		Button negativeButton = loginDialog.getButton(Dialog.BUTTON_NEGATIVE);
 		negativeButton.setOnClickListener(new LoginHelper.NegativeButtonClicked(this));
-
-		//return returnValue;
 	}
 
 	// Sets up the expandable list view used to display tests for each course

@@ -140,6 +140,7 @@ public final class R {
         public static final int action_undo=0x7f060008;
         public static final int action_upload_script=0x7f06000b;
         public static final int app_name=0x7f060000;
+        public static final int base_URL=0x7f060018;
         public static final int hello_world=0x7f060001;
         public static final int hint_password=0x7f060014;
         public static final int hint_username=0x7f060013;

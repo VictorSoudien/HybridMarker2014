@@ -11,6 +11,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Dialog;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,13 +26,18 @@ public class LoginHelper
 		private final EditText passwordField;
 		private final TextView messageDisplay;
 		
+		private Handler loginHandler;
+		
+		@SuppressWarnings("unused")
 		private TestScriptBrowserActivity callingActivity;
 		
-		public PositiveLoginButtonClicked(Dialog dia, View lView, TestScriptBrowserActivity caller)
+		public PositiveLoginButtonClicked(Dialog dia, View lView, TestScriptBrowserActivity caller, Handler handler)
 		{
 			dialog = dia;
 			loginView = lView;
 			callingActivity = caller;
+			
+			loginHandler = handler;
 			
 			usernameField = (EditText) loginView.findViewById(R.id.usernameInput);
 			passwordField = (EditText) loginView.findViewById(R.id.passwordInput);
@@ -43,6 +49,8 @@ public class LoginHelper
 		{
 			String username = usernameField.getText().toString();
 			String password = passwordField.getText().toString();
+			
+			messageDisplay.setVisibility(View.INVISIBLE);
 			
 			if ((username.length() == 0) || (password.length() == 0))
 			{
@@ -57,11 +65,24 @@ public class LoginHelper
 					
 					if (response.equals("1"))
 					{
+						ValueStoringHelperClass.loggedIn = true;
+						ValueStoringHelperClass.USERNAME = username;
+						
+						loginHandler.sendEmptyMessage(0);
+						
 						dialog.dismiss();
 					}
 					else
 					{
-						messageDisplay.setText("Invalid username or password");
+						if (response.equals("0"))
+						{
+							messageDisplay.setText("Invalid username or password");
+						}
+						else
+						{
+							messageDisplay.setText(response);
+						}
+						
 						messageDisplay.setVisibility(View.VISIBLE);
 					}
 				}
@@ -89,7 +110,7 @@ public class LoginHelper
 			
 			public String loginToServer(String username, String password)
 			{
-				String link = "http://people.cs.uct.ac.za/~vsoudien/Test/loginCheck.php?q=";
+				String link = R.string.base_URL + "/loginCheck.php?q=";
 				
 				try
 				{	
@@ -116,12 +137,13 @@ public class LoginHelper
 				catch (Exception e)
 				{
 					// Handle exception
-					return "Error";
+					return "Please check your internet connection";
 				}
 			}
 		}
 	}
 	
+	// Handle the pressing of the cancel button
 	public static class NegativeButtonClicked implements View.OnClickListener
 	{
 		TestScriptBrowserActivity controller;
