@@ -20,5 +20,10 @@
 	<classpathentry kind="lib" path="libs/commons-vfs-2.0/commons-vfs2-examples-2.0-sources.jar"/>
 	<classpathentry kind="lib" path="libs/commons-vfs-2.0/commons-vfs2-examples-2.0.jar"/>
 	<classpathentry kind="lib" path="libs/jsch-0.1.51.jar"/>
+	<classpathentry kind="lib" path="libs/opencv-249.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="ScriptUploader/libs/x64"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
