@@ -15,7 +15,6 @@ import net.sourceforge.tess4j.*;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.*;
@@ -239,7 +238,7 @@ public class PDFProcessor
 		
 		String fileName = numberOfFiles + "-" + testName + "-" + uploadTime + ".pdf";
 		
-		///////////////// Upload pdf as multiple images /////////////////////////////
+		///////////////// Upload PDF as multiple images /////////////////////////////
 		String originalDir =  directoryToSaveTo;
 		
 		try
