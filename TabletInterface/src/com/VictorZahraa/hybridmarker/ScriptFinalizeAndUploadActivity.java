@@ -126,7 +126,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
 	}
-	
+
 	@Override
 	public void onBackPressed()
 	{
@@ -210,6 +210,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		private ProgressDialog progressDialog;
 
 		private String pathToSDCard;
+		private boolean success;
 
 		@Override
 		protected String doInBackground(String... params) 
@@ -217,11 +218,13 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			// Get the path to external storage
 			pathToSDCard = Environment.getExternalStorageDirectory().getPath();
 
-			if (connectToServer() == true)
+			success = connectToServer();
+
+			if (success == true)
 			{
 				uploadFiles(params[0]);
 			}
-			
+
 			return null;
 		}
 
@@ -239,7 +242,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				sshSession.setConfig(connProps);
 
 				sshSession.connect();
-				
+
 				return true;
 			}
 			catch (Exception e)
@@ -266,7 +269,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				File temp;
 				FileOutputStream fileOut;
 				String basePageName = "";
-				
+
 				if (ValueStoringHelperClass.isRemark == true)
 				{
 					basePageName = "ReMarkedPage";
@@ -293,12 +296,13 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				}
 
 				sftpChannel.disconnect();
-				
+
 				uploadMarks();
 			}
 			catch (Exception e)
 			{
 				publishProgress("An error has occured: Please check your network connection");
+				success = false;
 			}
 		}
 
@@ -313,9 +317,18 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 						"&Test=" + ValueStoringHelperClass.TEST_NAME.trim().replaceAll(" ", "%20") + 
 						"&user=" + ValueStoringHelperClass.USERNAME.trim() + 
 						"&studentNumber=" + studentNumberInput.getText().toString().trim() + 
-						"&Mark=" + valueStore.getTotalMark() +
-						"&Result=" + valueStore.getResultsInDBFormat();
+						"&Mark=" + valueStore.getSumOfPageScores() +
+						"&Result=" + valueStore.getResultsInDBFormat().replaceAll("\\+", "%2B");
 				
+				if (valueStore.isScriptFlagged() == true)
+				{
+					link += "&Flag=true" + "&Comment=" + valueStore.getFlagText().replaceAll(" ", "%20");
+				}
+				else
+				{
+					link += "&Flag=true";
+				}
+
 				if (ValueStoringHelperClass.isRemark == true)
 				{
 					link += "&Remark=Yes";
@@ -338,7 +351,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				publishProgress(e.getMessage());
 			}
 		}
-		
+
 		@Override
 		protected void onPreExecute()
 		{
@@ -358,22 +371,25 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		protected void onPostExecute(String param)
 		{
 			progressDialog.dismiss();
+			
+			if (success == true)
+			{
+				new AlertDialog.Builder(context)
+				.setTitle("Script Upload")
+				.setMessage("File uploaded successfully")
+				.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) 
+					{
+						valueStore.recycleBitmaps();
 
-			new AlertDialog.Builder(context)
-			.setTitle("Script Upload")
-			.setMessage("File uploaded successfully")
-			.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) 
-				{
-					valueStore.recycleBitmaps();
-
-					// Restart the application
-					Intent i = getBaseContext().getPackageManager()
-							.getLaunchIntentForPackage( getBaseContext().getPackageName() );
-					i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(i);
-				}}
-					).show();
+						// Restart the application
+						Intent i = getBaseContext().getPackageManager()
+								.getLaunchIntentForPackage( getBaseContext().getPackageName() );
+						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(i);
+					}}
+						).show();
+			}
 		}
 	}
 
