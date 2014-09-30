@@ -309,8 +309,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 			try
 			{	
-				//URL url = new URL(link);
-				
 				link += "Course=" + ValueStoringHelperClass.COURSE_NAME.trim() +
 						"&Test=" + ValueStoringHelperClass.TEST_NAME.trim().replaceAll(" ", "%20") + 
 						"&user=" + ValueStoringHelperClass.USERNAME.trim() + 
