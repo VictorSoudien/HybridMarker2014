@@ -20,6 +20,7 @@ public class ValueStoringHelperClass
 	public static String USERNAME;
 	public static String COURSE_NAME;
 	public static String TEST_NAME;
+	public static ArrayList<String> STUDENTS_LIST;
 	
 	private static int numPages;
 	private static double [] scorePerPage;
@@ -64,7 +65,7 @@ public class ValueStoringHelperClass
 	
 	// Stores the text the user entered as part of the complaint about a script
 	private static String scriptFlagText;
-	private static boolean scriptFlagged;
+	private static boolean scriptFlagged = false;
 
 	public ValueStoringHelperClass()
 	{

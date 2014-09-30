@@ -62,7 +62,7 @@ public class LoginHelper
 				try
 				{
 					String response = new PHPCommunication().execute("Login", username, password).get();
-					
+
 					if (response.equals("1"))
 					{
 						ValueStoringHelperClass.loggedIn = true;
@@ -151,7 +151,7 @@ public class LoginHelper
 		{
 			new PHPCommunication().execute();
 		}
-		
+
 		// Used to get information from the DB
 		private class PHPCommunication extends AsyncTask<String, Integer, String>
 		{
@@ -175,7 +175,7 @@ public class LoginHelper
 
 					// Execute the php file
 					HttpResponse response = client.execute(request);
-					
+
 					return "Success";
 				}
 				catch (Exception e)

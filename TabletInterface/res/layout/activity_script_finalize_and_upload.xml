@@ -42,7 +42,7 @@
            android:textSize="30sp"
            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-       <EditText
+       <AutoCompleteTextView
            android:id="@+id/student_number_field"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
            android:ems="10" >
 
            <requestFocus />
-       </EditText>
+       </AutoCompleteTextView>
 
        <Button
            android:id="@+id/upload_button"

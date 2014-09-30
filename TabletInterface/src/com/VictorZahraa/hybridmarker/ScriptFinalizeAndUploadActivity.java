@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -58,7 +59,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 	View.OnTouchListener gestureListener;
 
 	private ImageView studentNumberImageView;
-	private EditText studentNumberInput;
+	private AutoCompleteTextView studentNumberInput;
 	private ImageView testDisplay;
 	private TextView markTextView;
 	private ListView markSummary;
@@ -92,7 +93,10 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		studentNumberImageView.setScrollY(540);
 		studentNumberImageView.setScrollX(-85);
 
-		studentNumberInput = (EditText) findViewById(R.id.student_number_field);
+		studentNumberInput = (AutoCompleteTextView) findViewById(R.id.student_number_field);
+		
+		ArrayAdapter<String> stuAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_expandable_list_item_1, ValueStoringHelperClass.STUDENTS_LIST);
+		studentNumberInput.setAdapter(stuAdapter);
 
 		// Gesture detection
 		gestureDetector = new GestureDetector(this, new MyGestureDetector());
@@ -330,7 +334,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				}
 				else
 				{
-					link += "&Flag=true";
+					link += "&Flag=false";
 				}
 
 				if (ValueStoringHelperClass.isRemark == true)

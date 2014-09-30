@@ -511,6 +511,7 @@ public class TestScriptBrowserActivity extends Activity {
 				int numPages = 0;
 
 				ValueStoringHelperClass.isRemark = false;
+				valueStore.setFlagText("");
 
 				valueStore.initPageCollection();
 
@@ -519,7 +520,7 @@ public class TestScriptBrowserActivity extends Activity {
 					file = file.trim();
 
 					// Ignore previously marked image files
-					if (file.contains("Marked") || file.contains("saved") || file.contains("Original"))
+					if (file.contains("Marked") || file.contains("saved"))
 					{
 						ValueStoringHelperClass.isRemark = true;
 					}
@@ -547,11 +548,44 @@ public class TestScriptBrowserActivity extends Activity {
 
 				valueStore.processMemoText("memo.txt", "answersPerPage.txt");
 				valueStore.setNumPages(numPages);
+				
+				// Populate the list of students
+				String link = getText(R.string.base_URL) + "/getListOfStudents.php?";
+				link += "Course=" + ValueStoringHelperClass.COURSE_NAME;
+
+				HttpClient client = new DefaultHttpClient();
+				HttpGet request = new HttpGet();
+				request.setURI(new URI(link));
+
+				// Execute the php file
+				HttpResponse response = client.execute(request);
+				BufferedReader in = new BufferedReader
+						(new InputStreamReader(response.getEntity().getContent()));
+
+				StringBuffer sb = new StringBuffer("");
+				String line="";
+				while ((line = in.readLine()) != null) {
+					sb.append(line);
+					break;
+				}
+				in.close();
+				
+				String out = sb.toString();
+				String [] tempArray = out.split("<br>");
+				ArrayList<String> students = new ArrayList<String>();
+				
+				for (String stu : tempArray)
+				{
+					students.add(stu);
+				}
+				
+				ValueStoringHelperClass.STUDENTS_LIST = (ArrayList<String>) students.clone();
+				
 				downloadSuccess = true;
 			}
 			catch (Exception e)
 			{
-				publishProgress("An error has occured: Please check your network connection");
+				publishProgress(/*"An error has occured: Please check your network connection" + */e.getMessage());
 			}
 		}
 
