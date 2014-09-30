@@ -23,17 +23,31 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class ScriptFinalizeAndUploadActivity extends Activity {
 
@@ -206,6 +220,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			if (connectToServer() == true)
 			{
 				uploadFiles(params[0]);
+				uploadMarks();
 			}
 			
 			return null;
@@ -286,6 +301,64 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			}
 		}
 
+		// Uploads the marks to the database and determines whether or not the script should be flagged
+		private void uploadMarks()
+		{
+			String link = context.getText(R.string.base_URL) + "/uploadMarks.php";
+
+			try
+			{	
+				URL url = new URL(link);
+				
+				/*String values = ValueStoringHelperClass.COURSE_NAME + "\n"+
+				ValueStoringHelperClass.TEST_NAME + "\n"+
+						ValueStoringHelperClass.USERNAME + "\n"+
+				studentNumberInput.getText().toString() + "\n" +
+						valueStore.getTotalMark() + "\n" +
+				valueStore.getResultsInDBFormat();*/
+				
+				//publishProgress(values);
+				
+				String data  = URLEncoder.encode("Course", "UTF-8") 
+				+ "=" + URLEncoder.encode(ValueStoringHelperClass.COURSE_NAME.trim(), "UTF-8");
+				data += "&" + URLEncoder.encode("Test", "UTF-8") 
+				+ "=" + URLEncoder.encode(ValueStoringHelperClass.TEST_NAME.trim(), "UTF-8");
+				data += "&" + URLEncoder.encode("user", "UTF-8") 
+				+ "=" + URLEncoder.encode(ValueStoringHelperClass.USERNAME.trim(), "UTF-8");
+				data += "&" + URLEncoder.encode("studentNumber", "UTF-8") 
+				+ "=" + URLEncoder.encode(studentNumberInput.getText().toString().trim(), "UTF-8");
+				data += "&" + URLEncoder.encode("Mark", "UTF-8") 
+				+ "=" + URLEncoder.encode(("" + valueStore.getTotalMark()).trim(), "UTF-8");
+				data += "&" + URLEncoder.encode("Result", "UTF-8") 
+				+ "=" + URLEncoder.encode(valueStore.getResultsInDBFormat().trim(), "UTF-8");
+				
+				if (ValueStoringHelperClass.isRemark == true)
+				{
+					data += "&" + URLEncoder.encode("Remark", "UTF-8") 
+					+ "=" + URLEncoder.encode("Yes", "UTF-8");
+				}
+				else
+				{
+					data += "&" + URLEncoder.encode("Remark", "UTF-8") 
+					+ "=" + URLEncoder.encode("No", "UTF-8");
+				}
+				
+				URLConnection conn = url.openConnection();
+				conn.setDoOutput(true);
+				
+				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream()); 
+				wr.write( data ); 
+				wr.flush();
+				wr.close();
+			}
+			catch (Exception e)
+			{
+				// Handle exception
+				//return e.getMessage();//"Please check your internet connection";
+				publishProgress(e.getMessage());
+			}
+		}
+		
 		@Override
 		protected void onPreExecute()
 		{
@@ -296,7 +369,9 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		@Override
 		protected void onProgressUpdate(String... messages)
 		{
-			progressDialog.setMessage(messages[0]);
+			//progressDialog.setMessage(messages[0]);
+			Toast t = Toast.makeText(context, messages[0], Toast.LENGTH_LONG);
+			t.show();
 		}
 
 		@Override

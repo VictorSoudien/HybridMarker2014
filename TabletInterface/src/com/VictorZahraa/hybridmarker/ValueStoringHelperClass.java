@@ -18,6 +18,8 @@ public class ValueStoringHelperClass
 	
 	public static boolean loggedIn = false;
 	public static String USERNAME;
+	public static String COURSE_NAME;
+	public static String TEST_NAME;
 	
 	private static int numPages;
 	private static double [] scorePerPage;

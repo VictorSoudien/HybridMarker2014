@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.renderscript.Sampler.Value;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -200,6 +201,8 @@ public class TestScriptBrowserActivity extends Activity {
 
 				String tempTestName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
 				tempTestName = tempTestName.replace("*", "\\*");
+				
+				ValueStoringHelperClass.TEST_NAME = listHeaders.get(groupPosition).replaceAll("_", " ").trim();
 
 				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
 				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/memo.txt";
@@ -243,6 +246,8 @@ public class TestScriptBrowserActivity extends Activity {
 				getActionBar().setTitle(drawerItems[position]);
 
 				selectedItemInDrawer = drawerItems[position];
+				
+				ValueStoringHelperClass.COURSE_NAME = drawerItems[position];
 
 				new ServerConnect().execute("Update Lists", drawerItems[position]);
 			}
