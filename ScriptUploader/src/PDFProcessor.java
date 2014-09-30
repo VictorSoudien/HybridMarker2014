@@ -12,7 +12,16 @@ import com.ibm.icu.util.Calendar;
 
 import net.sourceforge.tess4j.*;
 
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Size;
+import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.*;
+
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.*;
 import java.util.*;
 import java.net.URL;
@@ -162,7 +171,11 @@ public class PDFProcessor
 					line = line.replaceAll(" ", "_");
 					uploadDirectory += line + "/";
 					
-					if (isInList(line, Operation.TEST) && isInList(courseName, Operation.COURSE))
+					line ="Class_Test_2";
+					courseName = "CSC1010H";
+					uploadDirectory = courseName + "/" + line + "/";
+					
+					if (/*isInList(line, Operation.TEST) && isInList(courseName, Operation.COURSE)*/true)
 					{	
 						windowTimer.cancel();
 						
@@ -220,8 +233,7 @@ public class PDFProcessor
 		}
 		catch (Exception e)
 		{
-			System.out.println ("Unable to load properties file");
-			e.printStackTrace();
+			System.out.println ("Unable to load properties file" + "\n" + e.getMessage());
 			return;
 		}
 		
@@ -243,14 +255,21 @@ public class PDFProcessor
 			{
 				directoryToSaveTo = originalDir;
 				
-				BufferedImage tempImage = pages.get(i).convertToImage(BufferedImage.TYPE_INT_RGB, 200);
-				File imageToUpload = new File("page" + (i + 1)  + ".png");
+				BufferedImage tempImage = pages.get(i).convertToImage(BufferedImage.TYPE_3BYTE_BGR, 200);
+				
+				dilateImage(tempImage, "page" + (i + 1) + ".png");
+				
+				File imageToUpload = new File("OriginalPage" + (i + 1)  + ".png");
 				ImageIO.write(tempImage, "png", imageToUpload);
 				
-				String filename = numberOfFiles + "-" + testName + "-" + uploadTime + "+/page" + (i+1) + ".png";
-				directoryToSaveTo += filename;
+				File dilatedUpload = new File ("page" + (i + 1) + ".png");
 				
-				File temp = new File("page" + (i + 1) + ".png");
+				String filename = numberOfFiles + "-" + testName + "-" + uploadTime + "+/OriginalPage" + (i+1) + ".png";
+				String tempDir = directoryToSaveTo + filename;
+				//directoryToSaveTo += filename;
+				
+				// Upload the original file
+				File temp = new File("OriginalPage" + (i + 1) + ".png");
 				temp = new File(imageToUpload.getAbsolutePath());
 				
 				// Check if the file exists
@@ -260,7 +279,23 @@ public class PDFProcessor
 					System.exit(0);
 				}
 				
-				uploader.uploadFileToServer(directoryToSaveTo, temp);
+				uploader.uploadFileToServer(tempDir, temp);
+				temp.delete();
+				
+				filename = numberOfFiles + "-" + testName + "-" + uploadTime + "+/page" + (i+1) + ".png";
+				tempDir = directoryToSaveTo + filename;
+				
+				temp = new File("page" + (i + 1) + ".png");
+				temp = new File(dilatedUpload.getAbsolutePath());
+				
+				// Check if the file exists
+				if (!temp.exists())
+				{
+					System.out.println ("Unable to open file: " + dilatedUpload);
+					System.exit(0);
+				}
+				
+				uploader.uploadFileToServer(tempDir, temp);
 				
 				// Delete the file on the local file system
 				temp.delete();
@@ -271,10 +306,31 @@ public class PDFProcessor
 		catch (Exception e)
 		{
 			System.out.println ("Error while trying to convert pdf to images");
+			e.printStackTrace();
 		}
 		/////////////////////////////////////////////////////////////////////////////
 		
 		System.out.println ("File Uploaded PDF");
+	}
+	
+	// Dilate the image in an effort to improve readability
+	private void dilateImage(BufferedImage imageToProcess, String filename)
+	{
+		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
+		
+		int dilationSize = 1;
+		
+		byte[] imageData = ((DataBufferByte) imageToProcess.getRaster().getDataBuffer()).getData();
+		Mat inputImage = new Mat(imageToProcess.getHeight(), imageToProcess.getWidth(), CvType.CV_8UC3);
+		inputImage.put(0, 0, imageData);
+		
+		Mat outMat = inputImage;
+		
+		Mat element1 = Imgproc.getStructuringElement(Imgproc.MORPH_RECT,		
+		new Size(2*dilationSize + 1, 2*dilationSize+1));
+		Imgproc.erode(inputImage, outMat, element1);
+		
+		Highgui.imwrite(filename, outMat);
 	}
 	
 	// Reset the upload window if the uploader is inactive for the time specified
@@ -296,7 +352,8 @@ public class PDFProcessor
 		
 		//imageFiles[0] = new File ("scanned_class_test_2/201408201304.pdf");
 		
-		File dir = new File("scanned_class_test_2");
+		//File dir = new File("scanned_class_test_2");
+		File dir = new File("dilate_test");
 		File imageFiles [] = dir.listFiles();
 		int count = 1;
 		
@@ -307,6 +364,7 @@ public class PDFProcessor
 			System.out.println ();
 			count++;
 		}
+		
 		
 		/*File imageFile = new File("scanned_class_test_2/201408201312.pdf");
 		proc.processDocument(imageFile);
