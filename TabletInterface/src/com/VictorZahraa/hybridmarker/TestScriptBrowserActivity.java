@@ -514,7 +514,7 @@ public class TestScriptBrowserActivity extends Activity {
 					file = file.trim();
 
 					// Ignore previously marked image files
-					if (file.contains("Marked") || file.contains("saved"))
+					if (file.contains("Marked") || file.contains("saved") || file.contains("Original"))
 					{
 						ValueStoringHelperClass.isRemark = true;
 					}
