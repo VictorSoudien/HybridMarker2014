@@ -171,11 +171,7 @@ public class PDFProcessor
 					line = line.replaceAll(" ", "_");
 					uploadDirectory += line + "/";
 					
-					line ="Class_Test_2";
-					courseName = "CSC1010H";
-					uploadDirectory = courseName + "/" + line + "/";
-					
-					if (/*isInList(line, Operation.TEST) && isInList(courseName, Operation.COURSE)*/true)
+					if (isInList(line, Operation.TEST) && isInList(courseName, Operation.COURSE))
 					{	
 						windowTimer.cancel();
 						
