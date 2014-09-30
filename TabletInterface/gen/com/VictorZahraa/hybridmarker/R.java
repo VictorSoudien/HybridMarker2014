@@ -45,7 +45,7 @@ public final class R {
     public static final class id {
         public static final int action_add_comment=0x7f09002d;
         public static final int action_flag_script=0x7f09002f;
-        public static final int action_refresh=0x7f090034;
+        public static final int action_refresh=0x7f090035;
         public static final int action_settings=0x7f09002b;
         public static final int action_undo=0x7f09002c;
         public static final int action_upload_script=0x7f09002e;
@@ -71,10 +71,10 @@ public final class R {
         public static final int markingScreenCanvasContainer=0x7f090008;
         public static final int memoAnswersListView=0x7f090004;
         public static final int memo_text=0x7f090022;
-        public static final int menu_option_Eraser=0x7f090031;
-        public static final int menu_option_Pen=0x7f090030;
-        public static final int menu_option_recog_gesture=0x7f090032;
-        public static final int menu_option_view_pdf=0x7f090033;
+        public static final int menu_option_Eraser=0x7f090032;
+        public static final int menu_option_Pen=0x7f090031;
+        public static final int menu_option_recog_gesture=0x7f090033;
+        public static final int menu_option_view_pdf=0x7f090034;
         public static final int nextQuestionButton=0x7f090011;
         public static final int optionsList=0x7f090023;
         public static final int passwordInput=0x7f09001e;
@@ -95,7 +95,7 @@ public final class R {
         public static final int testDisplay=0x7f090019;
         public static final int textView1=0x7f09001a;
         public static final int upload_button=0x7f090015;
-        public static final int user_display=0x7f090035;
+        public static final int user_display=0x7f090030;
         public static final int usernameInput=0x7f09001d;
     }
     public static final class layout {

@@ -173,6 +173,10 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				}
 			}).show();
 		}
+		else if (id == R.id.user_display)
+		{
+			new ProfilePopUpHelper(context, this.getLayoutInflater());
+		}
 		return super.onOptionsItemSelected(item);
 	}
 

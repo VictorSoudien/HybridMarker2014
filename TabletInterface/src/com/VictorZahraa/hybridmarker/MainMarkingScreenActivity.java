@@ -331,6 +331,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		{
 			new BitmapMerger().execute();
 		}
+		else if (id == R.id.user_display)
+		{
+			new ProfilePopUpHelper(context, this.getLayoutInflater());
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
