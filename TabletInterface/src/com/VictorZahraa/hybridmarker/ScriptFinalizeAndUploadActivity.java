@@ -220,7 +220,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			if (connectToServer() == true)
 			{
 				uploadFiles(params[0]);
-				uploadMarks();
 			}
 			
 			return null;
@@ -294,6 +293,8 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				}
 
 				sftpChannel.disconnect();
+				
+				uploadMarks();
 			}
 			catch (Exception e)
 			{
@@ -304,52 +305,33 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		// Uploads the marks to the database and determines whether or not the script should be flagged
 		private void uploadMarks()
 		{
-			String link = context.getText(R.string.base_URL) + "/uploadMarks.php";
+			String link = context.getText(R.string.base_URL) + "/uploadMarks.php?";
 
 			try
 			{	
-				URL url = new URL(link);
+				//URL url = new URL(link);
 				
-				/*String values = ValueStoringHelperClass.COURSE_NAME + "\n"+
-				ValueStoringHelperClass.TEST_NAME + "\n"+
-						ValueStoringHelperClass.USERNAME + "\n"+
-				studentNumberInput.getText().toString() + "\n" +
-						valueStore.getTotalMark() + "\n" +
-				valueStore.getResultsInDBFormat();*/
-				
-				//publishProgress(values);
-				
-				String data  = URLEncoder.encode("Course", "UTF-8") 
-				+ "=" + URLEncoder.encode(ValueStoringHelperClass.COURSE_NAME.trim(), "UTF-8");
-				data += "&" + URLEncoder.encode("Test", "UTF-8") 
-				+ "=" + URLEncoder.encode(ValueStoringHelperClass.TEST_NAME.trim(), "UTF-8");
-				data += "&" + URLEncoder.encode("user", "UTF-8") 
-				+ "=" + URLEncoder.encode(ValueStoringHelperClass.USERNAME.trim(), "UTF-8");
-				data += "&" + URLEncoder.encode("studentNumber", "UTF-8") 
-				+ "=" + URLEncoder.encode(studentNumberInput.getText().toString().trim(), "UTF-8");
-				data += "&" + URLEncoder.encode("Mark", "UTF-8") 
-				+ "=" + URLEncoder.encode(("" + valueStore.getTotalMark()).trim(), "UTF-8");
-				data += "&" + URLEncoder.encode("Result", "UTF-8") 
-				+ "=" + URLEncoder.encode(valueStore.getResultsInDBFormat().trim(), "UTF-8");
+				link += "Course=" + ValueStoringHelperClass.COURSE_NAME.trim() +
+						"&Test=" + ValueStoringHelperClass.TEST_NAME.trim().replaceAll(" ", "%20") + 
+						"&user=" + ValueStoringHelperClass.USERNAME.trim() + 
+						"&studentNumber=" + studentNumberInput.getText().toString().trim() + 
+						"&Mark=" + valueStore.getTotalMark() +
+						"&Result=" + valueStore.getResultsInDBFormat();
 				
 				if (ValueStoringHelperClass.isRemark == true)
 				{
-					data += "&" + URLEncoder.encode("Remark", "UTF-8") 
-					+ "=" + URLEncoder.encode("Yes", "UTF-8");
+					link += "&Remark=Yes";
 				}
 				else
 				{
-					data += "&" + URLEncoder.encode("Remark", "UTF-8") 
-					+ "=" + URLEncoder.encode("No", "UTF-8");
+					link += "&Remark=No";
 				}
-				
-				URLConnection conn = url.openConnection();
-				conn.setDoOutput(true);
-				
-				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream()); 
-				wr.write( data ); 
-				wr.flush();
-				wr.close();
+
+				HttpClient client = new DefaultHttpClient();
+				HttpGet request = new HttpGet();
+				request.setURI(new URI(link));
+
+				HttpResponse response = client.execute(request);
 			}
 			catch (Exception e)
 			{
