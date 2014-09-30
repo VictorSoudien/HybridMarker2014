@@ -190,7 +190,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 	{
 		String studentNum = studentNumberInput.getText().toString().trim();
 
-		if (studentNum.equals("") || studentNum.length() != 9)
+		if (studentNum.equals("") || studentNum.length() != 9 || (ValueStoringHelperClass.STUDENTS_LIST.contains(studentNum) == false))
 		{
 			// Display the flagging dialog
 			new AlertDialog.Builder(this)
