@@ -338,7 +338,7 @@ public class PDFProcessor
 		}
 	}
 	
-	public static void main(String[] args) 
+	/*public static void main(String[] args) 
 	{
 		//File imageFile = new File("201408080948.pdf");
 		//File imageFile = new File("ScannedScript.pdf");
@@ -365,8 +365,8 @@ public class PDFProcessor
 		proc.processDocument(imageFile);
 		
 		imageFile = new File("scanned_class_test_2/201408201316 (2).pdf");
-		proc.processDocument(imageFile);*/
+		proc.processDocument(imageFile);
 		
 		System.out.println ("Upload complete");
-	}
+	}*/
 }

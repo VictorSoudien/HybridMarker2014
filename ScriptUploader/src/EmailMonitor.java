@@ -19,9 +19,13 @@ public class EmailMonitor
 {
 	private IMAPFolder inbox;
 	private int lastMessageRead;
+	private PDFProcessor pdfProc;
 	
 	public void createConnectionToMailbox()
 	{
+		// Set up PDF Processor
+		pdfProc = new PDFProcessor();
+		
 		// Define protocol
 		Properties properties = new Properties();
 		properties.setProperty("mail.store.protocol", "imap");
@@ -109,10 +113,9 @@ public class EmailMonitor
 								bodyPart.saveFile(scannedPDF);
 								
 								// Send the pdf for processing in order to determine test name
-								PDFProcessor pdfProc = new PDFProcessor();
 								pdfProc.processDocument(scannedPDF);
 								
-								System.out.println("Attachment Saved");
+								scannedPDF.delete();
 							}
 						}
 					}

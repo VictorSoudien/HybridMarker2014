@@ -66,7 +66,9 @@ public class FileUploader
 		catch (Exception e)
 		{
 			System.out.println ("An error occured while trying to upload the file");
-			System.out.println (e.getMessage());
+			System.out.println (/*e.getMessage()*/);
+			System.out.println ("Retrying...");
+			uploadFileToServer(pathOnServer, fileToUpload);
 			return false;
 		}
 		finally
