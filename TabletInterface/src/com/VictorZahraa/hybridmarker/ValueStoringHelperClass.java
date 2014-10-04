@@ -88,10 +88,17 @@ public class ValueStoringHelperClass
 	public void setFlagText (String txt) {scriptFlagText = txt; scriptFlagged = !(scriptFlagText.equals(""));}
 	public String getFlagText () {return scriptFlagText;}
 	
+	public int getIndexOfLastIncrementedQuestion () {return indexOfLastIncrementedQuestion;}
+	
 	public String getMarkDisplay() 
 	{
 		return "Q " + (indexOfLastIncrementedQuestion + 1) + " : " + marksPerMainQuestion[indexOfLastIncrementedQuestion] +
 				" / " + maxMarksForMainQuestions.get(indexOfLastIncrementedQuestion);
+	}
+	
+	public boolean tooManyMarksAssignedToCurrentQuestion()
+	{
+		return (marksPerMainQuestion[indexOfLastIncrementedQuestion] > maxMarksForMainQuestions.get(indexOfLastIncrementedQuestion));
 	}
 	
 	public boolean isScriptFlagged () {return scriptFlagged;}

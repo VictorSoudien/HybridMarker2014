@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.TooManyListenersException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -106,7 +107,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		context = this;
 
 		valueStore = new ValueStoringHelperClass();
-		
+
 		currentPage = 1;
 		currentPageScore = 0;
 
@@ -156,7 +157,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		initTabs();
 		initiliseSCanvas();
 		loadGestureLibrary();
-		
+
 		pageMarkTextView.setText(valueStore.getMarkDisplay());
 
 		/*if (savedInstanceState == null) {
@@ -164,7 +165,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
 	}
-	
+
 	// Initialises tab layout
 	private void initTabs()
 	{
@@ -385,9 +386,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		else
 		{
 			new AlertDialog.Builder(context)
-		    .setTitle("Unable to retrieve memo for this page. Please report this issue to your network admin.")
-		    .setPositiveButton("Continue", null)
-		    .show();
+			.setTitle("Unable to retrieve memo for this page. Please report this issue to your network admin.")
+			.setPositiveButton("Continue", null)
+			.show();
 		}
 	}
 
@@ -577,6 +578,26 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		protected void onPostExecute(Long params)
 		{
 			pageMarkTextView.setText(valueStore.getMarkDisplay());
+
+			// Check that mark allocation is within bounds
+			if (valueStore.tooManyMarksAssignedToCurrentQuestion() == true)
+			{
+				// Display the flagging dialog
+				new AlertDialog.Builder(context)
+				.setTitle("Mark allocation")
+				.setMessage("Too many marks have been assigned to Question " + (valueStore.getIndexOfLastIncrementedQuestion() + 1))
+				.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) 
+					{
+						// Dismiss the dialog
+					}})
+				.setNegativeButton("Undo Last Mark Allocation", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) 
+						{
+							sCanvasView.undo();
+						}}
+				).show();
+			}
 		}
 	}
 

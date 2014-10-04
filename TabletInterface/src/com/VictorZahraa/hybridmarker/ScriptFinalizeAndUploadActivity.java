@@ -192,7 +192,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 		if (studentNum.equals("") || studentNum.length() != 9 || (ValueStoringHelperClass.STUDENTS_LIST.contains(studentNum) == false))
 		{
-			// Display the flagging dialog
+			// Display an error for student number entry
 			new AlertDialog.Builder(this)
 			.setTitle("Invalid Student Number")
 			.setMessage("Please enter a valid student number")
