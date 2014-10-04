@@ -156,6 +156,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		initTabs();
 		initiliseSCanvas();
 		loadGestureLibrary();
+		
+		pageMarkTextView.setText(valueStore.getMarkDisplay());
 
 		/*if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -355,7 +357,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		currentPage = page;
 		prevScore = valueStore.getPageScore(currentPage); // Get the previous mark for this page
 
-		pageMarkTextView.setText("" + valueStore.getPageScore(currentPage));
+		pageMarkTextView.setText(valueStore.getMarkDisplay());
 
 		if (valueStore.getStoredView(page) != null)
 		{
@@ -574,7 +576,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		@Override
 		protected void onPostExecute(Long params)
 		{
-			pageMarkTextView.setText("" + currentPageScore);
+			pageMarkTextView.setText(valueStore.getMarkDisplay());
 		}
 	}
 

@@ -48,9 +48,9 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:drawableBottom="@android:color/holo_blue_bright"
-                android:gravity="center_horizontal"
-                android:text="Medium Text"
+                android:gravity="center_horizontal"                
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+            <!-- android:text="Medium Text" -->
 
             <ListView
                 android:id="@+id/memoAnswersListView"

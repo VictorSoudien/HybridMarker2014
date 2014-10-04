@@ -63,6 +63,9 @@ public class ValueStoringHelperClass
 	private static ArrayList<ArrayList<Double>> maxMarks;
 	private static boolean marksPerMainQuestionBeingModified;
 	
+	// Used to update the mark display
+	private int indexOfLastIncrementedQuestion = 0;
+	
 	// Stores the text the user entered as part of the complaint about a script
 	private static String scriptFlagText;
 	private static boolean scriptFlagged = false;
@@ -83,6 +86,11 @@ public class ValueStoringHelperClass
 	
 	public void setFlagText (String txt) {scriptFlagText = txt; scriptFlagged = !(scriptFlagText.equals(""));}
 	public String getFlagText () {return scriptFlagText;}
+	
+	public String getMarkDisplay() 
+	{
+		return "Question " + (indexOfLastIncrementedQuestion + 1) + " : " + marksPerMainQuestion[indexOfLastIncrementedQuestion];
+	}
 	
 	public boolean isScriptFlagged () {return scriptFlagged;}
 
@@ -608,6 +616,8 @@ public class ValueStoringHelperClass
 					marksPerMainQuestion[pageCoords.get(i).get(2) - 1] = marksPerMainQuestion[pageCoords.get(i).get(2) - 1] +  mark;
 					subQuestionMarks[pageCoords.get(i).get(2) - 1][pageCoords.get(i).get(3) - 1] = subQuestionMarks[pageCoords.get(i).get(2) - 1][pageCoords.get(i).get(3) - 1] +  mark;
 					
+					indexOfLastIncrementedQuestion = pageCoords.get(i).get(2) - 1;
+					
 					// Prevent scores from going below 0
 					if (marksPerMainQuestion[pageCoords.get(i).get(2) - 1] < 0)
 					{
@@ -641,6 +651,8 @@ public class ValueStoringHelperClass
 			{
 				marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] = marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] + mark;
 				subQuestionMarks[pageCoords.get(indexOfNearest).get(2) - 1][pageCoords.get(indexOfNearest).get(3) - 1] = subQuestionMarks[pageCoords.get(indexOfNearest).get(2) - 1][pageCoords.get(indexOfNearest).get(3) - 1] +  mark;
+				
+				indexOfLastIncrementedQuestion = pageCoords.get(indexOfNearest).get(2) - 1;
 				
 				// Prevent scores from going below 0
 				if (marksPerMainQuestion[pageCoords.get(indexOfNearest).get(2) - 1] < 0)
