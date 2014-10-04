@@ -61,6 +61,7 @@ public class ValueStoringHelperClass
 	private static int numMainQuestions;
 	private static ArrayList<Integer> numSubQuestions;
 	private static ArrayList<ArrayList<Double>> maxMarks;
+	private static ArrayList<Double> maxMarksForMainQuestions;
 	private static boolean marksPerMainQuestionBeingModified;
 	
 	// Used to update the mark display
@@ -89,7 +90,8 @@ public class ValueStoringHelperClass
 	
 	public String getMarkDisplay() 
 	{
-		return "Question " + (indexOfLastIncrementedQuestion + 1) + " : " + marksPerMainQuestion[indexOfLastIncrementedQuestion];
+		return "Q " + (indexOfLastIncrementedQuestion + 1) + " : " + marksPerMainQuestion[indexOfLastIncrementedQuestion] +
+				" / " + maxMarksForMainQuestions.get(indexOfLastIncrementedQuestion);
 	}
 	
 	public boolean isScriptFlagged () {return scriptFlagged;}
@@ -360,6 +362,7 @@ public class ValueStoringHelperClass
 	private void processHeader(String header)
 	{	
 		maxMarks = new ArrayList<ArrayList<Double>>();
+		maxMarksForMainQuestions = new ArrayList<Double>();
 
 		String [] headerLines = header.split("\n");
 		totalMarks = Integer.parseInt(headerLines[0]);
@@ -371,6 +374,9 @@ public class ValueStoringHelperClass
 			if (line.startsWith("Q") || line.startsWith("q"))
 			{
 				numMainQuestions++;
+				String temp = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
+				
+				maxMarksForMainQuestions.add(Double.parseDouble(temp.split(" ")[0]));
 			}
 			else
 			{
