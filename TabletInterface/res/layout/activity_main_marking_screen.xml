@@ -46,22 +46,23 @@
                 android:id="@+id/markText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:background="@android:color/darker_gray"
                 android:drawableBottom="@android:color/holo_blue_bright"
-                android:gravity="center_horizontal"                
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/black" />
             <!-- android:text="Medium Text" -->
 
             <ListView
                 android:id="@+id/memoAnswersListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@android:color/black"
                 android:divider="@android:color/holo_blue_bright"
-                android:dividerHeight="1dp"
-                android:background="@android:color/black" >
+                android:dividerHeight="1dp" >
             </ListView>
 
-            <!-- 
+            <!--
             <ScrollView
                 android:id="@+id/answerTextScrollView"
                 android:layout_width="match_parent"
@@ -82,7 +83,8 @@
                         android:textAppearance="?android:attr/textAppearanceLarge" />
                 </LinearLayout>
             </ScrollView>
-			 -->
+            -->
+
 
             <!--
             <LinearLayout
