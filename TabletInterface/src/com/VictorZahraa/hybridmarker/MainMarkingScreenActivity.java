@@ -165,6 +165,28 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
 	}
+	
+	// Handle the pressing of the 'physical' back button
+	@Override
+	public void onBackPressed()
+	{
+		// Notify the user that any marking progress will be lost
+		new AlertDialog.Builder(context)
+		.setTitle("Are you sure you wish to exit?")
+		.setMessage("All marking progress on this script will be lost")
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) 
+			{
+				valueStore.recycleBitmaps();
+				finish();
+			}})
+		.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) 
+				{
+					//Dismiss the dialog
+				}}
+		).show();
+	}
 
 	// Initialises tab layout
 	private void initTabs()
@@ -582,7 +604,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			// Check that mark allocation is within bounds
 			if (valueStore.tooManyMarksAssignedToCurrentQuestion() == true)
 			{
-				// Display the flagging dialog
+				// Display a mark allocation error
 				new AlertDialog.Builder(context)
 				.setTitle("Mark allocation")
 				.setMessage("Too many marks have been assigned to Question " + (valueStore.getIndexOfLastIncrementedQuestion() + 1))
