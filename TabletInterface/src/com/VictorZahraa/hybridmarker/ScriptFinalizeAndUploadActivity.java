@@ -128,7 +128,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 	public void onBackPressed()
 	{
 		// Handle the pressing of the 'physical' back button
-		// Do nothing
 	}
 
 	@Override

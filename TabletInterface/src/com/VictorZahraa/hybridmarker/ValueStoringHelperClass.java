@@ -93,7 +93,7 @@ public class ValueStoringHelperClass
 	
 	public String getMarkDisplay() 
 	{
-		indexOfDisplayedQuestion = indexOfDisplayedQuestion;
+		indexOfDisplayedQuestion = indexOfLastIncrementedQuestion;
 		return "Q " + (indexOfLastIncrementedQuestion + 1) + " : " + marksPerMainQuestion[indexOfLastIncrementedQuestion] +
 				" / " + maxMarksForMainQuestions.get(indexOfLastIncrementedQuestion);
 	}
