@@ -641,16 +641,16 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 				double markToBeAllocated = (undo == true) ? -(tickCount + (0.5 * halfTickCount)): (tickCount + (0.5 * halfTickCount));
 				
-				if (isX == true)
+				/*if (isX == true)
 				{
 					markToBeAllocated = -(previousMarkAllocated);
 					valueStore.allocateMark((currentPage - 1), previousMedian, markToBeAllocated);
 				}
 				else
-				{
+				{*/
 					valueStore.allocateMark((currentPage - 1), (int) medianY, markToBeAllocated);
 					previousMarkAllocated = Math.abs(markToBeAllocated);
-				}
+				//}
 				
 				previousMedian = (int) medianY;
 
