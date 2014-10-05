@@ -20,28 +20,6 @@
             android:background="@android:color/black"
             android:orientation="vertical" >
 
-            <!--
-            <ScrollView
-                android:id="@+id/questionTextScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" 
-                android:layout_weight="1" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:id="@+id/questionText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="Large Text"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
-                </LinearLayout>
-            </ScrollView>
-            -->
-
             <TextView
                 android:id="@+id/markText"
                 android:layout_width="match_parent"
@@ -61,64 +39,6 @@
                 android:divider="@android:color/holo_blue_bright"
                 android:dividerHeight="1dp" >
             </ListView>
-
-            <!--
-            <ScrollView
-                android:id="@+id/answerTextScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#A7FF9F" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:id="@+id/answerText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="Large Text"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
-                </LinearLayout>
-            </ScrollView>
-            -->
-
-
-            <!--
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1.7"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:showDividers="middle" >
-
-                <Button
-                    android:id="@+id/previous_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:onClick="prevQuestionAndAnswer"
-                    android:text="@string/action_prev" />
-
-                <TextView
-                    android:id="@+id/markText"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="10"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="40sp" />
-
-                <Button
-                    android:id="@+id/next_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:onClick="nextQuestionAndAnswer"
-                    android:text="@string/action_next" />
-            </LinearLayout>
-            -->
         </LinearLayout>
 
         <com.VictorZahraa.hybridmarker.ScrollViewHelper
@@ -140,8 +60,6 @@
                     android:layout_height="match_parent"
                     android:scaleType="fitStart"
                     android:src="@drawable/page1200dpi" />
-                <!-- android:scaleType="fitStart" -->
-
             </LinearLayout>
         </com.VictorZahraa.hybridmarker.ScrollViewHelper>
     </LinearLayout>
@@ -162,8 +80,6 @@
         android:layout_marginBottom="-760dp"
         android:layout_toRightOf="@id/canvasAnchorPoint"
         android:background="@android:color/transparent" >
-
-        <!-- android:layout_width="680dp" -->
     </RelativeLayout>
 
 </RelativeLayout>
