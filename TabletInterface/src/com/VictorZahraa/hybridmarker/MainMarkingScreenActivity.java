@@ -459,9 +459,20 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	private class GestureRecognition extends AsyncTask<Object, String, Long>
 	{
+		// Stores details about the previous mark allocation that was made
+		double previousMarkAllocated = 0;
+		ArrayList<Float> previousPointsX = null;
+		ArrayList<Float> previousPointsY = null;
+		Rect previousRect = null;
+		
+		boolean isX = false;
+		int previousMedian = 0;
+		
 		@Override
 		protected Long doInBackground(Object... params)
 		{
+			isX = false;
+			
 			if (params.length == 2)
 			{
 				performGestureRecog((SCanvasView)params[0], (GestureMode) params[1]);
@@ -474,6 +485,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		{
 			LinkedList<SObject> sObjects = view.getSObjectList(true);
 
+			ArrayList<Double> xList = new ArrayList<Double>();
 			ArrayList<Double> yList = new ArrayList<Double>();
 			double medianY = 0;
 
@@ -511,6 +523,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				{	
 					counter++;
 					yList = new ArrayList<Double>();
+					xList = new ArrayList<Double>();
 
 					if (currentMode == GestureMode.NORMAL)
 					{
@@ -544,16 +557,42 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 					PointF [][] currentPoints = new PointF[1][1];
 					currentPoints[0] = ((SObjectStroke) objs).getPoints();
-
-					// Find the average yPosition of the tick
+					
+					// Used to find the median yPosition of the tick
 					for (int i = 0; i < currentPoints[0].length; i++)
 					{
-						double p = currentPoints[0][i].y;
+						double px = currentPoints[0][i].x;
+						double py = currentPoints[0][i].y;
 
-						yList.add(p);
+						xList.add(px);
+						yList.add(py);
 					}
+					Collections.sort(xList);
 					Collections.sort(yList);
 					medianY = yList.get(yList.size() / 2);
+					
+					// Coords of the current Rect
+					int xMin = (int) Math.ceil(xList.get(0));
+					int yMin = (int) Math.ceil(yList.get(0));
+					int xMax = (int) Math.ceil(xList.get(xList.size() - 1));
+					int yMax = (int) Math.ceil(yList.get(yList.size() - 1));
+					
+					// Determine if an x is being processed
+					if (previousRect == null)
+					{
+						previousRect = new Rect(xMin, yMin, xMax, yMax);
+					}
+					else
+					{
+						Rect currentRect = new Rect(xMin, yMin, xMax, yMax);
+						
+						if (currentRect.contains(previousRect) || previousRect.contains(currentRect))
+						{
+							isX = true;
+						}
+						
+						previousRect = currentRect;
+					}
 
 					ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
 
@@ -601,7 +640,19 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
 
 				double markToBeAllocated = (undo == true) ? -(tickCount + (0.5 * halfTickCount)): (tickCount + (0.5 * halfTickCount));
-				valueStore.allocateMark((currentPage - 1), (int) medianY, markToBeAllocated);
+				
+				if (isX == true)
+				{
+					markToBeAllocated = -(previousMarkAllocated);
+					valueStore.allocateMark((currentPage - 1), previousMedian, markToBeAllocated);
+				}
+				else
+				{
+					valueStore.allocateMark((currentPage - 1), (int) medianY, markToBeAllocated);
+					previousMarkAllocated = Math.abs(markToBeAllocated);
+				}
+				
+				previousMedian = (int) medianY;
 
 				currentPageScore += markToBeAllocated;
 
