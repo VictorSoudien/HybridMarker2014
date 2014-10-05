@@ -372,6 +372,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			if (success == true)
 			{
 				new AlertDialog.Builder(context)
+				.setCancelable(false)
 				.setTitle("Script Upload")
 				.setMessage("File uploaded successfully")
 				.setPositiveButton("Continue", new DialogInterface.OnClickListener() {

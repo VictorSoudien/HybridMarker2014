@@ -144,6 +144,7 @@ public class TestScriptBrowserActivity extends Activity {
 	public void onBackPressed()
 	{
 		// Handle the pressing of the 'physical' back button
+		endApplication();
 	}
 
 	// Close the application
@@ -169,6 +170,7 @@ public class TestScriptBrowserActivity extends Activity {
 		.setView(loginView)
 		.setPositiveButton("Log In", null)
 		.setNegativeButton("Exit", null)
+		.setCancelable(false)
 		.show();
 
 		// Add a listener to the positive button
@@ -589,9 +591,13 @@ public class TestScriptBrowserActivity extends Activity {
 
 		protected void onProgressUpdate(String... message) 
 		{
+			message[0] = (message[0].trim().equals("")) ? "An error has occured: Please check your network connection" : message[0];
+			
 			new AlertDialog.Builder(context)
-			.setTitle(message[0])
+			.setTitle("Connection Error")
+			.setMessage(message[0])
 			.setPositiveButton("Continue", null)
+			.setCancelable(false)
 			.show();
 		}
 

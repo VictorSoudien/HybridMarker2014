@@ -174,6 +174,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		new AlertDialog.Builder(context)
 		.setTitle("Are you sure you wish to exit?")
 		.setMessage("All marking progress on this script will be lost")
+		.setCancelable(false)
 		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) 
 			{
@@ -410,6 +411,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			new AlertDialog.Builder(context)
 			.setTitle("Unable to retrieve memo for this page. Please report this issue to your network admin.")
 			.setPositiveButton("Continue", null)
+			.setCancelable(false)
 			.show();
 		}
 	}
@@ -606,6 +608,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 			{
 				// Display a mark allocation error
 				new AlertDialog.Builder(context)
+				.setCancelable(false)
 				.setTitle("Mark allocation")
 				.setMessage("Too many marks have been assigned to Question " + (valueStore.getIndexOfLastIncrementedQuestion() + 1))
 				.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
