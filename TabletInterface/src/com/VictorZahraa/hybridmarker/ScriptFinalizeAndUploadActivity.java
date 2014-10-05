@@ -212,7 +212,10 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		private ProgressDialog progressDialog;
 
 		private String pathToSDCard;
+		
 		private boolean success;
+		private String error;
+		
 
 		@Override
 		protected String doInBackground(String... params) 
@@ -249,7 +252,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			}
 			catch (Exception e)
 			{
-				publishProgress("An error has occured: Please check your network connection");
+				error = "An error occured while trying to establish a connection to the server: \nPlease check your network connection";
 				return false;
 			}
 		}
@@ -303,7 +306,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			}
 			catch (Exception e)
 			{
-				publishProgress("An error has occured: Please check your network connection");
+				error = "An error occured during file upload: \nPlease check your network connection";
 				success = false;
 			}
 		}
@@ -349,8 +352,8 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			catch (Exception e)
 			{
 				// Handle exception
-				//return e.getMessage();//"Please check your internet connection";
-				publishProgress(e.getMessage());
+				error = "An error occured during mark uploading: \nPlease check your network connection";
+				success = false;
 			}
 		}
 
@@ -359,14 +362,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		{
 			progressDialog = ProgressDialog.show(ScriptFinalizeAndUploadActivity.this, "", 
 					"Uploading Script", true);
-		}
-
-		@Override
-		protected void onProgressUpdate(String... messages)
-		{
-			//progressDialog.setMessage(messages[0]);
-			Toast t = Toast.makeText(context, messages[0], Toast.LENGTH_LONG);
-			t.show();
 		}
 
 		@Override
@@ -389,6 +384,18 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 								.getLaunchIntentForPackage( getBaseContext().getPackageName() );
 						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(i);
+					}}
+						).show();
+			}
+			else
+			{
+				new AlertDialog.Builder(context)
+				.setTitle("Script Upload Unsuccessful")
+				.setMessage(error)
+				.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) 
+					{
+						// Dismiss the dialog
 					}}
 						).show();
 			}
