@@ -20,16 +20,35 @@
             android:background="@android:color/black"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/markText"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/darker_gray"
-                android:drawableBottom="@android:color/holo_blue_bright"
-                android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@android:color/black" />
-            <!-- android:text="Medium Text" -->
+                android:orientation="horizontal" >
+
+                <ImageButton
+                    android:id="@+id/previousQuestionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_previous_item"
+                    android:onClick="displayMarksForPreviousQuestion" />
+
+                <TextView
+                    android:id="@+id/markText"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:drawableBottom="@android:color/holo_blue_bright"
+                    android:gravity="center"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/black"/>
+                
+                <ImageButton
+                    android:id="@+id/nextQuestionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_next_item"
+                    android:onClick="displayMarksForNextQuestion" />
+            </LinearLayout>
 
             <ListView
                 android:id="@+id/memoAnswersListView"

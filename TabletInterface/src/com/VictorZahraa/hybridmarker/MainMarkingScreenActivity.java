@@ -165,7 +165,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}*/
 	}
-	
+
 	// Handle the pressing of the 'physical' back button
 	@Override
 	public void onBackPressed()
@@ -181,12 +181,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				valueStore.recycleBitmaps();
 				finish();
 			}})
-		.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			.setNegativeButton("No", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) 
 				{
 					//Dismiss the dialog
 				}}
-		).show();
+					).show();
 	}
 
 	// Initialises tab layout
@@ -294,6 +294,18 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				//displayToast("Custom Gesture Library Loaded");
 			}
 		}
+	}
+
+	// Called when the next question button is clicked
+	public void displayMarksForNextQuestion(View view)
+	{
+		pageMarkTextView.setText(valueStore.getNextMarkDisplay());
+	}
+
+	// Called when the previous question button is clicked
+	public void displayMarksForPreviousQuestion(View view)
+	{
+		pageMarkTextView.setText(valueStore.getPreviousMarkDisplay());
 	}
 
 	@Override
@@ -616,12 +628,12 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					{
 						// Dismiss the dialog
 					}})
-				.setNegativeButton("Undo Last Mark Allocation", new DialogInterface.OnClickListener() {
+					.setNegativeButton("Undo Last Mark Allocation", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) 
 						{
 							sCanvasView.undo();
 						}}
-				).show();
+							).show();
 			}
 		}
 	}

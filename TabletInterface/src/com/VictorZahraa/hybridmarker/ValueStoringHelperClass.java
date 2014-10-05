@@ -66,6 +66,7 @@ public class ValueStoringHelperClass
 	
 	// Used to update the mark display
 	private int indexOfLastIncrementedQuestion = 0;
+	private int indexOfDisplayedQuestion = 0;
 	
 	// Stores the text the user entered as part of the complaint about a script
 	private static String scriptFlagText;
@@ -92,8 +93,39 @@ public class ValueStoringHelperClass
 	
 	public String getMarkDisplay() 
 	{
+		indexOfDisplayedQuestion = indexOfDisplayedQuestion;
 		return "Q " + (indexOfLastIncrementedQuestion + 1) + " : " + marksPerMainQuestion[indexOfLastIncrementedQuestion] +
 				" / " + maxMarksForMainQuestions.get(indexOfLastIncrementedQuestion);
+	}
+	
+	public String getNextMarkDisplay() 
+	{
+		if (indexOfDisplayedQuestion != (marksPerMainQuestion.length - 1))
+		{
+			indexOfDisplayedQuestion += 1;
+			return "Q " + (indexOfDisplayedQuestion + 1) + " : " + marksPerMainQuestion[indexOfDisplayedQuestion] +
+					" / " + maxMarksForMainQuestions.get(indexOfDisplayedQuestion);
+		}
+		else
+		{
+			return "Q " + (indexOfDisplayedQuestion + 1) + " : " + marksPerMainQuestion[indexOfDisplayedQuestion] +
+					" / " + maxMarksForMainQuestions.get(indexOfDisplayedQuestion);
+		}
+	}
+	
+	public String getPreviousMarkDisplay() 
+	{
+		if (indexOfDisplayedQuestion != 0)
+		{
+			indexOfDisplayedQuestion -= 1;
+			return "Q " + (indexOfDisplayedQuestion + 1) + " : " + marksPerMainQuestion[indexOfDisplayedQuestion] +
+					" / " + maxMarksForMainQuestions.get(indexOfDisplayedQuestion);
+		}
+		else
+		{
+			return "Q " + (indexOfDisplayedQuestion + 1) + " : " + marksPerMainQuestion[indexOfDisplayedQuestion] +
+					" / " + maxMarksForMainQuestions.get(indexOfDisplayedQuestion);
+		}
 	}
 	
 	public boolean tooManyMarksAssignedToCurrentQuestion()
