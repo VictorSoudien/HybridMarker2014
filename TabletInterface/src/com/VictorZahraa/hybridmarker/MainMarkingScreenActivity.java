@@ -575,14 +575,14 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 						if (currentGesturePoints.containsKey(py))
 						{
 							// Add the x coord to the ArrayList
-							currentGesturePoints.get(py).add(px);
+							currentGesturePoints.get(Math.floor(py)).add(Math.floor(px));
 						}
 						else
 						{
 							ArrayList<Double> temp = new ArrayList<Double>();
-							temp.add(px);
+							temp.add(Math.floor(px));
 							
-							currentGesturePoints.put(py, (ArrayList<Double>) temp.clone());
+							currentGesturePoints.put(Math.floor(py), (ArrayList<Double>) temp.clone());
 						}
 					}
 					Collections.sort(xList);
@@ -592,29 +592,40 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					// Determine if an x is being processed
 					if (prevGesturePoints != null)
 					{
-						for (Double key : currentGesturePoints.keySet())
-						{
+						for (double key : currentGesturePoints.keySet())
+						{	
 							if (prevGesturePoints.containsKey(key))
 							{
+								tempMessage = "Y in common";
+								
 								ArrayList<Double> prevTemp = prevGesturePoints.get(key);
 								ArrayList<Double> currentTemp = currentGesturePoints.get(key);
 								
+								int padding = 15;
+								
 								for (double x : prevTemp)
 								{
-									if (currentTemp.contains(x))
+									for (double xCurr : currentTemp)
+									{
+										if ((xCurr - padding) < x && (xCurr + padding) > x)
+										{
+											isX = true;
+											tempMessage = "X";
+											break;
+										}
+									}
+									/*if (currentTemp.contains(x))
 									{
 										isX = true;
-										tempMessage = "X";
+										//tempMessage = "X";
 										break;
-									}
+									}*/
 								}
 								
 								if (isX == true)
 								{
 									break;
 								}
-								
-								tempMessage = "Y in common";
 							}
 						}
 					}
