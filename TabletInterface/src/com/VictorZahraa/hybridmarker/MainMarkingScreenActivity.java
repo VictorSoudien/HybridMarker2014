@@ -642,63 +642,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 					prevGesturePoints = (HashMap<Double, ArrayList<Double>>) currentGesturePoints.clone();
 
-					//					// Coords of the current Rect
-					//					int xMin = (int) Math.ceil(xList.get(0));
-					//					int yMin = (int) Math.ceil(yList.get(0));
-					//					int xMax = (int) Math.ceil(xList.get(xList.size() - 1));
-					//					int yMax = (int) Math.ceil(yList.get(yList.size() - 1));
-					//					
-					//					// Determine if an x is being processed
-					//					if (prevRect == null)
-					//					{
-					//						prevRect = objs.getRect();
-					//						
-					//						prevXMin = xMin;
-					//						prevYMin = yMin;
-					//						prevXMax = xMax;
-					//						prevYMax = yMax;
-					//					}
-					//					else
-					//					{
-					//						//Rect currentRect = new Rect(xMin, yMin, xMax, yMax);
-					//						RectF currentRect = objs.getRect();
-					//						
-					//						/*if (currentRect.contains(previousRect) || previousRect.contains(currentRect))
-					//						{
-					//							isX = true;
-					//							tempMessage = "Bounding Boxes Intersect";
-					//						}*/
-					//						
-					//						//if (Rect.intersects(previousRect, currentRect))
-					//						if (currentRect.intersect(prevRect))//(RectF.intersects(currentRect, prevRect))
-					//						{
-					//							isX = true;
-					//							//tempMessage = "Intersect";
-					//						}
-					//						else
-					//						{
-					//							//tempMessage = "No intersection";
-					//						}
-					//						
-					//						/*float d = (prevYMax - prevYMin) * (xMax - xMin) - (prevXMax - prevXMin) * (yMax - yMin);
-					//						
-					//						if (d == 0)
-					//						{
-					//							tempMessage = ("Not intersecting");
-					//						}
-					//						else
-					//						{
-					//							tempMessage = ("Intersecting");
-					//						}*/
-					//						
-					//						prevXMin = xMin;
-					//						prevYMin = yMin;
-					//						prevXMax = xMax;
-					//						prevYMax = yMax;
-					//						
-					//						prevRect = objs.getRect();
-					//					}
-
 					ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
 
 					if ((gestureInfo == null) || (gestureInfo.size() <= 0))
