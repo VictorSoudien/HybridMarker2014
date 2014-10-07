@@ -474,7 +474,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 		boolean isX = false;
 		int previousMedian = 0;
-		String tempMessage = "";
 
 		@Override
 		protected Long doInBackground(Object... params)
@@ -605,8 +604,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 								{	
 									if (prevGesturePoints.containsKey(key))
 									{
-										tempMessage = "Y in common";
-
 										ArrayList<Double> prevTemp = prevGesturePoints.get(key);
 										ArrayList<Double> currentTemp = currentGesturePoints.get(key);
 
@@ -621,7 +618,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 													if ((xCurr - padding) < x && (xCurr + padding) > x)
 													{
 														isX = true;
-														tempMessage = "X";
 														break;
 													}
 												}
@@ -714,7 +710,6 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		protected void onPostExecute(Long params)
 		{
 			pageMarkTextView.setText(valueStore.getMarkDisplay());
-			displayToast(tempMessage);
 
 			// Check that mark allocation is within bounds
 			if (valueStore.tooManyMarksAssignedToCurrentQuestion() == true)
