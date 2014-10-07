@@ -34,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
-
 import com.samsung.samm.common.SObject;
 import com.samsung.samm.common.SObjectStroke;
 import com.samsung.samm.common.SObjectText;
@@ -319,6 +318,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_marking_screen, menu);
 		actionMenu = menu;
+		
+		MenuItem userDisplay = menu.findItem(R.id.user_display);
+		userDisplay.setTitle(ValueStoringHelperClass.USERNAME);
+		
 		return true;
 	}
 

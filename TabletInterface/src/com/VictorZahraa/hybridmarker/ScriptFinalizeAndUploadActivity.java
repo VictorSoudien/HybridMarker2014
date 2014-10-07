@@ -135,6 +135,10 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.script_finalize_and_upload, menu);
+		
+		MenuItem userDisplay = menu.findItem(R.id.user_display);
+		userDisplay.setTitle(ValueStoringHelperClass.USERNAME);
+		
 		return true;
 	}
 
