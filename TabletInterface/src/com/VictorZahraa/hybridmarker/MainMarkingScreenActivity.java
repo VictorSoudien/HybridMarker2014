@@ -322,6 +322,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		MenuItem userDisplay = menu.findItem(R.id.user_display);
 		userDisplay.setTitle(ValueStoringHelperClass.USERNAME);
 		
+		actionMenu.findItem(R.id.action_free_write).setIcon(R.drawable.ic_action_edit);
+		actionMenu.findItem(R.id.action_add_comment).setIcon(R.drawable.ic_action_chat);
+		
 		return true;
 	}
 
@@ -419,6 +422,14 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		scriptScrollView.setScrollY(0);
 		prevGesturePoints = null;
 		previousSObject = null;
+		
+		// Reset modes
+		freeWrite = false;
+		if (sCanvasView != null)
+		{
+			sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
+		}
+		invalidateOptionsMenu();
 
 		if (previousSObjects != null)
 		{
