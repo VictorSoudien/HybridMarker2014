@@ -93,9 +93,14 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	// Used during gesture recognition
 	HashMap<Double, ArrayList<Double>> prevGesturePoints;
 	SObject previousSObject = null;
-	
+
 	// Stores details about the previous mark allocation that was made
 	double previousMarkAllocated = 0;
+
+	// Allows the user to write freely without gesture recognition being performed
+	boolean freeWrite = false;
+	
+	Menu actionMenu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -235,7 +240,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				sCanvasView.setZoomEnable(false);
 			}
 		});
-		
+
 		sCanvasView.setHistoryUpdateListener(new HistoryUpdateListener() 
 		{	
 			@Override
@@ -313,6 +318,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_marking_screen, menu);
+		actionMenu = menu;
 		return true;
 	}
 
@@ -334,15 +340,42 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		}
 		else if (id == R.id.action_add_comment)
 		{
+			// Only allowed to be in one mode at a time
+			if (freeWrite == true)
+			{
+				actionMenu.findItem(R.id.action_free_write).setIcon(R.drawable.ic_action_edit);
+				freeWrite = false;
+			}
+
 			if (sCanvasView.getCanvasMode() == SCanvasConstants.SCANVAS_MODE_INPUT_PEN)
 			{
-				item.setIcon(R.drawable.ic_action_edit_selected);
+				item.setIcon(R.drawable.ic_action_chat_selected);
 				sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_TEXT);
 			}
 			else if (sCanvasView.getCanvasMode() == SCanvasConstants.SCANVAS_MODE_INPUT_TEXT)
 			{
-				item.setIcon(R.drawable.ic_action_edit);
+				item.setIcon(R.drawable.ic_action_chat);
 				sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
+			}
+		}
+		else if (id == R.id.action_free_write)
+		{
+			// Only allowed to be in one mode at a time
+			if (sCanvasView.getCanvasMode() == SCanvasConstants.SCANVAS_MODE_INPUT_TEXT)
+			{
+				actionMenu.findItem(R.id.action_add_comment).setIcon(R.drawable.ic_action_chat);
+				sCanvasView.setCanvasMode(SCanvasConstants.SCANVAS_MODE_INPUT_PEN);
+			}
+
+			if (freeWrite == false)
+			{
+				item.setIcon(R.drawable.ic_action_edit_selected);
+				freeWrite = true;
+			}
+			else if (freeWrite == true)
+			{
+				item.setIcon(R.drawable.ic_action_edit);
+				freeWrite = false;
 			}
 		}
 		else if (id == R.id.action_flag_script)
@@ -545,7 +578,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 					}
 
 					// Do not attempt to recognize comments
-					if (objs.getClass().isInstance(new SObjectText()))
+					if (objs.getClass().isInstance(new SObjectText()) || (freeWrite == true))
 					{
 						continue;
 					}
@@ -625,7 +658,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 							}
 						}
 					}
-					
+
 					previousSObject = objs.copyObject();
 
 					prevGesturePoints = (HashMap<Double, ArrayList<Double>>) currentGesturePoints.clone();

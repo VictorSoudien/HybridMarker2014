@@ -25,31 +25,34 @@ public final class R {
         public static final int drawer_shadow=0x7f020000;
         public static final int ic_action_accept=0x7f020001;
         public static final int ic_action_cancel=0x7f020002;
-        public static final int ic_action_edit=0x7f020003;
-        public static final int ic_action_edit_selected=0x7f020004;
-        public static final int ic_action_next_item=0x7f020005;
-        public static final int ic_action_person=0x7f020006;
-        public static final int ic_action_previous_item=0x7f020007;
-        public static final int ic_action_refresh=0x7f020008;
-        public static final int ic_action_undo=0x7f020009;
-        public static final int ic_action_upload=0x7f02000a;
-        public static final int ic_action_warning=0x7f02000b;
-        public static final int ic_drawer=0x7f02000c;
-        public static final int ic_launcher=0x7f02000d;
-        public static final int page1200dpi=0x7f02000e;
-        public static final int page2200dpi=0x7f02000f;
-        public static final int page3200dpi=0x7f020010;
-        public static final int page4200dpi=0x7f020011;
-        public static final int page5200dpi=0x7f020012;
-        public static final int warlock=0x7f020013;
+        public static final int ic_action_chat=0x7f020003;
+        public static final int ic_action_chat_selected=0x7f020004;
+        public static final int ic_action_edit=0x7f020005;
+        public static final int ic_action_edit_selected=0x7f020006;
+        public static final int ic_action_next_item=0x7f020007;
+        public static final int ic_action_person=0x7f020008;
+        public static final int ic_action_previous_item=0x7f020009;
+        public static final int ic_action_refresh=0x7f02000a;
+        public static final int ic_action_undo=0x7f02000b;
+        public static final int ic_action_upload=0x7f02000c;
+        public static final int ic_action_warning=0x7f02000d;
+        public static final int ic_drawer=0x7f02000e;
+        public static final int ic_launcher=0x7f02000f;
+        public static final int page1200dpi=0x7f020010;
+        public static final int page2200dpi=0x7f020011;
+        public static final int page3200dpi=0x7f020012;
+        public static final int page4200dpi=0x7f020013;
+        public static final int page5200dpi=0x7f020014;
+        public static final int warlock=0x7f020015;
     }
     public static final class id {
         public static final int action_add_comment=0x7f09002f;
-        public static final int action_flag_script=0x7f090031;
-        public static final int action_refresh=0x7f090037;
+        public static final int action_flag_script=0x7f090032;
+        public static final int action_free_write=0x7f090030;
+        public static final int action_refresh=0x7f090038;
         public static final int action_settings=0x7f09002d;
         public static final int action_undo=0x7f09002e;
-        public static final int action_upload_script=0x7f090030;
+        public static final int action_upload_script=0x7f090031;
         public static final int answerText=0x7f090011;
         public static final int answerTextScrollView=0x7f090010;
         public static final int button_recog_gesture=0x7f09000d;
@@ -73,10 +76,10 @@ public final class R {
         public static final int markingScreenCanvasContainer=0x7f09000a;
         public static final int memoAnswersListView=0x7f090006;
         public static final int memo_text=0x7f090024;
-        public static final int menu_option_Eraser=0x7f090034;
-        public static final int menu_option_Pen=0x7f090033;
-        public static final int menu_option_recog_gesture=0x7f090035;
-        public static final int menu_option_view_pdf=0x7f090036;
+        public static final int menu_option_Eraser=0x7f090035;
+        public static final int menu_option_Pen=0x7f090034;
+        public static final int menu_option_recog_gesture=0x7f090036;
+        public static final int menu_option_view_pdf=0x7f090037;
         public static final int nextQuestionButton=0x7f090005;
         public static final int optionsList=0x7f090025;
         public static final int passwordInput=0x7f090020;
@@ -98,7 +101,7 @@ public final class R {
         public static final int testDisplay=0x7f09001a;
         public static final int textView1=0x7f09001b;
         public static final int upload_button=0x7f090016;
-        public static final int user_display=0x7f090032;
+        public static final int user_display=0x7f090033;
         public static final int usernameInput=0x7f09001f;
     }
     public static final class layout {
@@ -139,30 +142,31 @@ public final class R {
     }
     public static final class string {
         public static final int action_add_comment=0x7f060009;
-        public static final int action_flag_script=0x7f06000a;
-        public static final int action_next=0x7f060010;
-        public static final int action_prev=0x7f06000f;
-        public static final int action_refresh=0x7f06000d;
+        public static final int action_flag_script=0x7f06000b;
+        public static final int action_free_write=0x7f06000a;
+        public static final int action_next=0x7f060011;
+        public static final int action_prev=0x7f060010;
+        public static final int action_refresh=0x7f06000e;
         public static final int action_settings=0x7f060002;
         public static final int action_undo=0x7f060008;
-        public static final int action_upload_script=0x7f06000b;
+        public static final int action_upload_script=0x7f06000c;
         public static final int app_name=0x7f060000;
-        public static final int base_URL=0x7f060018;
+        public static final int base_URL=0x7f060019;
         public static final int hello_world=0x7f060001;
-        public static final int hint_password=0x7f060014;
-        public static final int hint_username=0x7f060013;
-        public static final int instruction_enter_student_number=0x7f060012;
+        public static final int hint_password=0x7f060015;
+        public static final int hint_username=0x7f060014;
+        public static final int instruction_enter_student_number=0x7f060013;
         public static final int menu_option_Eraser=0x7f060004;
         public static final int menu_option_Pen=0x7f060003;
         public static final int menu_option_recog_gesture=0x7f060005;
-        public static final int nav_drawer_open=0x7f06000e;
-        public static final int title_activity_login=0x7f060015;
+        public static final int nav_drawer_open=0x7f06000f;
+        public static final int title_activity_login=0x7f060016;
         public static final int title_activity_main_marking_screen=0x7f060007;
         public static final int title_activity_pdf_display_screen=0x7f060006;
-        public static final int title_activity_per_question_marking=0x7f060017;
-        public static final int title_activity_script_finalize_and_upload=0x7f060011;
-        public static final int title_activity_test_per_question_layout=0x7f060016;
-        public static final int title_activity_test_script_browser=0x7f06000c;
+        public static final int title_activity_per_question_marking=0x7f060018;
+        public static final int title_activity_script_finalize_and_upload=0x7f060012;
+        public static final int title_activity_test_per_question_layout=0x7f060017;
+        public static final int title_activity_test_script_browser=0x7f06000d;
     }
     public static final class style {
         /** 

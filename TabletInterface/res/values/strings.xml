@@ -11,6 +11,7 @@
     <string name="title_activity_main_marking_screen">MainMarkingScreenActivity</string>
     <string name="action_undo">Undo</string>
     <string name="action_add_comment">Add Comment</string>
+    <string name="action_free_write">Enter writing mode</string>
     <string name="action_flag_script">Flag Script</string>
     <string name="action_upload_script">Upload Script</string>
     <string name="title_activity_test_script_browser">TestScriptBrowserActivity</string>
