@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -97,7 +98,18 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.listItem);
         
+        ImageView icon = (ImageView) convertView.findViewById(R.id.icon_test_marked);
+        
         txtListChild.setText(childText);
+        
+        if (childText.length() == 10)
+        {
+        	icon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_action_accept));
+        }
+        else
+        {
+        	icon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_action_cancel));
+        }
         
         /*ImageView tickView = (ImageView) convertView.findViewById(R.id.icon_test_marked);
         tickView.setVisibility(View.INVISIBLE);*/

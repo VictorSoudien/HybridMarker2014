@@ -16,14 +16,13 @@
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"/>
      <!-- android:paddingLeft="25dp"  -->
      
-    <!-- <ImageView
+    <ImageView
         android:id="@+id/icon_test_marked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:paddingRight="10dp"
         android:paddingLeft="5dp"
-        android:src="@drawable/ic_action_accept"
-        android:contentDescription="@string/app_name"/>  --> 
+        android:contentDescription="@string/app_name"/>
     
 </RelativeLayout>
