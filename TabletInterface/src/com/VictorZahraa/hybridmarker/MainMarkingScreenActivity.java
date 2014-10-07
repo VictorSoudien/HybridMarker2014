@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.VictorZahraa.hybridmarker.ScrollViewHelper.OnScrollViewListner;
+
 import com.samsung.samm.common.SObject;
 import com.samsung.samm.common.SObjectStroke;
 import com.samsung.samm.common.SObjectText;
@@ -46,21 +47,12 @@ import com.samsung.spensdk.SCanvasView;
 import com.samsung.spensdk.applistener.HistoryUpdateListener;
 import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 
-import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.TooManyListenersException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
@@ -243,7 +235,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				sCanvasView.setZoomEnable(false);
 			}
 		});
-
+		
 		sCanvasView.setHistoryUpdateListener(new HistoryUpdateListener() 
 		{	
 			@Override
