@@ -30,7 +30,7 @@
         android:id="@+id/action_upload_script"
        	android:title="@string/action_upload_script"
     	android:icon="@drawable/ic_action_upload" 
-    	android:showAsAction="ifRoom"/>
+    	android:showAsAction="always"/>
     	
     <item 
         android:id="@+id/action_flag_script"
@@ -38,10 +38,10 @@
     	android:icon="@drawable/ic_action_warning" 
     	android:showAsAction="ifRoom"/>
     
-    <item
+	<item
         android:id="@+id/user_display"
         android:orderInCategory="100"
-        android:showAsAction="always|withText"
+        android:showAsAction="ifRoom|withText"
         android:icon="@drawable/ic_action_person"
         android:title=""/>
 
