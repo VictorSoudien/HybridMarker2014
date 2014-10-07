@@ -38,7 +38,6 @@ public class ProfilePopUpHelper
 		final View loginView = inflater.inflate(R.layout.profile_popup_layout, null);
 		final ListView optionsList = (ListView) loginView.findViewById(R.id.optionsList);
 
-		options.add("Train Gesture Recognition");
 		options.add("Logout");
 
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
