@@ -10,36 +10,36 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 
+import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
-
-import javax.imageio.ImageIO;
 
 public class Driver 
 {
 	private final float PAGE_WIDTH = 612;
 	private final float PAGE_HEIGHT = 792;
-	
+
 	private String outputFilename;
 	private PDDocument outputPDF;
-	
+
 	private String fileDir;
 	private String imagePrefix;
-	
+
 	public Driver(String outFilename, String dir, String prefix)
 	{
 		outputFilename = outFilename;
 		outputPDF = new PDDocument();
-		
+
 		fileDir = dir.endsWith("/") ? dir : (dir + "/");
 		imagePrefix = prefix;
 	}
-	
+
 	// Iterates through all images which need to be added
 	public void createPDF()
 	{
 		System.out.println ("Writing images to PDF...");
-		
+
 		// Add the first page
 		File tempFile= new File (fileDir + "page1.png");
 		if (tempFile.exists())
@@ -51,14 +51,14 @@ public class Driver
 			System.out.println ("Invalid drirectory provided");
 			return;
 		}
-		
+
 		boolean allProcessed = false;
 		int counter = 2;
-		
+
 		while (allProcessed == false)
 		{
 			tempFile = new File (fileDir + imagePrefix + counter + ".png");
-			
+
 			if (tempFile.exists())
 			{
 				addImageToPDF(tempFile);
@@ -70,10 +70,10 @@ public class Driver
 				finalizePDF();
 			}	
 		}
-		
+
 		System.out.println ("Done");
 	}
-	
+
 	// Add an image to the PDF
 	private void addImageToPDF (File imageToAdd)
 	{
@@ -81,16 +81,16 @@ public class Driver
 		{
 			PDPage cleanPage = new PDPage();
 			outputPDF.addPage(cleanPage);
-		
+
 			BufferedImage inputImage = ImageIO.read(imageToAdd);
 			PDXObjectImage ximage = new PDJpeg(outputPDF, inputImage);
-			
+
 			float imageWidth = inputImage.getWidth();
 			float imageHeight = inputImage.getHeight();
-			
+
 			PDPageContentStream contentStream = new PDPageContentStream(outputPDF, cleanPage, true, false);
-            contentStream.drawXObject(ximage, 0, 0, imageWidth*(PAGE_WIDTH / imageWidth), imageHeight *(PAGE_HEIGHT / imageHeight));
-            contentStream.close();
+			contentStream.drawXObject(ximage, 0, 0, imageWidth*(PAGE_WIDTH / imageWidth), imageHeight *(PAGE_HEIGHT / imageHeight));
+			contentStream.close();
 		}
 		catch (Exception e)
 		{
@@ -98,7 +98,7 @@ public class Driver
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Write the doc to storage
 	private void finalizePDF()
 	{
@@ -114,7 +114,7 @@ public class Driver
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main (String [] args)
 	{
 		if (args.length != 3)
@@ -123,8 +123,8 @@ public class Driver
 			System.out.println ("Usage: java -jar ImageToPDF.jar outputFilename inputDirectory imagePrefix");
 			return;
 		}
-		
-		Driver driver = new Driver("Remarked.pdf", "MPHNOK005+/", "ReMarkedPage");
+
+		Driver driver = new Driver(args[0], args[1], args[2]);
 		driver.createPDF();
 	}
 }
