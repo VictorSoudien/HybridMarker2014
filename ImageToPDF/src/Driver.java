@@ -119,7 +119,9 @@ public class Driver
 	{
 		if (args.length != 3)
 		{
-			
+			System.out.println ("Invalid number of arguments");
+			System.out.println ("Usage: java -jar ImageToPDF.jar outputFilename inputDirectory imagePrefix");
+			return;
 		}
 		
 		Driver driver = new Driver("Remarked.pdf", "MPHNOK005+/", "ReMarkedPage");
