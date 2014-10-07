@@ -97,9 +97,13 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	// A flag used to check if the bitmaps are being merged
 	private boolean bitmapsBeingMerged;
-	
+
 	// Used during gesture recognition
 	HashMap<Double, ArrayList<Double>> prevGesturePoints;
+	SObject previousSObject = null;
+	
+	// Stores details about the previous mark allocation that was made
+	double previousMarkAllocated = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -386,6 +390,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Reset the scroll view when a new tab is selected
 		scriptScrollView.setScrollY(0);
 		prevGesturePoints = null;
+		previousSObject = null;
 
 		if (previousSObjects != null)
 		{
@@ -464,15 +469,13 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	private class GestureRecognition extends AsyncTask<Object, String, Long>
 	{
-		// Stores details about the previous mark allocation that was made
-		double previousMarkAllocated = 0;
 		ArrayList<Float> previousPointsX = null;
 		ArrayList<Float> previousPointsY = null;
-		
+
 		boolean isX = false;
 		int previousMedian = 0;
 		String tempMessage = "";
-		
+
 		@Override
 		protected Long doInBackground(Object... params)
 		{
@@ -560,9 +563,9 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 					PointF [][] currentPoints = new PointF[1][1];
 					currentPoints[0] = ((SObjectStroke) objs).getPoints();
-					
+
 					HashMap<Double, ArrayList<Double>> currentGesturePoints = new HashMap<Double, ArrayList<Double>>();
-					
+
 					// Used to find the median yPosition of the tick
 					for (int i = 0; i < currentPoints[0].length; i++)
 					{
@@ -571,7 +574,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 						xList.add(px);
 						yList.add(py);
-						
+
 						if (currentGesturePoints.containsKey(py))
 						{
 							// Add the x coord to the ArrayList
@@ -581,113 +584,120 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 						{
 							ArrayList<Double> temp = new ArrayList<Double>();
 							temp.add(Math.floor(px));
-							
+
 							currentGesturePoints.put(Math.floor(py), (ArrayList<Double>) temp.clone());
 						}
 					}
 					Collections.sort(xList);
 					Collections.sort(yList);
 					medianY = yList.get(yList.size() / 2);
-					
+
 					// Determine if an x is being processed
-					if (prevGesturePoints != null)
+					if (previousSObject != null)
 					{
-						for (double key : currentGesturePoints.keySet())
-						{	
-							if (prevGesturePoints.containsKey(key))
+						RectF currentRect = objs.getRect();
+
+						if (prevGesturePoints != null)
+						{
+							if (currentRect.intersect(previousSObject.getRect()))
 							{
-								tempMessage = "Y in common";
-								
-								ArrayList<Double> prevTemp = prevGesturePoints.get(key);
-								ArrayList<Double> currentTemp = currentGesturePoints.get(key);
-								
-								int padding = 15;
-								
-								for (double x : prevTemp)
-								{
-									for (double xCurr : currentTemp)
+								for (double key : currentGesturePoints.keySet())
+								{	
+									if (prevGesturePoints.containsKey(key))
 									{
-										if ((xCurr - padding) < x && (xCurr + padding) > x)
+										tempMessage = "Y in common";
+
+										ArrayList<Double> prevTemp = prevGesturePoints.get(key);
+										ArrayList<Double> currentTemp = currentGesturePoints.get(key);
+
+										int padding = 15;
+
+										for (double x : prevTemp)
 										{
-											isX = true;
-											tempMessage = "X";
+											for (double xCurr : currentTemp)
+											{
+												if (currentRect.contains((float)x, (float)key) && currentRect.contains((float)xCurr, (float)key))
+												{
+													if ((xCurr - padding) < x && (xCurr + padding) > x)
+													{
+														isX = true;
+														tempMessage = "X";
+														break;
+													}
+												}
+											}
+										}
+
+										if (isX == true)
+										{
 											break;
 										}
 									}
-									/*if (currentTemp.contains(x))
-									{
-										isX = true;
-										//tempMessage = "X";
-										break;
-									}*/
-								}
-								
-								if (isX == true)
-								{
-									break;
 								}
 							}
 						}
 					}
 					
+					previousSObject = objs.copyObject();
+
 					prevGesturePoints = (HashMap<Double, ArrayList<Double>>) currentGesturePoints.clone();
-					
-//					// Coords of the current Rect
-//					int xMin = (int) Math.ceil(xList.get(0));
-//					int yMin = (int) Math.ceil(yList.get(0));
-//					int xMax = (int) Math.ceil(xList.get(xList.size() - 1));
-//					int yMax = (int) Math.ceil(yList.get(yList.size() - 1));
-//					
-//					// Determine if an x is being processed
-//					if (prevRect == null)
-//					{
-//						prevRect = objs.getRect();
-//						
-//						prevXMin = xMin;
-//						prevYMin = yMin;
-//						prevXMax = xMax;
-//						prevYMax = yMax;
-//					}
-//					else
-//					{
-//						//Rect currentRect = new Rect(xMin, yMin, xMax, yMax);
-//						RectF currentRect = objs.getRect();
-//						
-//						/*if (currentRect.contains(previousRect) || previousRect.contains(currentRect))
-//						{
-//							isX = true;
-//							tempMessage = "Bounding Boxes Intersect";
-//						}*/
-//						
-//						//if (Rect.intersects(previousRect, currentRect))
-//						if (currentRect.intersect(prevRect))//(RectF.intersects(currentRect, prevRect))
-//						{
-//							isX = true;
-//							//tempMessage = "Intersect";
-//						}
-//						else
-//						{
-//							//tempMessage = "No intersection";
-//						}
-//						
-//						/*float d = (prevYMax - prevYMin) * (xMax - xMin) - (prevXMax - prevXMin) * (yMax - yMin);
-//						
-//						if (d == 0)
-//						{
-//							tempMessage = ("Not intersecting");
-//						}
-//						else
-//						{
-//							tempMessage = ("Intersecting");
-//						}*/
-//						
-//						prevXMin = xMin;
-//						prevYMin = yMin;
-//						prevXMax = xMax;
-//						prevYMax = yMax;
-//						
-//						prevRect = objs.getRect();
-//					}
+
+					//					// Coords of the current Rect
+					//					int xMin = (int) Math.ceil(xList.get(0));
+					//					int yMin = (int) Math.ceil(yList.get(0));
+					//					int xMax = (int) Math.ceil(xList.get(xList.size() - 1));
+					//					int yMax = (int) Math.ceil(yList.get(yList.size() - 1));
+					//					
+					//					// Determine if an x is being processed
+					//					if (prevRect == null)
+					//					{
+					//						prevRect = objs.getRect();
+					//						
+					//						prevXMin = xMin;
+					//						prevYMin = yMin;
+					//						prevXMax = xMax;
+					//						prevYMax = yMax;
+					//					}
+					//					else
+					//					{
+					//						//Rect currentRect = new Rect(xMin, yMin, xMax, yMax);
+					//						RectF currentRect = objs.getRect();
+					//						
+					//						/*if (currentRect.contains(previousRect) || previousRect.contains(currentRect))
+					//						{
+					//							isX = true;
+					//							tempMessage = "Bounding Boxes Intersect";
+					//						}*/
+					//						
+					//						//if (Rect.intersects(previousRect, currentRect))
+					//						if (currentRect.intersect(prevRect))//(RectF.intersects(currentRect, prevRect))
+					//						{
+					//							isX = true;
+					//							//tempMessage = "Intersect";
+					//						}
+					//						else
+					//						{
+					//							//tempMessage = "No intersection";
+					//						}
+					//						
+					//						/*float d = (prevYMax - prevYMin) * (xMax - xMin) - (prevXMax - prevXMin) * (yMax - yMin);
+					//						
+					//						if (d == 0)
+					//						{
+					//							tempMessage = ("Not intersecting");
+					//						}
+					//						else
+					//						{
+					//							tempMessage = ("Intersecting");
+					//						}*/
+					//						
+					//						prevXMin = xMin;
+					//						prevYMin = yMin;
+					//						prevXMax = xMax;
+					//						prevYMax = yMax;
+					//						
+					//						prevRect = objs.getRect();
+					//					}
 
 					ArrayList<SPenGestureInfo> gestureInfo = gestureLib.recognizeSPenGesture(currentPoints);
 
@@ -735,18 +745,19 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 				int halfTickCount = (gestureCount.get("halfTick") == null) ? 0 : gestureCount.get("halfTick");
 
 				double markToBeAllocated = (undo == true) ? -(tickCount + (0.5 * halfTickCount)): (tickCount + (0.5 * halfTickCount));
-				
-				/*if (isX == true)
+
+				if (isX == true)
 				{
 					markToBeAllocated = -(previousMarkAllocated);
 					valueStore.allocateMark((currentPage - 1), previousMedian, markToBeAllocated);
+					previousMarkAllocated = 0;
 				}
 				else
-				{*/
+				{
 					valueStore.allocateMark((currentPage - 1), (int) medianY, markToBeAllocated);
 					previousMarkAllocated = Math.abs(markToBeAllocated);
-				//}
-				
+				}
+
 				previousMedian = (int) medianY;
 
 				currentPageScore += markToBeAllocated;
