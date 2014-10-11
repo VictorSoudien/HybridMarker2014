@@ -508,8 +508,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	private class GestureRecognition extends AsyncTask<Object, String, Long>
 	{
-		ArrayList<Float> previousPointsX = null;
-		ArrayList<Float> previousPointsY = null;
+		//ArrayList<Float> previousPointsX = null;
+		//ArrayList<Float> previousPointsY = null;
+		
+		String tempMessage = "";
 
 		boolean isX = false;
 		int previousMedian = 0;
@@ -632,7 +634,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 					// Determine if an x is being processed
 					if (previousSObject != null)
-					{
+					{	
 						RectF currentRect = objs.getRect();
 
 						if (prevGesturePoints != null)
@@ -646,7 +648,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 										ArrayList<Double> prevTemp = prevGesturePoints.get(key);
 										ArrayList<Double> currentTemp = currentGesturePoints.get(key);
 
-										int padding = 15;
+										int padding = 20;
 
 										for (double x : prevTemp)
 										{
@@ -742,9 +744,14 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 				// Ensure that the score never goes below 0
 				currentPageScore = (currentPageScore < 0) ? 0 : currentPageScore;
+				
+				if (undo == true)
+				{
+					previousSObject = null;
+				}
 			}
 		}
-
+		
 		@Override
 		protected void onPostExecute(Long params)
 		{
