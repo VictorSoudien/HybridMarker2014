@@ -204,9 +204,9 @@ public class TestScriptBrowserActivity extends Activity {
 				
 				ValueStoringHelperClass.TEST_NAME = listHeaders.get(groupPosition).replaceAll("_", " ").trim();
 
-				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/" + tempTestName + "/";
-				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/memo.txt";
-				String ansPerPageDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/answersPerPage.txt";
+				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/" + tempTestName + "/";
+				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/memo.txt";
+				String ansPerPageDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/answersPerPage.txt";
 
 				// Store the current directory and test name
 				valueStore.setCurrentDirectory("Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/");
@@ -461,7 +461,7 @@ public class TestScriptBrowserActivity extends Activity {
 			// Populate group list
 			for (String testName : tests)
 			{
-				listHeaders.add(testName);
+				listHeaders.add(testName.replaceAll("_", " "));
 
 				if (listItems.get(testName) != null)
 				{
@@ -483,7 +483,7 @@ public class TestScriptBrowserActivity extends Activity {
 					}
 				}
 
-				listItems.put(testName, temp);
+				listItems.put(testName.replaceAll("_",  " "), temp);
 			}
 		}
 
