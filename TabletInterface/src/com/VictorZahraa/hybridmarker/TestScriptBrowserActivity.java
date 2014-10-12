@@ -491,7 +491,21 @@ public class TestScriptBrowserActivity extends Activity {
 		private void populateNavDrawer()
 		{
 			String listOfCourses = executeCommandOnServer("cd Honours_Project && ls");
-			drawerItems = listOfCourses.split("\n");
+			
+			if (ValueStoringHelperClass.CAN_VIEW_ALL_COURSES == true)
+			{
+				drawerItems = listOfCourses.split("\n");
+			}
+			else
+			{
+				int numCourses = ValueStoringHelperClass.VIEWABLE_COURSES.size();
+				drawerItems = new String [numCourses];
+				
+				for (int i  = 0; i < numCourses; i++)
+				{
+					drawerItems[i] = ValueStoringHelperClass.VIEWABLE_COURSES.get(i);
+				}
+			}
 		}
 
 		// Download the images needed for each test from the server

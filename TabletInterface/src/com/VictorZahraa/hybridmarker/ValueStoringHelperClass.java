@@ -17,10 +17,12 @@ public class ValueStoringHelperClass
 	public static boolean isRemark = false;
 	
 	public static boolean loggedIn = false;
+	public static boolean CAN_VIEW_ALL_COURSES = false;
 	public static String USERNAME;
 	public static String COURSE_NAME;
 	public static String TEST_NAME;
 	public static ArrayList<String> STUDENTS_LIST;
+	public static ArrayList<String> VIEWABLE_COURSES;
 	
 	private static int numPages;
 	private static double [] scorePerPage;

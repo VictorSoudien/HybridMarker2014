@@ -3,6 +3,7 @@ package com.VictorZahraa.hybridmarker;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -28,7 +29,6 @@ public class LoginHelper
 
 		private Handler loginHandler;
 
-		@SuppressWarnings("unused")
 		private TestScriptBrowserActivity callingActivity;
 
 		public PositiveLoginButtonClicked(Dialog dia, View lView, TestScriptBrowserActivity caller, Handler handler)
@@ -108,6 +108,7 @@ public class LoginHelper
 				return "ERROR";
 			}
 
+			@SuppressWarnings("unchecked")
 			public String loginToServer(String username, String password)
 			{
 				String link = callingActivity.getText(R.string.base_URL) + "/loginCheck.php?q=";
@@ -130,6 +131,49 @@ public class LoginHelper
 					{
 						result += line;
 						break;
+					}
+
+					if (result.equalsIgnoreCase("1"))
+					{
+						link = callingActivity.getText(R.string.base_URL) + "/coursesOfLoggedInUser.php?StaffID=" + username;
+
+						client = new DefaultHttpClient();
+						request = new HttpGet();
+						request.setURI(new URI(link));
+
+						response = client.execute(request);
+						in = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
+
+						String courseResult = "";
+						line = null;
+						// Read Server Response
+						while((line = in.readLine()) != null)
+						{
+							courseResult += line;
+							break;
+						}
+
+						if (courseResult.equalsIgnoreCase("All Courses"))
+						{
+							ValueStoringHelperClass.CAN_VIEW_ALL_COURSES = true;
+						}
+						else
+						{
+
+							String [] courses = courseResult.split("<br>");
+							ArrayList<String> temp = new ArrayList<String>();
+
+							for (String c : courses)
+							{
+								c = c.trim();
+								if (!c.equalsIgnoreCase(""))
+								{
+									temp.add(c);
+								}
+							}
+							
+							ValueStoringHelperClass.VIEWABLE_COURSES = (ArrayList<String>) temp.clone();
+						}
 					}
 
 					return result;
