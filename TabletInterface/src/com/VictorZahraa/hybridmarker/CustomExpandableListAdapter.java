@@ -102,7 +102,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter
         
         txtListChild.setText(childText);
         
-        if (childText.length() == 10) // If the folder has been renamed to the student number
+        if (childText.length() == 9) // If the folder has been renamed to the student number
         {
         	icon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_action_accept));
         }

@@ -201,6 +201,7 @@ public class TestScriptBrowserActivity extends Activity {
 
 				String tempTestName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
 				tempTestName = tempTestName.replace("*", "\\*");
+				tempTestName += "+";
 				
 				ValueStoringHelperClass.TEST_NAME = listHeaders.get(groupPosition).replaceAll("_", " ").trim();
 
@@ -479,7 +480,7 @@ public class TestScriptBrowserActivity extends Activity {
 					// Do not show the metadata files to the user
 					if (script.endsWith(".txt") == false)
 					{
-						temp.add(script);
+						temp.add(script.replaceAll("\\+", ""));
 					}
 				}
 
