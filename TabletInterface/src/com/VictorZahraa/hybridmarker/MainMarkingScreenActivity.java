@@ -589,10 +589,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 						}
 						else if (undo == false)
 						{
-							previousSObjects.add(objs);
+							previousSObjects.addLast(objs);
 						}
 					}
-
+					
 					// Do not attempt to recognize comments
 					if (objs.getClass().isInstance(new SObjectText()) || (freeWrite == true))
 					{
