@@ -80,7 +80,7 @@ public class LoginHelper
 						}
 						else
 						{
-							messageDisplay.setText(response);
+							messageDisplay.setText("Invalid username or password");
 						}
 
 						messageDisplay.setVisibility(View.VISIBLE);
