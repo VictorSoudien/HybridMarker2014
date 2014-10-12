@@ -98,7 +98,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 	// Allows the user to write freely without gesture recognition being performed
 	boolean freeWrite = false;
-	
+
 	Menu actionMenu;
 
 	@Override
@@ -318,13 +318,13 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_marking_screen, menu);
 		actionMenu = menu;
-		
+
 		MenuItem userDisplay = menu.findItem(R.id.user_display);
 		userDisplay.setTitle(ValueStoringHelperClass.USERNAME);
-		
+
 		actionMenu.findItem(R.id.action_free_write).setIcon(R.drawable.ic_action_edit);
 		actionMenu.findItem(R.id.action_add_comment).setIcon(R.drawable.ic_action_chat);
-		
+
 		return true;
 	}
 
@@ -422,7 +422,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		scriptScrollView.setScrollY(0);
 		prevGesturePoints = null;
 		previousSObject = null;
-		
+
 		// Reset modes
 		freeWrite = false;
 		if (sCanvasView != null)
@@ -510,7 +510,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 	{
 		//ArrayList<Float> previousPointsX = null;
 		//ArrayList<Float> previousPointsY = null;
-		
+
 		String tempMessage = "";
 
 		boolean isX = false;
@@ -744,14 +744,14 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 				// Ensure that the score never goes below 0
 				currentPageScore = (currentPageScore < 0) ? 0 : currentPageScore;
-				
+
 				if (undo == true)
 				{
 					previousSObject = null;
 				}
 			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(Long params)
 		{
