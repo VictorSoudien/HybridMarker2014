@@ -21,6 +21,9 @@ public class EmailMonitor
 	private int lastMessageRead;
 	private PDFProcessor pdfProc;
 	
+	private int startMessage;
+	private int endMessage = 0;
+	
 	public void createConnectionToMailbox()
 	{
 		// Set up PDF Processor
@@ -86,9 +89,12 @@ public class EmailMonitor
 	// Processes all messages that were received since the last count change notification
 	private void processLatestMessages ()
 	{
+		int start = startMessage;
+		int end = endMessage;
+		
 		try
 		{
-			for (int i = lastMessageRead + 1; i <= inbox.getMessageCount(); i++)
+			for (int i = start; i <= end; i++)
 			{
 				// Get the latest email
 				Message message = inbox.getMessage(i);
@@ -136,6 +142,26 @@ public class EmailMonitor
 		public void messagesAdded(MessageCountEvent arg0) 
 		{
 			System.out.println ("Message Added");
+			
+			if (endMessage == 0)
+			{
+				startMessage = lastMessageRead + 1;
+			}
+			else
+			{
+				startMessage = endMessage + 1;
+			}
+			
+			try 
+			{
+				endMessage = inbox.getMessageCount();
+			} 
+			catch (MessagingException e) 
+			{
+				System.out.println ("Error while trying to retrieve message count");
+				e.printStackTrace();
+			}
+			
 			processLatestMessages();
 		}
 
