@@ -81,7 +81,7 @@ public class PDFProcessor
 	
 	public void populateListOfTestsFromServer()
 	{
-		String link = "http://people.cs.uct.ac.za/~vsoudien/listOfTests.php";
+		String link = "http://people.cs.uct.ac.za/~vsoudien/Test/listOfTests.php";
 		
 		try
 		{			        
