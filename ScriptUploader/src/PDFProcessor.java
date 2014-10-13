@@ -82,6 +82,7 @@ public class PDFProcessor
 
 	public void populateListOfTestsFromServer()
 	{
+		num_pages = 6;
 		String link = "http://people.cs.uct.ac.za/~vsoudien/Test/listOfTests.php";
 
 		try
@@ -166,16 +167,25 @@ public class PDFProcessor
 				
 				try 
 				{
+					tempDoc.save("tempDoc.pdf");
 					tempDoc.close();
-					processDocument(null, tempDoc);
+					
+					File tempPDF = new File("tempDoc.pdf");
+					processDocument(tempPDF, null);
+					tempPDF.delete();
 				} 
-				catch (IOException e) 
+				catch (Exception e) 
 				{
 					System.out.println ("Error while trying to process a PDF containing multiple tests");
 					e.printStackTrace();
 					System.exit(0);
 				}
 			}
+		}
+		else
+		{
+			System.out.println ("Missing pages in scanned document");
+			System.exit(0);
 		}
 	}
 
@@ -401,33 +411,10 @@ public class PDFProcessor
 
 	/*public static void main(String[] args) 
 	{
-		//File imageFile = new File("201408080948.pdf");
+		File imageFile = new File("scanned_class_test_2/merged_2.pdf");
 		//File imageFile = new File("ScannedScript.pdf");
 
 		PDFProcessor proc = new PDFProcessor();
-
-		//imageFiles[0] = new File ("scanned_class_test_2/201408201304.pdf");
-
-		//File dir = new File("scanned_class_test_2");
-		File dir = new File("dilate_test");
-		File imageFiles [] = dir.listFiles();
-		int count = 1;
-
-		for (File f : imageFiles)
-		{
-			System.out.println ("Uploading file " + count);
-			proc.processDocument(f);
-			System.out.println ();
-			count++;
-		}
-
-
-		/*File imageFile = new File("scanned_class_test_2/201408201312.pdf");
-		proc.processDocument(imageFile);
-
-		imageFile = new File("scanned_class_test_2/201408201316 (2).pdf");
-		proc.processDocument(imageFile);
-
-		System.out.println ("Upload complete");
+		proc.processDocument(imageFile, null);
 	}*/
 }
