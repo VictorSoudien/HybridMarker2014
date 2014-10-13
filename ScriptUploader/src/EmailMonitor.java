@@ -119,7 +119,7 @@ public class EmailMonitor
 								bodyPart.saveFile(scannedPDF);
 								
 								// Send the pdf for processing in order to determine test name
-								pdfProc.processDocument(scannedPDF);
+								pdfProc.processDocument(scannedPDF, null);
 								
 								scannedPDF.delete();
 							}
