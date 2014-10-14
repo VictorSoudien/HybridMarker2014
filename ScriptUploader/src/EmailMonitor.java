@@ -115,13 +115,13 @@ public class EmailMonitor
 								String attachedFileName = bodyPart.getFileName();
 								//bodyPart.saveFile("Downloads/" + attachedFileName); // Save the attachment
 								
-								File scannedPDF = new File("Attachment.pdf"); // <-- CREATES FILE ON DISK
+								File scannedPDF = new File("Attachment.pdf"); // Creates file on disk
 								bodyPart.saveFile(scannedPDF);
 								
 								// Send the pdf for processing in order to determine test name
 								pdfProc.processDocument(scannedPDF, null);
 								
-								scannedPDF.delete();
+								scannedPDF.delete(); // Deletes file created on disk
 							}
 						}
 					}
