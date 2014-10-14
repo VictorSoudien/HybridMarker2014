@@ -409,12 +409,12 @@ public class PDFProcessor
 		}
 	}
 
-	/*public static void main(String[] args) 
+	public static void main(String[] args) 
 	{
-		File imageFile = new File("scanned_class_test_2/merged_2.pdf");
+		File imageFile = new File(args[0]);
 		//File imageFile = new File("ScannedScript.pdf");
 
 		PDFProcessor proc = new PDFProcessor();
 		proc.processDocument(imageFile, null);
-	}*/
+	}
 }
