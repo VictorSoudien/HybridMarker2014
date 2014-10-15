@@ -9,8 +9,12 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.opencv.core.Core;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +27,7 @@ public class FinalMemoProcessor
 
 	// The name of the output file
 	private String outputFileName;
+	private String testName;
 
 	// The name of the text file which contains the answers per page
 	private String answersPerPageOutputFile;
@@ -41,7 +46,7 @@ public class FinalMemoProcessor
 	// The strings which will be written to the file
 	private String outputHeader;
 
-	public FinalMemoProcessor (String memoFileName, String blankScriptFileName, String dir)
+	public FinalMemoProcessor (String tName, String memoFileName, String blankScriptFileName, String dir)
 	{		
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 
@@ -50,6 +55,7 @@ public class FinalMemoProcessor
 		// Verify the output directory
 		isDirValid(dir);
 		
+		testName = tName;
 		outputFileName = "memo.txt";
 		answersPerPageOutputFile = "answersPerPage.txt";
 
@@ -123,6 +129,8 @@ public class FinalMemoProcessor
 			PDDocument blankScript = PDDocument.load(blankScriptFile);
 			List<PDPage> pages = blankScript.getDocumentCatalog().getAllPages();
 
+			insertNumPagesIntoDB(pages.size());
+			
 			HorizontalLineDetection lineDetector = new HorizontalLineDetection();
 
 			// Process each page and get the answer regions
@@ -143,6 +151,43 @@ public class FinalMemoProcessor
 		catch (Exception e)
 		{
 			System.out.println ("An error occured while detecting answer regions:\n" + e);
+			System.exit(0);
+		}
+	}
+	
+	// Insert the number of pages into the database
+	private void insertNumPagesIntoDB (int numPages)
+	{
+		String link = "http://people.cs.uct.ac.za/~vsoudien/Test/numTestPages.php?";
+
+		try
+		{			        
+			link += "op=Insert&numPages=" + numPages + "&testName=" + testName.replaceAll(" ", "%20");
+			URL url = new URL(link);
+			URLConnection urlConn = url.openConnection();
+			urlConn.setDoOutput(true);
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+			String result = "";
+			String line = null;
+
+			// Read Server Response
+			while((line = reader.readLine()) != null)
+			{
+				result += line;
+				break;
+			}
+			
+			if (!result.trim().equals("1"))
+			{
+				System.out.println("Unable to enter number of paged into DB: Error communicating with php file");
+				System.exit(0);
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("Unable to enter number of paged into DB");
+			e.printStackTrace();
 			System.exit(0);
 		}
 	}
@@ -477,12 +522,12 @@ public class FinalMemoProcessor
 	public static void main (String [] args)
 	{
 		// Ensure that the file names have been provided
-		if (args.length != 3)
+		if (args.length != 4)
 		{
-			System.out.println ("Usage: java -jar ProcessMemo.jar memoFilename.pdf blankScript.pdf directoryToStoreMetaData");
+			System.out.println ("Usage: java -jar ProcessMemo.jar testName memoFilename.pdf blankScript.pdf directoryToStoreMetaData");
 			System.exit(0);
 		}
 
-		FinalMemoProcessor memoProc = new FinalMemoProcessor(args[0], args[1], args[2]);
+		FinalMemoProcessor memoProc = new FinalMemoProcessor(args[0], args[1], args[2], args[3]);
 	}
 }
