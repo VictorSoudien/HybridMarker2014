@@ -82,7 +82,6 @@ public class PDFProcessor
 
 	public void populateListOfTestsFromServer()
 	{
-		num_pages = 6;
 		String link = "http://people.cs.uct.ac.za/~vsoudien/Test/listOfTests.php";
 
 		try
@@ -133,6 +132,39 @@ public class PDFProcessor
 			System.out.println ("An error occured while trying to retrieve the list of tests from the database: ");
 			e.printStackTrace();
 			System.exit(0);
+		}
+	}
+	
+	// Gets the number of pages for this test
+	private void getNumPages(String testName, String courseName)
+	{
+		String link = "http://people.cs.uct.ac.za/~vsoudien/Test/numTestPages.php?";
+
+		try
+		{			        
+			link += "op=Select&testName=" + testName.replaceAll(" ", "%20") + "&courseName=" + courseName.replaceAll(" ", "%20");
+			URL url = new URL(link);
+			URLConnection urlConn = url.openConnection();
+			urlConn.setDoOutput(true);
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+			String result = "";
+			String line = null;
+
+			// Read Server Response
+			while((line = reader.readLine()) != null)
+			{
+				result += line;
+				break;
+			}
+			
+			num_pages = Integer.parseInt(result.trim());
+		}
+		catch (Exception e)
+		{
+			System.out.println ("An error has occured while retrieving the number of pages for this script");
+			e.printStackTrace();
+			num_pages = -1;
 		}
 	}
 
@@ -205,12 +237,6 @@ public class PDFProcessor
 				pdf = docToProcess;
 			}
 
-			if (containsMultipleTests(pdf) == true)
-			{
-				processMultipleTests(pdf);
-				return;
-			}
-
 			List<PDPage> pages = pdf.getDocumentCatalog().getAllPages();
 
 			// Convert the first page to an image
@@ -244,6 +270,16 @@ public class PDFProcessor
 					if (isInList(line, Operation.TEST) && isInList(courseName, Operation.COURSE))
 					{	
 						windowTimer.cancel();
+						
+						getNumPages(line.replaceAll("_", " "), courseName);
+						if (num_pages != -1)
+						{
+							if (containsMultipleTests(pdf) == true)
+							{
+								processMultipleTests(pdf);
+								return;
+							}
+						}
 
 						prepareFileForUpload(fileToProcess, uploadDirectory, line);
 
@@ -266,6 +302,14 @@ public class PDFProcessor
 					}
 					else if (inSuccessfulUploadWindow == true)
 					{
+						if (num_pages != -1)
+						{
+							if (containsMultipleTests(pdf) == true)
+							{
+								processMultipleTests(pdf);
+								return;
+							}
+						}
 						prepareFileForUpload(fileToProcess, currentUploadDirectory, currentTestName);
 					}
 					else
@@ -409,12 +453,12 @@ public class PDFProcessor
 		}
 	}
 
-	public static void main(String[] args) 
+	/*public static void main(String[] args) 
 	{
-		File imageFile = new File(args[0]);
-		//File imageFile = new File("ScannedScript.pdf");
+		//File imageFile = new File(args[0]);
+		File imageFile = new File("scanned_class_test_2/merged_2.pdf");
 
 		PDFProcessor proc = new PDFProcessor();
 		proc.processDocument(imageFile, null);
-	}
+	}*/
 }
