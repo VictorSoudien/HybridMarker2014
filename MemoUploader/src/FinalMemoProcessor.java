@@ -138,10 +138,10 @@ public class FinalMemoProcessor
 			// Process each page and get the answer regions
 			for (int i = 1; i < pages.size(); i++)
 			{
-				File output = new File("temp/page.png");
+				File output = new File("/home/zmathews/Honours_Project/java/temp/page.png");
 				ImageIO.write(pages.get(i).convertToImage(), "png", output);
 
-				ArrayList<String> result = lineDetector.processImage("temp/page.png");
+				ArrayList<String> result = lineDetector.processImage("/home/zmathews/Honours_Project/java/temp/page.png");
 				output.delete();
 
 				for (String line : result)
