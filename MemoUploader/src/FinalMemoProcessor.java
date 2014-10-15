@@ -27,6 +27,7 @@ public class FinalMemoProcessor
 
 	// The name of the output file
 	private String outputFileName;
+	private String courseName;
 	private String testName;
 
 	// The name of the text file which contains the answers per page
@@ -46,7 +47,7 @@ public class FinalMemoProcessor
 	// The strings which will be written to the file
 	private String outputHeader;
 
-	public FinalMemoProcessor (String tName, String memoFileName, String blankScriptFileName, String dir)
+	public FinalMemoProcessor (String cName, String tName, String memoFileName, String blankScriptFileName, String dir)
 	{		
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 
@@ -55,6 +56,7 @@ public class FinalMemoProcessor
 		// Verify the output directory
 		isDirValid(dir);
 		
+		courseName = cName;
 		testName = tName;
 		outputFileName = "memo.txt";
 		answersPerPageOutputFile = "answersPerPage.txt";
@@ -162,7 +164,7 @@ public class FinalMemoProcessor
 
 		try
 		{			        
-			link += "op=Insert&numPages=" + numPages + "&testName=" + testName.replaceAll(" ", "%20");
+			link += "op=Insert&numPages=" + numPages + "&testName=" + testName.replaceAll(" ", "%20") + "&courseName=" + courseName.replaceAll(" ", "%20");
 			URL url = new URL(link);
 			URLConnection urlConn = url.openConnection();
 			urlConn.setDoOutput(true);
@@ -522,12 +524,12 @@ public class FinalMemoProcessor
 	public static void main (String [] args)
 	{
 		// Ensure that the file names have been provided
-		if (args.length != 4)
+		if (args.length != 5)
 		{
-			System.out.println ("Usage: java -jar ProcessMemo.jar testName memoFilename.pdf blankScript.pdf directoryToStoreMetaData");
+			System.out.println ("Usage: java -jar ProcessMemo.jar courseName testName memoFilename.pdf blankScript.pdf directoryToStoreMetaData");
 			System.exit(0);
 		}
 
-		FinalMemoProcessor memoProc = new FinalMemoProcessor(args[0], args[1], args[2], args[3]);
+		FinalMemoProcessor memoProc = new FinalMemoProcessor(args[0], args[1], args[2], args[3], args[4]);
 	}
 }
