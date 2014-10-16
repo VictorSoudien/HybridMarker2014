@@ -38,7 +38,24 @@ public class ScriptFinalizer
 		outputPDF = new PDDocument();
 
 		processCSV("/home/zmathews/Honours_Project/" + courseName + "/" + testName + "/FinalScripts/emailStudents.csv");
-		
+		sendEmailToTA();
+	}
+	
+	// Sends the summary of marks to the TA
+	private void sendEmailToTA()
+	{
+		try
+		{
+			SendMail emailSender =  new SendMail(taEmail, "/home/zmathews/Honours_Project/" + courseName + "/" + testName + "/FinalScripts/studentResults.csv", "Here are the results of " + testName.replaceAll("_", " ") + " for " + courseName);
+			emailSender.sendMail();
+			System.out.println ("Email Sent to TA");
+		}
+		catch (Exception e)
+		{
+			System.out.println ("Error sending email to TA");
+			e.printStackTrace();
+			System.exit(0);
+		}
 	}
 
 	// Processes the csv file in order to get the student data
@@ -235,11 +252,6 @@ public class ScriptFinalizer
 	{	
 		if (args.length != 3)
 		{
-			for (String s : args)
-			{
-				System.out.println (s);
-			}
-			
 			System.out.println ("Invalid number of args");
 			System.out.println ("Usage: java -jar ScriptFinalizer.jar courseName testName taEmail");
 			System.exit(0);
