@@ -117,6 +117,7 @@ public class Driver
 
 	public static void main (String [] args)
 	{
+		// args = Course StudentNum File
 		if (args.length != 3)
 		{
 			System.out.println ("Invalid number of arguments");
