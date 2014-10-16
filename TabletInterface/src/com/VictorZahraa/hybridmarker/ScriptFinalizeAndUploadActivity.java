@@ -87,7 +87,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		studentNumberImageView.setScrollX(-85);
 
 		studentNumberInput = (AutoCompleteTextView) findViewById(R.id.student_number_field);
-		
+
 		ArrayAdapter<String> stuAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_expandable_list_item_1, ValueStoringHelperClass.STUDENTS_LIST);
 		studentNumberInput.setAdapter(stuAdapter);
 
@@ -135,10 +135,10 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.script_finalize_and_upload, menu);
-		
+
 		MenuItem userDisplay = menu.findItem(R.id.user_display);
 		userDisplay.setTitle(ValueStoringHelperClass.USERNAME);
-		
+
 		return true;
 	}
 
@@ -214,10 +214,10 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		private ProgressDialog progressDialog;
 
 		private String pathToSDCard;
-		
+
 		private boolean success;
 		private String error;
-		
+
 
 		@Override
 		protected String doInBackground(String... params) 
@@ -268,10 +268,17 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				commChannel.connect();
 				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
 
-				String baseDirectory =  valueStore.getCurrentDirectory() + studentNumber + "+/";
+				String baseDirectory =  valueStore.getCurrentDirectory() + studentNumber.toUpperCase() + "+/";
+				String oldDir = valueStore.getCurrentDirectory() + valueStore.getTestName() + "/";
 
-				// Rename the directory to the student number
-				sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
+				if (!(sftpChannel.ls(valueStore.getCurrentDirectory()).contains(studentNumber.toUpperCase() + "+")))
+				{
+					if (oldDir.equals(baseDirectory) == false)
+					{
+						// Rename the directory to the student number
+						sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
+					}
+				}
 
 				File temp;
 				FileOutputStream fileOut;
@@ -309,6 +316,12 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			catch (Exception e)
 			{
 				error = "An error occured during file upload: \nPlease check your network connection";
+				/*for (StackTraceElement ele : e.getStackTrace())
+				{
+					error += ele.toString() + "\n";
+				}
+				 */
+				error += e.getMessage();
 				success = false;
 			}
 		}
@@ -326,7 +339,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 						"&studentNumber=" + studentNumberInput.getText().toString().trim() + 
 						"&Mark=" + valueStore.getSumOfPageScores() +
 						"&Result=" + valueStore.getResultsInDBFormat().replaceAll("\\+", "%2B");
-				
+
 				if (valueStore.isScriptFlagged() == true)
 				{
 					link += "&Flag=true" + "&Comment=" + valueStore.getFlagText().replaceAll(" ", "%20");
@@ -355,6 +368,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			{
 				// Handle exception
 				error = "An error occured during mark uploading: \nPlease check your network connection";
+				error += "\n" + e;
 				success = false;
 			}
 		}
@@ -370,7 +384,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		protected void onPostExecute(String param)
 		{
 			progressDialog.dismiss();
-			
+
 			if (success == true)
 			{
 				new AlertDialog.Builder(context)

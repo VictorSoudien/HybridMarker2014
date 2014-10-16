@@ -200,17 +200,17 @@ public class TestScriptBrowserActivity extends Activity {
 					int groupPosition, int childPosition, long id) {
 
 				String tempTestName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
-				tempTestName = tempTestName.replace("*", "\\*");
+				//tempTestName = tempTestName.replace("*", "\\*");
 				tempTestName += "+";
 				
 				ValueStoringHelperClass.TEST_NAME = listHeaders.get(groupPosition).replaceAll("_", " ").trim();
 
-				String fileDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/" + tempTestName + "/";
-				String memoDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/memo.txt";
-				String ansPerPageDirectory = "Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/answersPerPage.txt";
+				String fileDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/" + tempTestName + "/";
+				String memoDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/memo.txt";
+				String ansPerPageDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/answersPerPage.txt";
 
 				// Store the current directory and test name
-				valueStore.setCurrentDirectory("Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition) + "/");
+				valueStore.setCurrentDirectory("/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/");
 				valueStore.setTestName(tempTestName);
 
 				downloadingFiles = true;

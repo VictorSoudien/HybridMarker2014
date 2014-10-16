@@ -178,8 +178,10 @@ public class ValueStoringHelperClass
 		
 		for (int i = 0; i < numMainQuestions; i++)
 		{
-			resultString += "+" + marksPerMainQuestion[i];
+			resultString += "+";
 			resultString += getMarksForSubQuestion(i);
+			//resultString += "+" + marksPerMainQuestion[i];
+			//resultString += getMarksForSubQuestion(i);
 		}
 		
 		return resultString;
