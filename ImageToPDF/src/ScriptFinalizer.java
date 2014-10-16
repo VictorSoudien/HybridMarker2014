@@ -86,7 +86,7 @@ public class ScriptFinalizer
 				String email = data[2];
 
 				outputPDF = new PDDocument();
-				createSinglePDF(studentNum);
+				createSinglePDF(studentNum, email, result);
 			}
 		}
 		catch (Exception e)
@@ -98,7 +98,7 @@ public class ScriptFinalizer
 	}
 
 	// Iterates through all images which need to be added
-	public void createSinglePDF(String studentNum)
+	public void createSinglePDF(String studentNum, String email, String result)
 	{
 		System.out.println ("Writing images to PDF...");
 
@@ -136,7 +136,7 @@ public class ScriptFinalizer
 				else
 				{
 					allProcessed = true;
-					finalizePDF(studentNum);
+					finalizePDF(studentNum, email, result);
 				}
 			}
 			else
@@ -211,7 +211,7 @@ public class ScriptFinalizer
 	}
 	
 	// Write the doc to storage
-	private void finalizePDF(String studentNum)
+	private void finalizePDF(String studentNum, String email, String result)
 	{
 		System.out.println ("Finalizing PDF...");
 		
@@ -219,6 +219,10 @@ public class ScriptFinalizer
 		{
 			outputPDF.save("/home/zmathews/Honours_Project/" + courseName + "/" + testName + "/FinalScripts/" + studentNum + ".pdf");
 			outputPDF.close();
+			
+			SendMail emailSender =  new SendMail(email, "/home/zmathews/Honours_Project/" + courseName + "/" + testName + "/FinalScripts/" + studentNum + ".pdf", result);
+			emailSender.sendMail();
+			System.out.println ("Email Sent");
 		}
 		catch (Exception e)
 		{
@@ -231,6 +235,11 @@ public class ScriptFinalizer
 	{	
 		if (args.length != 3)
 		{
+			for (String s : args)
+			{
+				System.out.println (s);
+			}
+			
 			System.out.println ("Invalid number of args");
 			System.out.println ("Usage: java -jar ScriptFinalizer.jar courseName testName taEmail");
 			System.exit(0);
