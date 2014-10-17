@@ -7,6 +7,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -70,6 +71,8 @@ public class ProfilePopUpHelper
 	// Used to get information from the DB
 	private class PHPCommunication extends AsyncTask<String, String, String>
 	{	
+		private boolean successfulLogout = false;
+
 		@Override
 		protected String doInBackground(String... params) 
 		{
@@ -95,6 +98,7 @@ public class ProfilePopUpHelper
 
 				client.execute(request);
 
+				successfulLogout = true;
 				return "Success";
 			}
 			catch (Exception e)
@@ -103,14 +107,45 @@ public class ProfilePopUpHelper
 				return "Please check your internet connection";
 			}
 		}
-		
+
 		@Override
 		public void onPostExecute(String params)
 		{
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			callerContext.startActivity(intent);
+			if (successfulLogout == true)
+			{
+				try
+				{
+					ValueStoringHelperClass valueStore = new ValueStoringHelperClass();
+					valueStore.recycleBitmaps();
+				}
+				catch (NullPointerException e)
+				{
+					// Ignore since this is simply the case if the user logs out without having marked anything
+				}
+				
+				ValueStoringHelperClass.loggedIn = false;
+				ValueStoringHelperClass.USERNAME = "";
+
+				// Restart the application
+				Intent i = ((Activity) callerContext).getBaseContext().getPackageManager()
+						.getLaunchIntentForPackage( ((Activity) callerContext).getBaseContext().getPackageName() );
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				callerContext.startActivity(i);
+				
+				Intent intent = new Intent(Intent.ACTION_MAIN);
+				intent.addCategory(Intent.CATEGORY_HOME);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				callerContext.startActivity(intent);
+			}
+			else
+			{
+				@SuppressWarnings("unused")
+				AlertDialog optionsDialog = new AlertDialog.Builder(callerContext)
+				.setTitle("Logout Error")
+				.setMessage("Unable to logout.\nPlease check your internet connection")
+				.setPositiveButton("Continue", null)
+				.show();
+			}
 		}
 	}
 }

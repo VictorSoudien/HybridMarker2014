@@ -11,6 +11,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.View;
@@ -189,7 +191,13 @@ public class LoginHelper
 
 	public static class PositiveLogoutButtonClicked implements View.OnClickListener
 	{
-
+		Context context;
+		
+		public PositiveLogoutButtonClicked(Context c)
+		{
+			context = c;
+		}
+		
 		@Override
 		public void onClick(View v) 
 		{
