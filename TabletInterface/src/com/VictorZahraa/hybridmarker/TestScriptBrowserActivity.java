@@ -316,10 +316,6 @@ public class TestScriptBrowserActivity extends Activity {
 		{
 			return true;
 		}
-		if (id == R.id.action_settings) 
-		{
-			return true;
-		}
 		else if ((id == R.id.action_refresh)  && (viewBeingRefreshed == false))
 		{
 			// Navigation drawer is updated if it is open

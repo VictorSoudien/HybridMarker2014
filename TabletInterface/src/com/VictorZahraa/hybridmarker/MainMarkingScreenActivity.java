@@ -336,11 +336,7 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 		int id = item.getItemId();
 
-		if (id == R.id.action_settings) 
-		{
-			return true;
-		}
-		else if (id == R.id.action_undo)
+		if (id == R.id.action_undo)
 		{
 			sCanvasView.undo();
 		}
