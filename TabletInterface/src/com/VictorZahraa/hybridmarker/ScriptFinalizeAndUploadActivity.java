@@ -50,6 +50,8 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 	private GestureDetector gestureDetector;
 	View.OnTouchListener gestureListener;
+	
+	private String studentNum;
 
 	private ImageView studentNumberImageView;
 	private AutoCompleteTextView studentNumberInput;
@@ -63,7 +65,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 	private int numMarkedPages;
 	private int currentPageBeingShown;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -184,7 +185,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 	// Called when the upload script button is clicked
 	public void uploadScript(View view)
 	{
-		String studentNum = studentNumberInput.getText().toString().trim();
+		studentNum = studentNumberInput.getText().toString().trim();
 
 		if (studentNum.equals("") || studentNum.length() != 9 || (ValueStoringHelperClass.STUDENTS_LIST.contains(studentNum) == false))
 		{
@@ -201,7 +202,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		}
 		else
 		{
-			new UploadFile().execute(studentNum);
+			new UploadFile().execute(studentNum, "No");
 		}
 	}
 
@@ -217,6 +218,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 		private boolean success;
 		private String error;
+		private boolean reportOption = false;
 
 
 		@Override
@@ -229,7 +231,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 			if (success == true)
 			{
-				uploadFiles(params[0]);
+				uploadFiles(params[0], params[1]);
 			}
 
 			return null;
@@ -260,7 +262,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		}
 
 		// Download the images needed for each test from the server
-		private void uploadFiles(String studentNumber)
+		private void uploadFiles(String studentNumber, String reportUpload)
 		{	
 			try
 			{
@@ -271,20 +273,34 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				String baseDirectory =  valueStore.getCurrentDirectory() + studentNumber.toUpperCase() + "+/";
 				String oldDir = valueStore.getCurrentDirectory() + valueStore.getTestName() + "/";
 
-				if (!(sftpChannel.ls(valueStore.getCurrentDirectory()).contains(studentNumber.toUpperCase() + "+")))
+				if (reportUpload.equalsIgnoreCase("No"))
 				{
-					if (oldDir.equals(baseDirectory) == false)
-					{
-						// Rename the directory to the student number
-						sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
-					}
+					// Rename the directory to the student number
+					sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
 				}
 
 				File temp;
 				FileOutputStream fileOut;
 				String basePageName = "";
 
-				if (ValueStoringHelperClass.isRemark == true)
+				if (reportUpload.equalsIgnoreCase("Yes"))
+				{
+					basePageName = "ConflictPage";
+					
+					// Upload the cover page
+					temp = new File (pathToSDCard + "/tempMarkedPage.png");
+					fileOut = new FileOutputStream(temp);
+
+					Bitmap currentPage = valueStore.getPage(0);
+					currentPage.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
+
+					String tempUploadDir = baseDirectory + basePageName + "1.png";
+					sftpChannel.put(new FileInputStream(temp), tempUploadDir);
+
+					// Delete the temp file that was created
+					temp.delete();
+				}
+				else if (ValueStoringHelperClass.isRemark == true)
 				{
 					basePageName = "ReMarkedPage";
 				}
@@ -315,13 +331,18 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			}
 			catch (Exception e)
 			{
-				error = "An error occured during file upload: \nPlease check your network connection";
-				/*for (StackTraceElement ele : e.getStackTrace())
+				// The case when a folder with the same name has been marked
+				if (e.getMessage().trim().equalsIgnoreCase("Failure"))
 				{
-					error += ele.toString() + "\n";
+					error = "A test with this name has already been marked. \nPlease check the student number or submit a report";
+					reportOption = true;
+					success = false;
+					return;
 				}
-				 */
-				error += e.getMessage();
+				else
+				{
+					error = "An error occured during file upload: \nPlease check your network connection";
+				}
 				success = false;
 			}
 		}
@@ -368,7 +389,6 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			{
 				// Handle exception
 				error = "An error occured during mark uploading: \nPlease check your network connection";
-				error += "\n" + e;
 				success = false;
 			}
 		}
@@ -406,15 +426,62 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			}
 			else
 			{
-				new AlertDialog.Builder(context)
-				.setTitle("Script Upload Unsuccessful")
-				.setMessage(error)
-				.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) 
-					{
-						// Dismiss the dialog
-					}}
-						).show();
+				if (reportOption == false)
+				{
+					new AlertDialog.Builder(context)
+					.setTitle("Script Upload Unsuccessful")
+					.setMessage(error)
+					.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) 
+						{
+							// Dismiss the dialog
+						}}
+							).show();
+				}
+				else
+				{
+					new AlertDialog.Builder(context)
+					.setTitle("Script Upload Unsuccessful")
+					.setMessage(error)
+					.setPositiveButton("Submit Report", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) 
+						{
+							if (valueStore.getFlagText().trim().equals(""))
+							{
+								valueStore.setFlagText("This test conflicts with another on the server\nPlease check both scripts");
+							}
+							else if (!(valueStore.getFlagText().contains("This test conflicts with another on the server\nPlease check both scripts")))
+							{
+								valueStore.setFlagText(valueStore.getFlagText() + "\nThis test conflicts with another on the server\nPlease check both scripts");
+							}
+							
+							// Display the flagging dialog
+							final EditText input = new EditText(context);
+							input.setText(valueStore.getFlagText());
+
+							new AlertDialog.Builder(context)
+							.setTitle("Flag Script")
+							.setMessage("Please state the reason for flagging this script:")
+							.setView(input)
+							.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									valueStore.setFlagText(input.getText().toString());
+									
+									new UploadFile().execute(studentNum, "Yes");
+								}
+							}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									// Do nothing.
+								}
+							}).show();
+						}})
+						.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) 
+							{
+								// Dismiss the dialog
+							}})
+							.show();
+				}
 			}
 		}
 	}
