@@ -12,7 +12,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.View;
@@ -62,7 +61,7 @@ public class LoginHelper
 			else
 			{
 				try
-				{
+				{	
 					String response = new PHPCommunication().execute("Login", username, password).get();
 
 					if (response.equals("1"))
@@ -76,15 +75,7 @@ public class LoginHelper
 					}
 					else
 					{
-						if (response.equals("0"))
-						{
-							messageDisplay.setText("Invalid username or password");
-						}
-						else
-						{
-							messageDisplay.setText("Invalid username or password");
-						}
-
+						messageDisplay.setText("Invalid username or password");
 						messageDisplay.setVisibility(View.VISIBLE);
 					}
 				}
