@@ -363,7 +363,9 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 				if (valueStore.isScriptFlagged() == true)
 				{
-					link += "&Flag=true" + "&Comment=" + valueStore.getFlagText().replaceAll(" ", "%20");
+					
+					String flagText = encode(valueStore.getFlagText().replaceAll("\n", ""));
+					link += "&Flag=true" + "&Comment=" + flagText;//valueStore.getFlagText().replaceAll(" ", "%20");
 				}
 				else
 				{
@@ -389,9 +391,36 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 			{
 				// Handle exception
 				error = "An error occured during mark uploading: \nPlease check your network connection";
+				error += "\n" + e.getMessage();
 				success = false;
 			}
 		}
+		
+		/////////// Retrieved from stackoverflow.com/questions/4571346/how-to-encode-url-to-avoid-special-characters-in-java on 10/17/2014
+		public String encode(String input) {
+	        StringBuilder resultStr = new StringBuilder();
+	        for (char ch : input.toCharArray()) {
+	            if (isUnsafe(ch)) {
+	                resultStr.append('%');
+	                resultStr.append(toHex(ch / 16));
+	                resultStr.append(toHex(ch % 16));
+	            } else {
+	                resultStr.append(ch);
+	            }
+	        }
+	        return resultStr.toString();
+	    }
+
+	    private char toHex(int ch) {
+	        return (char) (ch < 10 ? '0' + ch : 'A' + ch - 10);
+	    }
+
+	    private boolean isUnsafe(char ch) {
+	        if (ch > 128 || ch < 0)
+	            return true;
+	        return " %$&+,/:;=?@<>#%".indexOf(ch) >= 0;
+	    }
+		/////////// 
 
 		@Override
 		protected void onPreExecute()
