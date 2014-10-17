@@ -420,7 +420,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 	            return true;
 	        return " %$&+,/:;=?@<>#%".indexOf(ch) >= 0;
 	    }
-		/////////// 
+		/////////// End of external code
 
 		@Override
 		protected void onPreExecute()
@@ -477,11 +477,11 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 						{
 							if (valueStore.getFlagText().trim().equals(""))
 							{
-								valueStore.setFlagText("This test conflicts with another on the server\nPlease check both scripts");
+								valueStore.setFlagText("This test conflicts with another on the server.\n Please check both scripts");
 							}
-							else if (!(valueStore.getFlagText().contains("This test conflicts with another on the server\nPlease check both scripts")))
+							else if (!(valueStore.getFlagText().contains("This test conflicts with another on the server.\n Please check both scripts")))
 							{
-								valueStore.setFlagText(valueStore.getFlagText() + "\nThis test conflicts with another on the server\nPlease check both scripts");
+								valueStore.setFlagText(valueStore.getFlagText() + "\nThis test conflicts with another on the server.\n Please check both scripts");
 							}
 							
 							// Display the flagging dialog
