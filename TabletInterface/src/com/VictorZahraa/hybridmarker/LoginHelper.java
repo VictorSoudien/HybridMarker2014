@@ -217,6 +217,7 @@ public class LoginHelper
 					request.setURI(new URI(link));
 
 					// Execute the php file
+					@SuppressWarnings("unused")
 					HttpResponse response = client.execute(request);
 
 					return "Success";
