@@ -48,10 +48,16 @@ import com.samsung.spensdk.applistener.SCanvasInitializeListener;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class MainMarkingScreenActivity extends Activity implements ActionBar.TabListener 
 {
@@ -182,6 +188,15 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) 
 			{
+				try
+				{
+					int wait = new ReleaseFileLock().execute().get();
+				}
+				catch (Exception e)
+				{
+					// Do nothing
+				}
+				
 				valueStore.recycleBitmaps();
 				finish();
 			}})
@@ -857,6 +872,33 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 
 			Intent scriptUploadScreen = new Intent(MainMarkingScreenActivity.this, ScriptFinalizeAndUploadActivity.class);
 			startActivity(scriptUploadScreen);
+		}
+	}
+	
+	public class ReleaseFileLock extends AsyncTask<String, String, Integer>
+	{
+		@Override
+		protected Integer doInBackground(String... params) 
+		{	
+			String link = getText(R.string.base_URL) + "/controlFileLock.php?";
+
+			try
+			{	
+				link += "op=Remove" + "&Course=" + ValueStoringHelperClass.COURSE_NAME + "&Test=" + ValueStoringHelperClass.TEST_NAME.trim().replaceAll(" ", "_") + "&Name=" + ValueStoringHelperClass.ORIGINAL_FOLDER_NAME;
+			
+				HttpClient client = new DefaultHttpClient();
+				HttpGet request = new HttpGet();
+				request.setURI(new URI(link));
+				
+				@SuppressWarnings("unused")
+				HttpResponse response = client.execute(request);
+			}
+			catch (Exception e)
+			{
+				// Do nothing
+			}
+			
+			return null;
 		}
 	}
 

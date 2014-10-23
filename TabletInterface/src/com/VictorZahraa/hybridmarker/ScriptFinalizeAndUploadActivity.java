@@ -434,6 +434,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				HttpGet request = new HttpGet();
 				request.setURI(new URI(link));
 
+				@SuppressWarnings("unused")
 				HttpResponse response = client.execute(request);
 			}
 			catch (Exception e)

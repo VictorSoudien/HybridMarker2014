@@ -228,6 +228,8 @@ public class TestScriptBrowserActivity extends Activity {
 				alertDialog.show();
 
 				options.add("Mark Script");
+				options.add("View Marked Version");
+				options.add("View Unprocessed File");
 
 				ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
 						context, 
@@ -718,10 +720,6 @@ public class TestScriptBrowserActivity extends Activity {
 
 				HttpResponse response = client.execute(request);
 				
-				/*if (op.equals("Insert"))
-				{
-					
-				}*/
 				if (op.equals("Select"))
 				{
 					ValueStoringHelperClass.LOCKED_TESTS = new ArrayList<String>();
