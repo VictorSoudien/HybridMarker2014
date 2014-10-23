@@ -593,10 +593,24 @@ public class TestScriptBrowserActivity extends Activity {
 		// Download the images needed for each test from the server
 		private void downloadFiles(String directory, String memoDir, String ansPerPageDir)
 		{	
-			// Lock the file
-			controlFileLock("Insert", ValueStoringHelperClass.COURSE_NAME, ValueStoringHelperClass.TEST_NAME.trim(), directory.split("/")[directory.split("/").length - 1]);
+			String testName = directory.split("/")[directory.split("/").length - 1].replaceAll("\\+", "");
 			
-			ValueStoringHelperClass.ORIGINAL_FOLDER_NAME = directory.split("/")[directory.split("/").length - 1];
+			// Ensure that the script is not being marked
+			controlFileLock("Select", ValueStoringHelperClass.COURSE_NAME, "", "");
+			
+			if (ValueStoringHelperClass.LOCKED_TESTS.contains(testName.trim()) == false)
+			{
+				// Lock the file
+				controlFileLock("Insert", ValueStoringHelperClass.COURSE_NAME, ValueStoringHelperClass.TEST_NAME.trim(), testName);
+			}
+			else
+			{
+				downloadSuccess = false;
+				populateLists(ValueStoringHelperClass.COURSE_NAME);
+				return;
+			}
+			
+			ValueStoringHelperClass.ORIGINAL_FOLDER_NAME = testName;
 			
 			// Get the path to external storage
 			String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
@@ -796,6 +810,14 @@ public class TestScriptBrowserActivity extends Activity {
 			{
 				Intent pdfViewScreen = new Intent(TestScriptBrowserActivity.this, MainMarkingScreenActivity.class);
 				startActivity(pdfViewScreen);
+			}
+			else if (operationBeingPerformed.equals("Download Files") && (downloadSuccess == false))
+			{
+				AlertDialog lockedScriptDialog = new AlertDialog.Builder(context)
+				.setTitle("Scipt Options - " + ValueStoringHelperClass.TEST_NAME)
+				.setMessage("This script is currently being marked.")
+				.setPositiveButton("Ok", null)
+				.show();
 			}
 		}
 	}
