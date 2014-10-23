@@ -214,6 +214,16 @@ public class TestScriptBrowserActivity extends Activity {
 				.setView(optionsView)
 				.setPositiveButton("Back", null);
 				
+				if (ValueStoringHelperClass.LOCKED_TESTS.contains(listItems.get(listHeaders.get(groupPosition)).get(childPosition)))
+				{
+					AlertDialog lockedScriptDialog = new AlertDialog.Builder(context)
+					.setTitle("Script Options - " + listItems.get(listHeaders.get(groupPosition)).get(childPosition))
+					.setMessage("This script is currently being marked.")
+					.setPositiveButton("Ok", null)
+					.show();
+					return false;
+				}
+				
 				final AlertDialog alertDialog = alertDialogBuilder.create();
 				alertDialog.show();
 
