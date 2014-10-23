@@ -23,6 +23,7 @@ public class ValueStoringHelperClass
 	public static String TEST_NAME;
 	public static ArrayList<String> STUDENTS_LIST;
 	public static ArrayList<String> VIEWABLE_COURSES;
+	public static ArrayList<String> LOCKED_TESTS;
 	
 	private static int numPages;
 	private static double [] scorePerPage;

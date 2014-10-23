@@ -106,6 +106,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter
         {
         	icon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_action_accept));
         }
+        else if (ValueStoringHelperClass.LOCKED_TESTS.contains(childText.trim()))
+        {
+        	icon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_action_lock));
+        }
         else
         {
         	icon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_action_cancel));

@@ -508,6 +508,8 @@ public class TestScriptBrowserActivity extends Activity {
 		// Populate the expandable list layout
 		private void populateLists(String courseCode)
 		{	
+			controlFileLock("Select", courseCode, "", "");
+			
 			String listOfTests = executeCommandOnServer("cd Honours_Project/" + courseCode + "/ && ls");
 			String [] tests = listOfTests.split("\n");
 
@@ -581,6 +583,9 @@ public class TestScriptBrowserActivity extends Activity {
 		// Download the images needed for each test from the server
 		private void downloadFiles(String directory, String memoDir, String ansPerPageDir)
 		{	
+			// Lock the file
+			controlFileLock("Insert", ValueStoringHelperClass.COURSE_NAME, ValueStoringHelperClass.TEST_NAME.trim(), directory.split("/")[directory.split("/").length - 1]);
+			
 			// Get the path to external storage
 			String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
 
@@ -670,6 +675,51 @@ public class TestScriptBrowserActivity extends Activity {
 			catch (Exception e)
 			{
 				publishProgress(/*"An error has occured: Please check your network connection" + */e.getMessage());
+			}
+		}
+		
+		public void controlFileLock (String op, String course, String test, String name)
+		{
+			String link = getText(R.string.base_URL) + "/controlFileLock.php?";
+
+			try
+			{	
+				link += "op=" + op + "&Course=" + course + "&Test=" + test.replaceAll(" ", "_") + "&Name=" + name;
+			
+				HttpClient client = new DefaultHttpClient();
+				HttpGet request = new HttpGet();
+				request.setURI(new URI(link));
+
+				HttpResponse response = client.execute(request);
+				
+				/*if (op.equals("Insert"))
+				{
+					
+				}*/
+				if (op.equals("Select"))
+				{
+					ValueStoringHelperClass.LOCKED_TESTS = new ArrayList<String>();
+					BufferedReader in = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
+					
+					String result = "";
+					String line = null;
+					// Read Server Response
+					while((line = in.readLine()) != null)
+					{
+						result += line;
+						break;
+					}
+					
+					String [] temp = result.split("<br>");
+					for (String s : temp)
+					{
+						ValueStoringHelperClass.LOCKED_TESTS.add(s.trim());
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				publishProgress("Error during file lock management: \n" + e.getMessage());
 			}
 		}
 
