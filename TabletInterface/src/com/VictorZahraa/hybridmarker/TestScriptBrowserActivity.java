@@ -198,7 +198,7 @@ public class TestScriptBrowserActivity extends Activity {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
-
+				
 				String tempTestName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
 				//tempTestName = tempTestName.replace("*", "\\*");
 				tempTestName += "+";
@@ -491,7 +491,22 @@ public class TestScriptBrowserActivity extends Activity {
 			
 			if (ValueStoringHelperClass.CAN_VIEW_ALL_COURSES == true)
 			{
-				drawerItems = listOfCourses.split("\n");
+				String [] lsOut = listOfCourses.split("\n");
+				ArrayList<String> courses = new ArrayList<String>();
+				
+				for (String course : lsOut)
+				{
+					if (course.trim().length() == 8)
+					{
+						courses.add(course);
+					}
+				}
+				
+				drawerItems = new String [courses.size()];
+				for (int i = 0; i < courses.size(); i++)
+				{
+					drawerItems[i] = courses.get(i);
+				}
 			}
 			else
 			{
