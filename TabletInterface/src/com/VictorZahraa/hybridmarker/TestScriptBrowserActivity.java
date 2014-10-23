@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 
@@ -199,22 +201,78 @@ public class TestScriptBrowserActivity extends Activity {
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
 				
-				String tempTestName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
-				//tempTestName = tempTestName.replace("*", "\\*");
-				tempTestName += "+";
+				final int gPos = groupPosition;
+				final int cPos = childPosition;
 				
-				ValueStoringHelperClass.TEST_NAME = listHeaders.get(groupPosition).replaceAll("_", " ").trim();
+				// Display a list of options
+				final ArrayList<String> options = new ArrayList<String>();
+				View optionsView = getLayoutInflater().inflate(R.layout.profile_popup_layout, null);
+				ListView optionsList = (ListView) optionsView.findViewById(R.id.optionsList);
+				
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+				.setTitle("Script Options - " + listItems.get(listHeaders.get(groupPosition)).get(childPosition))
+				.setView(optionsView)
+				.setPositiveButton("Back", null);
+				
+				final AlertDialog alertDialog = alertDialogBuilder.create();
+				alertDialog.show();
 
-				String fileDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/" + tempTestName + "/";
-				String memoDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/memo.txt";
-				String ansPerPageDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/answersPerPage.txt";
+				options.add("Mark Script");
 
-				// Store the current directory and test name
-				valueStore.setCurrentDirectory("/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/");
-				valueStore.setTestName(tempTestName);
+				ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+						context, 
+						android.R.layout.simple_list_item_1,
+						options);
 
-				downloadingFiles = true;
-				new ServerConnect().execute("Download Files", fileDirectory, memoDirectory, ansPerPageDirectory);
+				optionsList.setAdapter(arrayAdapter);
+				optionsList.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) 
+					{
+						if (options.get(position).equalsIgnoreCase("Mark Script"))
+						{		
+							if (alertDialog != null)
+							{
+								alertDialog.dismiss();
+							}
+							
+							String tempTestName = listItems.get(listHeaders.get(gPos)).get(cPos);
+							tempTestName += "+";
+							
+							ValueStoringHelperClass.TEST_NAME = listHeaders.get(gPos).replaceAll("_", " ").trim();
+
+							String fileDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(gPos).replaceAll(" ", "_") + "/" + tempTestName + "/";
+							String memoDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(gPos).replaceAll(" ", "_") + "/memo.txt";
+							String ansPerPageDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(gPos).replaceAll(" ", "_") + "/answersPerPage.txt";
+
+							// Store the current directory and test name
+							valueStore.setCurrentDirectory("/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(gPos).replaceAll(" ", "_") + "/");
+							valueStore.setTestName(tempTestName);
+
+							downloadingFiles = true;
+							new ServerConnect().execute("Download Files", fileDirectory, memoDirectory, ansPerPageDirectory);
+						}
+					}
+				});
+				
+//				String tempTestName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
+//				//tempTestName = tempTestName.replace("*", "\\*");
+//				tempTestName += "+";
+//				
+//				ValueStoringHelperClass.TEST_NAME = listHeaders.get(groupPosition).replaceAll("_", " ").trim();
+//
+//				String fileDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/" + tempTestName + "/";
+//				String memoDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/memo.txt";
+//				String ansPerPageDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/answersPerPage.txt";
+//
+//				// Store the current directory and test name
+//				valueStore.setCurrentDirectory("/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(groupPosition).replaceAll(" ", "_") + "/");
+//				valueStore.setTestName(tempTestName);
+//
+//				downloadingFiles = true;
+//				new ServerConnect().execute("Download Files", fileDirectory, memoDirectory, ansPerPageDirectory);
 
 				return false;
 			}
