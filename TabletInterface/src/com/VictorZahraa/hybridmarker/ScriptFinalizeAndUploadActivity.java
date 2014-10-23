@@ -30,9 +30,11 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -382,6 +384,8 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				request.setURI(new URI(link));
 
 				HttpResponse response = client.execute(request);
+				
+				releaseFileLock(ValueStoringHelperClass.COURSE_NAME, ValueStoringHelperClass.TEST_NAME.trim(), ValueStoringHelperClass.ORIGINAL_FOLDER_NAME);
 			}
 			catch (Exception e)
 			{
@@ -418,6 +422,26 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 	    }
 		/////////// End of external code
 
+	    public void releaseFileLock (String course, String test, String name)
+		{
+			String link = getText(R.string.base_URL) + "/controlFileLock.php?";
+
+			try
+			{	
+				link += "op=Remove" + "&Course=" + course + "&Test=" + test.replaceAll(" ", "_") + "&Name=" + name;
+			
+				HttpClient client = new DefaultHttpClient();
+				HttpGet request = new HttpGet();
+				request.setURI(new URI(link));
+
+				HttpResponse response = client.execute(request);
+			}
+			catch (Exception e)
+			{
+				// Do nothing
+			}
+		}
+	    
 		@Override
 		protected void onPreExecute()
 		{

@@ -586,6 +586,8 @@ public class TestScriptBrowserActivity extends Activity {
 			// Lock the file
 			controlFileLock("Insert", ValueStoringHelperClass.COURSE_NAME, ValueStoringHelperClass.TEST_NAME.trim(), directory.split("/")[directory.split("/").length - 1]);
 			
+			ValueStoringHelperClass.ORIGINAL_FOLDER_NAME = directory.split("/")[directory.split("/").length - 1];
+			
 			// Get the path to external storage
 			String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
 
