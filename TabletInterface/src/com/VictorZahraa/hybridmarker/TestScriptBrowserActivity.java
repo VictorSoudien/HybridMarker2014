@@ -545,8 +545,8 @@ public class TestScriptBrowserActivity extends Activity {
 				// Populate the sublist for this category
 				for (String script : scripts)
 				{
-					// Do not show the metadata files to the user
-					if (script.endsWith(".txt") == false)
+					// Do not show any files only folders
+					if ((script.contains(".") == false) && (!script.equals("FinalScripts")))
 					{
 						temp.add(script.replaceAll("\\+", ""));
 					}
