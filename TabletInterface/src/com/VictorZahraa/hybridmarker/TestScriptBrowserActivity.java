@@ -233,7 +233,7 @@ public class TestScriptBrowserActivity extends Activity {
 				if (scriptName.length() == 9)
 				{
 					options.add("Remark Script");
-					options.add("View Marked Version");
+					options.add("View Marked Script");
 				}
 				else
 				{
@@ -284,6 +284,15 @@ public class TestScriptBrowserActivity extends Activity {
 							
 							downloadingFiles = true;
 							new ServerConnect().execute("Download Files for Viewing", fileDirectory, "OriginalPage", scriptName);
+						}
+						else if (options.get(position).equals("View Marked Script"))
+						{
+							String tempTestName = listItems.get(listHeaders.get(gPos)).get(cPos);
+							tempTestName += "+";
+							String fileDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(gPos).replaceAll(" ", "_") + "/" + tempTestName + "/";
+							
+							downloadingFiles = true;
+							new ServerConnect().execute("Download Files for Viewing", fileDirectory, "Marked", scriptName);
 						}
 					}
 				});
@@ -794,6 +803,22 @@ public class TestScriptBrowserActivity extends Activity {
 				
 				String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
 	
+				if (prefix.equals("Marked"))
+				{
+					if (filenames.contains("ReMarkedPage"))
+					{
+						prefix = "ReMarkedPage";
+					}
+					else if (filenames.contains("save"))
+					{
+						prefix = "save";
+					}
+					else
+					{
+						prefix = "MarkedPage";
+					}
+				}
+				
 				for (String file : files)
 				{
 					file = file.trim();
