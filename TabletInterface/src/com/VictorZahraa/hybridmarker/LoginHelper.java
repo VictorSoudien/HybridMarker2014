@@ -152,7 +152,11 @@ public class LoginHelper
 						}
 						else
 						{
-
+							/* Needs to be here so that it is reset if a new user logs in without having been
+							 * cleared from memory 
+							 */
+							ValueStoringHelperClass.CAN_VIEW_ALL_COURSES = false;
+							
 							String [] courses = courseResult.split("<br>");
 							ArrayList<String> temp = new ArrayList<String>();
 
@@ -219,7 +223,7 @@ public class LoginHelper
 					// Execute the php file
 					@SuppressWarnings("unused")
 					HttpResponse response = client.execute(request);
-
+					
 					return "Success";
 				}
 				catch (Exception e)

@@ -205,6 +205,28 @@ public class TestScriptBrowserActivity extends Activity {
 				
 				final int gPos = groupPosition;
 				final int cPos = childPosition;
+				
+				// If this user is not an admin user
+				if (ValueStoringHelperClass.CAN_VIEW_ALL_COURSES == false)
+				{
+					String tempTestName = listItems.get(listHeaders.get(gPos)).get(cPos);
+					tempTestName += "+";
+					
+					ValueStoringHelperClass.TEST_NAME = listHeaders.get(gPos).replaceAll("_", " ").trim();
+
+					String fileDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(gPos).replaceAll(" ", "_") + "/" + tempTestName + "/";
+					String memoDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(gPos).replaceAll(" ", "_") + "/memo.txt";
+					String ansPerPageDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(gPos).replaceAll(" ", "_") + "/answersPerPage.txt";
+
+					// Store the current directory and test name
+					valueStore.setCurrentDirectory("/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(gPos).replaceAll(" ", "_") + "/");
+					valueStore.setTestName(tempTestName);
+
+					downloadingFiles = true;
+					new ServerConnect().execute("Download Files", fileDirectory, memoDirectory, ansPerPageDirectory);
+					return false;
+				}
+				
 				final String scriptName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
 				final ArrayList<String> options = new ArrayList<String>();
 				
