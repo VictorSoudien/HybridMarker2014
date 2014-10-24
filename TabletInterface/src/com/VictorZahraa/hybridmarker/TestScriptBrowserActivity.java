@@ -203,14 +203,16 @@ public class TestScriptBrowserActivity extends Activity {
 				
 				final int gPos = groupPosition;
 				final int cPos = childPosition;
-				
-				// Display a list of options
 				final ArrayList<String> options = new ArrayList<String>();
+				
 				View optionsView = getLayoutInflater().inflate(R.layout.profile_popup_layout, null);
 				ListView optionsList = (ListView) optionsView.findViewById(R.id.optionsList);
 				
+				String scriptName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
+				
+				// Display a list of options
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
-				.setTitle("Script Options - " + listItems.get(listHeaders.get(groupPosition)).get(childPosition))
+				.setTitle("Script Options - " + scriptName)
 				.setView(optionsView)
 				.setPositiveButton("Back", null);
 				
@@ -227,8 +229,15 @@ public class TestScriptBrowserActivity extends Activity {
 				final AlertDialog alertDialog = alertDialogBuilder.create();
 				alertDialog.show();
 
-				options.add("Mark Script");
-				options.add("View Marked Version");
+				if (scriptName.length() == 9)
+				{
+					options.add("Remark Script");
+					options.add("View Marked Version");
+				}
+				else
+				{
+					options.add("Mark Script");
+				}
 				options.add("View Unprocessed File");
 
 				ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
