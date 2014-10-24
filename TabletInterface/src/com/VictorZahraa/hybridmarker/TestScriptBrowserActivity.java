@@ -805,6 +805,8 @@ public class TestScriptBrowserActivity extends Activity {
 	
 				if (prefix.equals("Marked"))
 				{
+					numPages = 1; // Because we don't show the cover page
+					
 					if (filenames.contains("ReMarkedPage"))
 					{
 						prefix = "ReMarkedPage";
