@@ -77,6 +77,7 @@ public class ValueStoringHelperClass
 	private static boolean scriptFlagged = false;
 	
 	// Fields used for the viewing of test scripts but not marking
+	private ArrayList<Bitmap> viewPageBitmaps;
 	private static int numViewablePages;
 
 	public ValueStoringHelperClass()
@@ -760,4 +761,32 @@ public class ValueStoringHelperClass
 	
 	// Methods used for the viewing of the script and not marking it
 	
+	public void initViewPageBitmaps ()
+	{
+		viewPageBitmaps = new ArrayList<Bitmap>();
+	}
+	
+	public boolean addViewPage (int pageNum, String prefix)
+	{
+		File page = new File (pathToSDCard + "/" + prefix + pageNum + ".png");
+		Bitmap imageBitmap = BitmapFactory.decodeFile(page.getAbsolutePath());
+
+		if (imageBitmap != null)
+		{
+			viewPageBitmaps.add(imageBitmap);
+			page.delete();
+			return true;
+		}
+		else
+		{
+			// Display an error message
+			page.delete();
+			return false;
+		}
+	}
+	
+	public int getNumViewablePages() {return viewPageBitmaps.size();}
+	public Bitmap getViewablePage(int index) {return viewPageBitmaps.get(index);}
+	
+	// RECYCLE VIEW PAGE BITMAPS
 }

@@ -278,27 +278,12 @@ public class TestScriptBrowserActivity extends Activity {
 						}
 						else if (options.get(position).equals("View Unprocessed File"))
 						{
-							// Test pop-up display of test
-							View testView = getLayoutInflater().inflate(R.layout.script_viewing_layout, null);
-							View imageV = getLayoutInflater().inflate(R.layout.simple_image_view, null);
-							LinearLayout linearLayout = (LinearLayout) testView.findViewById(R.id.scriptViewLinearLayout);
-							ImageView scriptViewImage = (ImageView) imageV.findViewById(R.id.imageView1);
-							scriptViewImage.setImageResource(R.drawable.page5200dpi);
+							String tempTestName = listItems.get(listHeaders.get(gPos)).get(cPos);
+							tempTestName += "+";
+							String fileDirectory = "/home/zmathews/Honours_Project/" + selectedItemInDrawer + "/" + listHeaders.get(gPos).replaceAll(" ", "_") + "/" + tempTestName + "/";
 							
-							//ImageView img = (ImageView) findViewById(android.R.layout.simple_gallery_item);
-							//img.setImageResource(R.drawable.page3200dpi);
-							//linearLayout.addView(img);
-							
-							linearLayout.addView(imageV);
-							
-							AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
-							.setTitle("Viewing " + scriptName)
-							.setView(testView)
-							.setPositiveButton("Done", null)
-							.setCancelable(false);
-							
-							AlertDialog scriptViewDialog = alertDialogBuilder.create();
-							scriptViewDialog.show();
+							downloadingFiles = true;
+							new ServerConnect().execute("Download Files for Viewing", fileDirectory, "OriginalPage", scriptName);
 						}
 					}
 				});
@@ -449,6 +434,8 @@ public class TestScriptBrowserActivity extends Activity {
 
 		private ProgressDialog progressDialog;
 		private boolean downloadSuccess = false;
+		
+		private String scriptBeingViewed = "";
 
 		@Override
 		protected Long doInBackground(String... params) 
@@ -487,7 +474,17 @@ public class TestScriptBrowserActivity extends Activity {
 					{
 						downloadFiles(params[1], params[2], params[3]);
 					}
-				}	
+				}
+				else if (params[0].equalsIgnoreCase("Download Files for Viewing"))
+				{
+					operationBeingPerformed = "Download Files for Viewing";
+					
+					if (connectToServer() == true)
+					{
+						scriptBeingViewed = params[3];
+						downloadFilesForScriptViewing(params[1], params[2]);
+					}
+				}
 			}
 
 			return null;
@@ -780,6 +777,45 @@ public class TestScriptBrowserActivity extends Activity {
 				publishProgress("Error during file lock management: \n" + e.getMessage());
 			}
 		}
+		
+		private void downloadFilesForScriptViewing(String directory, String prefix)
+		{
+			valueStore.initViewPageBitmaps();
+			
+			try
+			{
+				String filenames = executeCommandOnServer("cd " + directory + " && ls");
+				String [] files = filenames.split("\n");
+	
+				Channel commChannel = sshSession.openChannel("sftp");
+				commChannel.connect();
+				ChannelSftp sftpChannel = (ChannelSftp) commChannel;
+				int numPages = 0;
+				
+				String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
+	
+				for (String file : files)
+				{
+					file = file.trim();
+	
+					if (file.startsWith(prefix) && file.contains(".png"))
+					{
+						String saveDir = pathToSDCard + "/" + file;
+						String fileDir = directory + file;
+	
+						sftpChannel.get(fileDir, saveDir);
+						numPages++;
+						valueStore.addViewPage(numPages, prefix);
+					}
+				}
+				
+				downloadSuccess = true;
+			}
+			catch (Exception e)
+			{
+				publishProgress("An error has occured during file download.\nPlease check your internet connection");
+			}
+		}
 
 		protected void onProgressUpdate(String... message) 
 		{
@@ -850,6 +886,50 @@ public class TestScriptBrowserActivity extends Activity {
 				.setMessage("This script is currently being marked.")
 				.setPositiveButton("Ok", null)
 				.show();
+			}
+			
+			if (operationBeingPerformed.equals("Download Files for Viewing") && (downloadSuccess == true))
+			{
+				downloadingFiles = false;
+				downloadSuccess = false;
+				
+				// Display the test to the user
+				View testView = getLayoutInflater().inflate(R.layout.script_viewing_layout, null);
+				LinearLayout linearLayout = (LinearLayout) testView.findViewById(R.id.scriptViewLinearLayout);
+				
+				for (int i = 0; i < valueStore.getNumViewablePages(); i++)
+				{
+					View imageV = getLayoutInflater().inflate(R.layout.simple_image_view, null);
+					ImageView scriptViewImage = (ImageView) imageV.findViewById(R.id.imageView1);
+					scriptViewImage.setImageBitmap(valueStore.getViewablePage(i));
+					
+					linearLayout.addView(imageV);
+				}
+
+				if (valueStore.getNumViewablePages() != 0)
+				{
+					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+					.setTitle("Viewing " + scriptBeingViewed)
+					.setView(testView)
+					.setPositiveButton("Done", null)
+					.setCancelable(false);
+					
+					
+					AlertDialog scriptViewDialog = alertDialogBuilder.create();
+					scriptViewDialog.show();
+				}
+				else
+				{
+					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+					.setTitle("Viewing " + scriptBeingViewed)
+					.setMessage("Requested version of script not found")
+					.setPositiveButton("Done", null)
+					.setCancelable(false);
+					
+					
+					AlertDialog scriptViewDialog = alertDialogBuilder.create();
+					scriptViewDialog.show();
+				}
 			}
 		}
 	}
