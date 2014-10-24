@@ -75,6 +75,9 @@ public class ValueStoringHelperClass
 	// Stores the text the user entered as part of the complaint about a script
 	private static String scriptFlagText;
 	private static boolean scriptFlagged = false;
+	
+	// Fields used for the viewing of test scripts but not marking
+	private static int numViewablePages;
 
 	public ValueStoringHelperClass()
 	{
@@ -754,4 +757,7 @@ public class ValueStoringHelperClass
 			answerCoordsPerPage.add((ArrayList<ArrayList<Integer>>) temp.clone());
 		}
 	}
+	
+	// Methods used for the viewing of the script and not marking it
+	
 }

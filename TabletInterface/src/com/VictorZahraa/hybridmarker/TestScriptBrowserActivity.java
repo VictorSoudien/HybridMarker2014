@@ -26,6 +26,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.AdapterView.OnItemClickListener;
@@ -203,12 +205,11 @@ public class TestScriptBrowserActivity extends Activity {
 				
 				final int gPos = groupPosition;
 				final int cPos = childPosition;
+				final String scriptName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
 				final ArrayList<String> options = new ArrayList<String>();
 				
 				View optionsView = getLayoutInflater().inflate(R.layout.profile_popup_layout, null);
 				ListView optionsList = (ListView) optionsView.findViewById(R.id.optionsList);
-				
-				String scriptName = listItems.get(listHeaders.get(groupPosition)).get(childPosition);
 				
 				// Display a list of options
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
@@ -252,13 +253,13 @@ public class TestScriptBrowserActivity extends Activity {
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) 
 					{
-						if (options.get(position).equalsIgnoreCase("Mark Script"))
+						if (alertDialog != null)
+						{
+							alertDialog.dismiss();
+						}
+						
+						if (options.get(position).equalsIgnoreCase("Mark Script") || options.get(position).equalsIgnoreCase("Remark Script"))
 						{		
-							if (alertDialog != null)
-							{
-								alertDialog.dismiss();
-							}
-							
 							String tempTestName = listItems.get(listHeaders.get(gPos)).get(cPos);
 							tempTestName += "+";
 							
@@ -274,6 +275,30 @@ public class TestScriptBrowserActivity extends Activity {
 
 							downloadingFiles = true;
 							new ServerConnect().execute("Download Files", fileDirectory, memoDirectory, ansPerPageDirectory);
+						}
+						else if (options.get(position).equals("View Unprocessed File"))
+						{
+							// Test pop-up display of test
+							View testView = getLayoutInflater().inflate(R.layout.script_viewing_layout, null);
+							View imageV = getLayoutInflater().inflate(R.layout.simple_image_view, null);
+							LinearLayout linearLayout = (LinearLayout) testView.findViewById(R.id.scriptViewLinearLayout);
+							ImageView scriptViewImage = (ImageView) imageV.findViewById(R.id.imageView1);
+							scriptViewImage.setImageResource(R.drawable.page5200dpi);
+							
+							//ImageView img = (ImageView) findViewById(android.R.layout.simple_gallery_item);
+							//img.setImageResource(R.drawable.page3200dpi);
+							//linearLayout.addView(img);
+							
+							linearLayout.addView(imageV);
+							
+							AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+							.setTitle("Viewing " + scriptName)
+							.setView(testView)
+							.setPositiveButton("Done", null)
+							.setCancelable(false);
+							
+							AlertDialog scriptViewDialog = alertDialogBuilder.create();
+							scriptViewDialog.show();
 						}
 					}
 				});
