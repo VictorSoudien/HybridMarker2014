@@ -104,7 +104,14 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter
         
         if (childText.length() == 9) // If the folder has been renamed to the student number
         {
-        	icon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_action_accept));
+        	if (childText.startsWith("CONFLT")) // If the folder has been renamed to the student number
+            {
+            	icon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_action_warning_file_list));
+            }
+        	else
+        	{
+        		icon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_action_accept));
+        	}
         }
         else if (ValueStoringHelperClass.LOCKED_TESTS.contains(childText.trim()))
         {
