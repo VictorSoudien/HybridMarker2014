@@ -217,6 +217,9 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		private boolean success;
 		private String error;
 		private boolean reportOption = false;
+		
+		private String confName;
+		private boolean conflictFile = false;
 
 
 		@Override
@@ -276,14 +279,25 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 					// Rename the directory to the student number
 					sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
 				}
+				else
+				{
+					confName = getNextConflictScriptID();
+					baseDirectory = valueStore.getCurrentDirectory() + confName.toUpperCase() + "+/";
+					
+					conflictFile = true;
+					
+					// Rename the directory to the student number
+					sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
+				}
 
 				File temp;
 				FileOutputStream fileOut;
 				String basePageName = "";
 
-				if (reportUpload.equalsIgnoreCase("Yes"))
+				/*if (reportUpload.equalsIgnoreCase("Yes"))
 				{
-					basePageName = "ConflictPage";
+					//basePageName = "ConflictPage";
+					basePageName = "MarkedPage";
 					
 					// Upload the cover page
 					temp = new File (pathToSDCard + "/tempMarkedPage.png");
@@ -297,8 +311,8 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 					// Delete the temp file that was created
 					temp.delete();
-				}
-				else if (ValueStoringHelperClass.isRemark == true)
+				}*/
+				if (ValueStoringHelperClass.isRemark == true)
 				{
 					basePageName = "ReMarkedPage";
 				}
@@ -344,6 +358,57 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				success = false;
 			}
 		}
+		
+		// Gets the number of conflicting scripts already uploaded
+		private String getNextConflictScriptID()
+		{
+			String link = getText(R.string.base_URL) + "/getConflictTests.php?";
+
+			try
+			{	
+				HttpClient client = new DefaultHttpClient();
+				HttpGet request = new HttpGet();
+				request.setURI(new URI(link));
+
+				HttpResponse response = client.execute(request);
+				
+				BufferedReader in = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
+				
+				String result = "";
+				String line = null;
+				
+				// Read Server Response
+				while((line = in.readLine()) != null)
+				{
+					result += line;
+					break;
+				}
+				
+				int nextNum = Integer.parseInt(result.trim()); // No need to add one since count starts at 0
+				String returnVal = "CONFLT";
+				
+				switch (Integer.toString(nextNum).length()) {
+				case 1:
+					returnVal += "00" + Integer.toString(nextNum);
+					break;
+				case 2:
+					returnVal += "0" + Integer.toString(nextNum);
+					break;
+				case 3:
+					returnVal += Integer.toString(nextNum);
+					break;
+				default:
+					break;
+				}
+				
+				return returnVal;
+			}
+			catch (Exception e)
+			{
+				publishProgress("An error occured while uploading the file: \n" + e.getMessage());
+				return "ERROR";
+			}
+		}
 
 		// Uploads the marks to the database and determines whether or not the script should be flagged
 		private void uploadMarks()
@@ -352,10 +417,12 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 			try
 			{	
+				String studentNumber = (conflictFile == true) ? confName : studentNumberInput.getText().toString().trim();
+				
 				link += "Course=" + ValueStoringHelperClass.COURSE_NAME.trim() +
 						"&Test=" + ValueStoringHelperClass.TEST_NAME.trim().replaceAll(" ", "%20") + 
 						"&user=" + ValueStoringHelperClass.USERNAME.trim() + 
-						"&studentNumber=" + studentNumberInput.getText().toString().trim() + 
+						"&studentNumber=" + studentNumber + 
 						"&Mark=" + valueStore.getSumOfPageScores() +
 						"&Result=" + valueStore.getResultsInDBFormat().replaceAll("\\+", "%2B");
 
@@ -498,11 +565,11 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 						{
 							if (valueStore.getFlagText().trim().equals(""))
 							{
-								valueStore.setFlagText("This test conflicts with another on the server.\n Please check both scripts");
+								valueStore.setFlagText("This test conflicts with another on the server.\nPlease check both scripts");
 							}
-							else if (!(valueStore.getFlagText().contains("This test conflicts with another on the server.\n Please check both scripts")))
+							else if (!(valueStore.getFlagText().contains("This test conflicts with another on the server.\nPlease check both scripts")))
 							{
-								valueStore.setFlagText(valueStore.getFlagText() + "\nThis test conflicts with another on the server.\n Please check both scripts");
+								valueStore.setFlagText(valueStore.getFlagText() + "\nThis test conflicts with another on the server.\nPlease check both scripts");
 							}
 							
 							// Display the flagging dialog
