@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -256,6 +258,7 @@ public class TestScriptBrowserActivity extends Activity {
 				{
 					options.add("Remark Script");
 					options.add("View Marked Script");
+					options.add("Rename File");
 				}
 				else
 				{
@@ -316,6 +319,14 @@ public class TestScriptBrowserActivity extends Activity {
 							downloadingFiles = true;
 							new ServerConnect().execute("Download Files for Viewing", fileDirectory, "Marked", scriptName);
 						}
+						else if(options.get(position).equals("Rename File"))
+						{
+							String tempTestName = listItems.get(listHeaders.get(gPos)).get(cPos);
+							String coureName = selectedItemInDrawer;
+							String testName = listHeaders.get(gPos).replaceAll(" ", "_");
+							
+							showRenameDialog(tempTestName, coureName, testName, "");
+						}
 					}
 				});
 				
@@ -339,6 +350,44 @@ public class TestScriptBrowserActivity extends Activity {
 				return false;
 			}
 		});
+	}
+	
+	// Show a dialog which allows the user to enter a new name for a file
+	public void showRenameDialog(String oldName, String course, String testName, String errorMessage)
+	{
+		final String oName = oldName;
+		final String courseName = course;
+		final String test = testName;
+		
+		View renameView = getLayoutInflater().inflate(R.layout.script_rename_edit_text, null);
+		final EditText newNameField = (EditText) renameView.findViewById(R.id.newFileName);
+		final TextView messageView = (TextView) renameView.findViewById(R.id.messageTextView);
+		
+		messageView.setText(errorMessage);
+		
+		AlertDialog renameFileDialog = new AlertDialog.Builder(context)
+		.setTitle("Rename Script - " + oldName)
+		.setMessage("Please enter the new name: ")
+		.setView(renameView)
+		.setPositiveButton("Change Name", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				String newName = newNameField.getText().toString().trim();
+				
+				if ((newName.length() == 0) || ((newName.length() != 9)))
+				{
+					showRenameDialog(oName, courseName, test, "The new name must be 9 characters long");
+				}
+				else
+				{
+					new ServerConnect().execute("Rename File", newName.toUpperCase().trim(), courseName, test, oName);
+				}
+			}
+		})
+		.setNegativeButton("Cancel", null)
+		.show();
 	}
 
 	// Sets up the navigation drawer
@@ -514,6 +563,15 @@ public class TestScriptBrowserActivity extends Activity {
 					{
 						scriptBeingViewed = params[3];
 						downloadFilesForScriptViewing(params[1], params[2]);
+					}
+				}
+				else if (params[0].equalsIgnoreCase("Rename File"))
+				{
+					operationBeingPerformed = "Rename File";
+					
+					if (connectToServer() == true)
+					{
+						renameFile(params[1], params[2], params[3], params[4]);
 					}
 				}
 			}
@@ -863,6 +921,29 @@ public class TestScriptBrowserActivity extends Activity {
 			catch (Exception e)
 			{
 				publishProgress("An error has occured during file download.\nPlease check your internet connection");
+			}
+		}
+		
+		// Rename the file
+		private void renameFile(String newName, String course, String testName, String oldFileName)
+		{
+			String link = "http://people.cs.uct.ac.za/~zmathews/System/php" + "/renameFile.php?q=";
+
+			try
+			{	
+				link += newName + "*" + course + "/" + testName + "/" + oldFileName;
+				
+				HttpClient client = new DefaultHttpClient();
+				HttpGet request = new HttpGet();
+				request.setURI(new URI(link));
+
+				HttpResponse response = client.execute(request);
+				
+				populateLists(course);
+			}
+			catch (Exception e)
+			{
+				publishProgress();
 			}
 		}
 
