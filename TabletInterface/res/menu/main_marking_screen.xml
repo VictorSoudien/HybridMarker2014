@@ -20,7 +20,7 @@
     <item
         android:id="@+id/action_upload_script"
         android:icon="@drawable/ic_action_upload"
-        android:showAsAction="always"
+        android:showAsAction="always|withText"
         android:title="@string/action_upload_script"/>
     <item
         android:id="@+id/action_flag_script"
