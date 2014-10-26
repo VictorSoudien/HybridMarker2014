@@ -61,6 +61,7 @@ public class TestScriptBrowserActivity extends Activity {
 	private Context context;
 	private ActionBar actionBar;
 	private TextView instructionText;
+	private ImageView logoDisplay;
 	
 	private MenuItem userDisplay;
 
@@ -109,6 +110,7 @@ public class TestScriptBrowserActivity extends Activity {
 		        switch (msg.what) {
 		        case 0:
 		        	instructionText.setVisibility(View.VISIBLE);
+		        	logoDisplay.setVisibility(View.VISIBLE);
 		        	listUpdateProgressBar.setVisibility(View.INVISIBLE);
 		        	
 		        	invalidateOptionsMenu();
@@ -133,6 +135,10 @@ public class TestScriptBrowserActivity extends Activity {
 		
 	  	instructionText = (TextView) findViewById(R.id.instructionText);
 	  	instructionText.setVisibility(View.INVISIBLE);
+	  	
+	  	logoDisplay = (ImageView) findViewById(R.id.logo_display);
+	  	logoDisplay.setVisibility(View.INVISIBLE);
+	  	
 		valueStore = new ValueStoringHelperClass();
 		listUpdateProgressBar = (ProgressBar) findViewById(R.id.list_update_progress_bar);
 		listUpdateProgressBar.setVisibility(View.INVISIBLE);
@@ -410,6 +416,7 @@ public class TestScriptBrowserActivity extends Activity {
 			{
 				// Remove the instruction text
 				instructionText.setVisibility(View.INVISIBLE);
+				logoDisplay.setVisibility(View.INVISIBLE);
 
 				drawerListView.setItemChecked(position, true);
 				drawerLayout.closeDrawer(drawerListView);
