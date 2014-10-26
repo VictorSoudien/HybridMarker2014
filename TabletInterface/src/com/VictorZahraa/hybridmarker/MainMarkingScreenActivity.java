@@ -334,8 +334,8 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		getMenuInflater().inflate(R.menu.main_marking_screen, menu);
 		actionMenu = menu;
 
-		MenuItem userDisplay = menu.findItem(R.id.user_display);
-		userDisplay.setTitle(ValueStoringHelperClass.USERNAME);
+		/*MenuItem userDisplay = menu.findItem(R.id.user_display);
+		userDisplay.setTitle(ValueStoringHelperClass.USERNAME);*/
 
 		actionMenu.findItem(R.id.action_free_write).setIcon(R.drawable.ic_action_edit);
 		actionMenu.findItem(R.id.action_add_comment).setIcon(R.drawable.ic_action_chat);
@@ -419,10 +419,10 @@ public class MainMarkingScreenActivity extends Activity implements ActionBar.Tab
 		{
 			new BitmapMerger().execute();
 		}
-		else if (id == R.id.user_display)
+		/*else if (id == R.id.user_display)
 		{
 			new ProfilePopUpHelper(context, this.getLayoutInflater());
-		}
+		}*/
 		return super.onOptionsItemSelected(item);
 	}
 

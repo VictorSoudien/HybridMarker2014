@@ -18,20 +18,14 @@
         android:showAsAction="ifRoom"
         android:title="@string/action_free_write"/>
     <item
-        android:id="@+id/action_upload_script"
-        android:icon="@drawable/ic_action_upload"
-        android:showAsAction="always|withText"
-        android:title="@string/action_upload_script"/>
-    <item
         android:id="@+id/action_flag_script"
         android:icon="@drawable/ic_action_warning"
         android:showAsAction="ifRoom"
         android:title="@string/action_flag_script"/>
     <item
-        android:id="@+id/user_display"
-        android:icon="@drawable/ic_action_person"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom|withText"
-        android:title=""/>
+        android:id="@+id/action_upload_script"
+        android:icon="@drawable/ic_action_upload"
+        android:showAsAction="always|withText"
+        android:title="@string/action_upload_script"/>
 
 </menu>

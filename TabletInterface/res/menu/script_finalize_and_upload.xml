@@ -6,13 +6,6 @@
         android:id="@+id/action_flag_script"
        	android:title="@string/action_flag_script"
     	android:icon="@drawable/ic_action_warning" 
-    	android:showAsAction="ifRoom"/>
-    
-    <item
-        android:id="@+id/user_display"
-        android:orderInCategory="100"
-        android:showAsAction="always|withText"
-        android:icon="@drawable/ic_action_person"
-        android:title=""/>
+    	android:showAsAction="ifRoom|withText"/>
 
 </menu>

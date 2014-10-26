@@ -48,12 +48,12 @@ public final class R {
     }
     public static final class id {
         public static final int action_add_comment=0x7f090030;
-        public static final int action_flag_script=0x7f090033;
+        public static final int action_flag_script=0x7f090032;
         public static final int action_free_write=0x7f090031;
-        public static final int action_refresh=0x7f090039;
+        public static final int action_refresh=0x7f090038;
         public static final int action_settings=0x7f09002e;
         public static final int action_undo=0x7f09002f;
-        public static final int action_upload_script=0x7f090032;
+        public static final int action_upload_script=0x7f090033;
         public static final int answerText=0x7f090011;
         public static final int answerTextScrollView=0x7f090010;
         public static final int button_recog_gesture=0x7f09000d;
@@ -77,10 +77,10 @@ public final class R {
         public static final int markingScreenCanvasContainer=0x7f09000a;
         public static final int memoAnswersListView=0x7f090006;
         public static final int memo_text=0x7f090024;
-        public static final int menu_option_Eraser=0x7f090036;
-        public static final int menu_option_Pen=0x7f090035;
-        public static final int menu_option_recog_gesture=0x7f090037;
-        public static final int menu_option_view_pdf=0x7f090038;
+        public static final int menu_option_Eraser=0x7f090035;
+        public static final int menu_option_Pen=0x7f090034;
+        public static final int menu_option_recog_gesture=0x7f090036;
+        public static final int menu_option_view_pdf=0x7f090037;
         public static final int nextQuestionButton=0x7f090005;
         public static final int optionsList=0x7f090025;
         public static final int passwordInput=0x7f090020;
@@ -103,7 +103,7 @@ public final class R {
         public static final int testDisplay=0x7f09001a;
         public static final int textView1=0x7f09001b;
         public static final int upload_button=0x7f090016;
-        public static final int user_display=0x7f090034;
+        public static final int user_display=0x7f090039;
         public static final int usernameInput=0x7f09001f;
     }
     public static final class layout {

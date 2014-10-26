@@ -139,8 +139,8 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.script_finalize_and_upload, menu);
 
-		MenuItem userDisplay = menu.findItem(R.id.user_display);
-		userDisplay.setTitle(ValueStoringHelperClass.USERNAME);
+		/*MenuItem userDisplay = menu.findItem(R.id.user_display);
+		userDisplay.setTitle(ValueStoringHelperClass.USERNAME);*/
 
 		return true;
 	}
@@ -172,10 +172,10 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				}
 			}).show();
 		}
-		else if (id == R.id.user_display)
+		/*else if (id == R.id.user_display)
 		{
 			new ProfilePopUpHelper(context, this.getLayoutInflater());
-		}
+		}*/
 		return super.onOptionsItemSelected(item);
 	}
 
