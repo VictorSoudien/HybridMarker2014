@@ -612,7 +612,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				{
 					return false;
 				}
-				if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) 
+				/*if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) 
 				{
 					// Left Swipe
 					currentPageBeingShown = (currentPageBeingShown == numMarkedPages) ? currentPageBeingShown : (currentPageBeingShown + 1);
@@ -622,6 +622,20 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) 
 				{
 					// Right Swipe
+					currentPageBeingShown = (currentPageBeingShown == 0) ? 0 : (currentPageBeingShown - 1);
+					testDisplay.setImageBitmap(valueStore.getMergedBitmap(currentPageBeingShown));
+					markTextView.setText("Final Mark: " + valueStore.getSumOfPageScores() + " / " + valueStore.getTotalMark() + "\t\tMarks for this page: "  + valueStore.getPageScore(currentPageBeingShown + 1));
+				}*/
+				if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) 
+				{
+					// Up Swipe
+					currentPageBeingShown = (currentPageBeingShown == numMarkedPages) ? currentPageBeingShown : (currentPageBeingShown + 1);
+					testDisplay.setImageBitmap(valueStore.getMergedBitmap(currentPageBeingShown));
+					markTextView.setText("Final Mark: " + valueStore.getSumOfPageScores() + " / " + valueStore.getTotalMark() + "\t\tMarks for this page: "  + valueStore.getPageScore(currentPageBeingShown + 1));
+				} 
+				else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) 
+				{
+					// Down Swipe
 					currentPageBeingShown = (currentPageBeingShown == 0) ? 0 : (currentPageBeingShown - 1);
 					testDisplay.setImageBitmap(valueStore.getMergedBitmap(currentPageBeingShown));
 					markTextView.setText("Final Mark: " + valueStore.getSumOfPageScores() + " / " + valueStore.getTotalMark() + "\t\tMarks for this page: "  + valueStore.getPageScore(currentPageBeingShown + 1));

@@ -178,7 +178,6 @@ public class TestScriptBrowserActivity extends Activity {
 		messageDisplay.setVisibility(View.INVISIBLE);
 
 		AlertDialog loginDialog = new AlertDialog.Builder(context)
-		.setTitle("Login")
 		.setView(loginView)
 		.setPositiveButton("Log In", null)
 		.setNegativeButton("Exit", null)
@@ -521,6 +520,7 @@ public class TestScriptBrowserActivity extends Activity {
 
 		private ProgressDialog progressDialog;
 		private boolean downloadSuccess = false;
+		private boolean connectionLost = false;
 		
 		private String scriptBeingViewed = "";
 
@@ -723,6 +723,7 @@ public class TestScriptBrowserActivity extends Activity {
 		private void downloadFiles(String directory, String memoDir, String ansPerPageDir)
 		{	
 			String testName = directory.split("/")[directory.split("/").length - 1].replaceAll("\\+", "");
+			ValueStoringHelperClass.ORIGINAL_FOLDER_NAME = testName;
 			
 			// Ensure that the script is not being marked
 			controlFileLock("Select", ValueStoringHelperClass.COURSE_NAME, "", "");
@@ -738,8 +739,6 @@ public class TestScriptBrowserActivity extends Activity {
 				populateLists(ValueStoringHelperClass.COURSE_NAME);
 				return;
 			}
-			
-			ValueStoringHelperClass.ORIGINAL_FOLDER_NAME = testName;
 			
 			// Get the path to external storage
 			String pathToSDCard = Environment.getExternalStorageDirectory().getPath();
@@ -829,7 +828,7 @@ public class TestScriptBrowserActivity extends Activity {
 			}
 			catch (Exception e)
 			{
-				publishProgress(/*"An error has occured: Please check your network connection" + */e.getMessage());
+				publishProgress("An error has occured: Please check your network connection");
 			}
 		}
 		
@@ -953,9 +952,37 @@ public class TestScriptBrowserActivity extends Activity {
 				publishProgress();
 			}
 		}
+		
+		public void releaseFileLock (String course, String test, String name)
+		{
+			String link = getText(R.string.base_URL) + "/controlFileLock.php?";
+
+			try
+			{	
+				link += "op=Remove" + "&Course=" + course + "&Test=" + test.replaceAll(" ", "_") + "&Name=" + name;
+			
+				HttpClient client = new DefaultHttpClient();
+				HttpGet request = new HttpGet();
+				request.setURI(new URI(link));
+
+				@SuppressWarnings("unused")
+				HttpResponse response = client.execute(request);
+			}
+			catch (Exception e)
+			{
+				// Do nothing
+			}
+		}
 
 		protected void onProgressUpdate(String... message) 
 		{
+			// Release the lock if download fails
+			if (downloadingFiles == true)
+			{
+				connectionLost = true;
+				controlFileLock("Remove",ValueStoringHelperClass.COURSE_NAME, ValueStoringHelperClass.TEST_NAME.trim(), ValueStoringHelperClass.ORIGINAL_FOLDER_NAME);
+			}
+			
 			message[0] = (message[0].trim().equals("")) ? "An error has occured: Please check your network connection" : message[0];
 			
 			new AlertDialog.Builder(context)
@@ -1016,7 +1043,7 @@ public class TestScriptBrowserActivity extends Activity {
 				Intent pdfViewScreen = new Intent(TestScriptBrowserActivity.this, MainMarkingScreenActivity.class);
 				startActivity(pdfViewScreen);
 			}
-			else if (operationBeingPerformed.equals("Download Files") && (downloadSuccess == false))
+			else if (operationBeingPerformed.equals("Download Files") && (downloadSuccess == false) && (connectionLost == false))
 			{
 				AlertDialog lockedScriptDialog = new AlertDialog.Builder(context)
 				.setTitle("Scipt Options - " + ValueStoringHelperClass.TEST_NAME)
