@@ -49,7 +49,7 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 	private static final int SWIPE_MIN_DISTANCE = 50;
 	private static final int SWIPE_MAX_OFF_PATH = 250;
-	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+	private static final int SWIPE_THRESHOLD_VELOCITY = 100;
 	private GestureDetector gestureDetector;
 	View.OnTouchListener gestureListener;
 	
@@ -67,6 +67,9 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 
 	private int numMarkedPages;
 	private int currentPageBeingShown;
+	
+	private boolean folderAlreadyRenamed = false;
+	private boolean reportUploadFlag = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -274,10 +277,19 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 				String baseDirectory =  valueStore.getCurrentDirectory() + studentNumber.toUpperCase() + "+/";
 				String oldDir = valueStore.getCurrentDirectory() + valueStore.getTestName() + "/";
 
-				if (reportUpload.equalsIgnoreCase("No"))
+				if (reportUpload.equalsIgnoreCase("Yes"))
 				{
-					// Rename the directory to the student number
-					sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
+					reportUploadFlag = true;
+				}
+				
+				if (reportUpload.equalsIgnoreCase("No") && (reportUploadFlag == false))
+				{
+					if (folderAlreadyRenamed == false)
+					{
+						// Rename the directory to the student number
+						sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
+					}
+					folderAlreadyRenamed = true;
 				}
 				else
 				{
@@ -286,8 +298,12 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 					
 					conflictFile = true;
 					
-					// Rename the directory to the student number
-					sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
+					if (folderAlreadyRenamed == false)
+					{
+						// Rename the directory to the student number
+						sftpChannel.rename(valueStore.getCurrentDirectory() + valueStore.getTestName() + "/", baseDirectory);
+					}
+					folderAlreadyRenamed = true;
 				}
 
 				File temp;
@@ -608,24 +624,10 @@ public class ScriptFinalizeAndUploadActivity extends Activity {
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 			try {
-				if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+				if (Math.abs(e1.getX() - e2.getX()) > SWIPE_MAX_OFF_PATH)
 				{
 					return false;
 				}
-				/*if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) 
-				{
-					// Left Swipe
-					currentPageBeingShown = (currentPageBeingShown == numMarkedPages) ? currentPageBeingShown : (currentPageBeingShown + 1);
-					testDisplay.setImageBitmap(valueStore.getMergedBitmap(currentPageBeingShown));
-					markTextView.setText("Final Mark: " + valueStore.getSumOfPageScores() + " / " + valueStore.getTotalMark() + "\t\tMarks for this page: "  + valueStore.getPageScore(currentPageBeingShown + 1));
-				} 
-				else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) 
-				{
-					// Right Swipe
-					currentPageBeingShown = (currentPageBeingShown == 0) ? 0 : (currentPageBeingShown - 1);
-					testDisplay.setImageBitmap(valueStore.getMergedBitmap(currentPageBeingShown));
-					markTextView.setText("Final Mark: " + valueStore.getSumOfPageScores() + " / " + valueStore.getTotalMark() + "\t\tMarks for this page: "  + valueStore.getPageScore(currentPageBeingShown + 1));
-				}*/
 				if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) 
 				{
 					// Up Swipe

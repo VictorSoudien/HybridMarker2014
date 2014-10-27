@@ -521,6 +521,7 @@ public class TestScriptBrowserActivity extends Activity {
 		private ProgressDialog progressDialog;
 		private boolean downloadSuccess = false;
 		private boolean connectionLost = false;
+		private boolean errorDisplayed = false;
 		
 		private String scriptBeingViewed = "";
 
@@ -827,7 +828,7 @@ public class TestScriptBrowserActivity extends Activity {
 				downloadSuccess = true;
 			}
 			catch (Exception e)
-			{
+			{				
 				publishProgress("An error has occured: Please check your network connection");
 			}
 		}
@@ -869,7 +870,7 @@ public class TestScriptBrowserActivity extends Activity {
 			}
 			catch (Exception e)
 			{
-				publishProgress("Error during file lock management: \n" + e.getMessage());
+				publishProgress("An error has occured: Please check your network connection");
 			}
 		}
 		
@@ -943,6 +944,7 @@ public class TestScriptBrowserActivity extends Activity {
 				HttpGet request = new HttpGet();
 				request.setURI(new URI(link));
 
+				@SuppressWarnings("unused")
 				HttpResponse response = client.execute(request);
 				
 				populateLists(course);
@@ -952,45 +954,22 @@ public class TestScriptBrowserActivity extends Activity {
 				publishProgress();
 			}
 		}
-		
-		public void releaseFileLock (String course, String test, String name)
-		{
-			String link = getText(R.string.base_URL) + "/controlFileLock.php?";
-
-			try
-			{	
-				link += "op=Remove" + "&Course=" + course + "&Test=" + test.replaceAll(" ", "_") + "&Name=" + name;
-			
-				HttpClient client = new DefaultHttpClient();
-				HttpGet request = new HttpGet();
-				request.setURI(new URI(link));
-
-				@SuppressWarnings("unused")
-				HttpResponse response = client.execute(request);
-			}
-			catch (Exception e)
-			{
-				// Do nothing
-			}
-		}
 
 		protected void onProgressUpdate(String... message) 
-		{
-			// Release the lock if download fails
-			if (downloadingFiles == true)
+		{	
+			if (errorDisplayed == false)
 			{
 				connectionLost = true;
-				controlFileLock("Remove",ValueStoringHelperClass.COURSE_NAME, ValueStoringHelperClass.TEST_NAME.trim(), ValueStoringHelperClass.ORIGINAL_FOLDER_NAME);
+				message[0] = (message[0].trim().equals("")) ? "An error has occured: Please check your network connection" : message[0];
+				
+				new AlertDialog.Builder(context)
+				.setTitle("Connection Error")
+				.setMessage(message[0])
+				.setPositiveButton("Continue", null)
+				.setCancelable(false)
+				.show();
 			}
-			
-			message[0] = (message[0].trim().equals("")) ? "An error has occured: Please check your network connection" : message[0];
-			
-			new AlertDialog.Builder(context)
-			.setTitle("Connection Error")
-			.setMessage(message[0])
-			.setPositiveButton("Continue", null)
-			.setCancelable(false)
-			.show();
+			errorDisplayed = true;
 		}
 
 		@Override
