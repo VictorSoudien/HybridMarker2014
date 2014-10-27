@@ -118,6 +118,12 @@ public class TestScriptBrowserActivity extends Activity {
 		    		new ServerConnect().execute("Update Nav Drawer");
 		    		
 		            break;
+		        case 1:
+	        		invalidateOptionsMenu();
+		        	
+		    		new ServerConnect().execute("Load Last Viewed");
+		    		
+		            break;
 		        default:
 		            break;
 		        }
@@ -130,7 +136,7 @@ public class TestScriptBrowserActivity extends Activity {
 		}
 		else
 		{
-			loginHandler.sendEmptyMessage(0);
+			loginHandler.sendEmptyMessage(1);
 		}
 		
 	  	instructionText = (TextView) findViewById(R.id.instructionText);
@@ -582,6 +588,17 @@ public class TestScriptBrowserActivity extends Activity {
 						renameFile(params[1], params[2], params[3], params[4]);
 					}
 				}
+				if (params[0].equalsIgnoreCase("Load Last Viewed"))
+				{
+					operationBeingPerformed = "Load Last Viewed";
+
+					if (connectToServer() == true)
+					{
+						populateNavDrawer();
+						selectedItemInDrawer = ValueStoringHelperClass.COURSE_NAME;
+						populateLists(selectedItemInDrawer);
+					}
+				}
 			}
 
 			return null;
@@ -1009,7 +1026,7 @@ public class TestScriptBrowserActivity extends Activity {
 				exListView.setEnabled(true);
 			}
 
-			if (operationBeingPerformed.equalsIgnoreCase("Update Nav Drawer"))
+			if (operationBeingPerformed.equalsIgnoreCase("Update Nav Drawer") || operationBeingPerformed.equalsIgnoreCase("Load Last Viewed"))
 			{
 				navDrawArrayAdapter =  new ArrayAdapter<String>(context, R.layout.drawer_list_item, drawerItems);
 				drawerListView.setAdapter(navDrawArrayAdapter);
