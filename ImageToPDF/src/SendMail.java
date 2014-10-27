@@ -88,7 +88,7 @@ public class SendMail
                         String filename = fileExtention;
                         DataSource source = new FileDataSource(filename);
                         messageBodyPart.setDataHandler(new DataHandler(source));
-                        messageBodyPart.setFileName(filename);
+                        messageBodyPart.setFileName("Test Script.pdf");
                         multipart.addBodyPart(messageBodyPart);
          
          
