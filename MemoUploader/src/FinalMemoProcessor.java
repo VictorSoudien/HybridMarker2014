@@ -84,6 +84,11 @@ public class FinalMemoProcessor
 		openFiles(memoFileName, blankScriptFileName);
 		getAnswerRegions();
 		getMemoText();
+		
+		
+		// delete temp files
+		memoFile.delete();
+		blankScriptFile.delete();
 	}
 
 	// Test whether the output directory is valid
@@ -165,6 +170,9 @@ public class FinalMemoProcessor
 		try
 		{			        
 			link += "op=Insert&numPages=" + numPages + "&testName=" + testName.replaceAll(" ", "%20") + "&courseName=" + courseName.replaceAll(" ", "%20");
+			
+			//System.out.println (link);
+			
 			URL url = new URL(link);
 			URLConnection urlConn = url.openConnection();
 			urlConn.setDoOutput(true);
@@ -180,9 +188,11 @@ public class FinalMemoProcessor
 				break;
 			}
 			
+			//System.out.println (result);
+			
 			if (!result.trim().equals("1"))
 			{
-				System.out.println("Unable to enter number of paged into DB: Error communicating with php file");
+				System.out.println("Unable to enter number of pages into DB: Error communicating with php file");
 				System.exit(0);
 			}
 		}
@@ -190,7 +200,7 @@ public class FinalMemoProcessor
 		{
 			System.out.println("Unable to enter number of paged into DB");
 			e.printStackTrace();
-			System.exit(0);
+			//System.exit(0);
 		}
 	}
 
