@@ -52,7 +52,7 @@ public class SendMail
                 {
                     protected PasswordAuthentication getPasswordAuthentication() 
                     {
-                            return new PasswordAuthentication("zahraa.mathews@gmail.com","MickyYoochun86");
+                            return new PasswordAuthentication("scriptviewuct@gmail.com","ScriptView2014");
                     }
 		});
  
@@ -60,7 +60,7 @@ public class SendMail
                 {
 			MimeMessage message = new MimeMessage(session);
                         //address from
-			message.setFrom(new InternetAddress("zahraa.mathews@gmail.com"));
+			message.setFrom(new InternetAddress("scriptviewuct@gmail.com"));
 			//address to
                         message.setRecipients(Message.RecipientType.TO,	InternetAddress.parse(receiver));
                         String subject = "Test Results";

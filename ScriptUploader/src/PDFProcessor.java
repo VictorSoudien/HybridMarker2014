@@ -453,20 +453,16 @@ public class PDFProcessor
 		}
 	}
 
-//	public static void main(String[] args) 
-//	{
-//		//File imageFile = new File(args[0]);
-//		/*File imageFile = new File("scanned_class_test_2/merged_2.pdf");*/
-//
-//		PDFProcessor proc = new PDFProcessor();
-//		//proc.processDocument(imageFile, null);*/
-//		
-//		File [] allFiles = new File("Class_Test_2/").listFiles();
-//		
-//		for (File f : allFiles)
-//		{
-//			System.out.println (f.getName());
-//			proc.processDocument(f, null);
-//		}
-//	}
+	// For demo purposes
+	public static void main(String[] args) 
+	{
+		PDFProcessor proc = new PDFProcessor();
+		
+		File [] allFiles = new File("Demo_Scripts/").listFiles();
+		
+		for (File f : allFiles)
+		{
+			proc.processDocument(f, null);
+		}
+	}
 }
